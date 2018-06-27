@@ -3,57 +3,57 @@
 namespace cucumber\mod\ban;
 
 use cucumber\Cucumber;
+use cucumber\mod\utils\PlayerPunishmentCompound;
 use cucumber\utils\{CPlayer, Utils};
+
+// TODO: Generalize into concrete PunishmentManager, or turn into an interface and have BanManager, MuteManager, etc
 
 final class BanManager
 {
 
     /** @var Cucumber */
 	private $plugin;
-    /** @var Ban[] */
-	private $bans;
+    /** @var PlayerPunishmentCompound */
+	private $compound;
     /** @var IpBanList[] */
 	private $ip_bans;
 
 	public function __construct(Cucumber $plugin)
 	{
 		$this->plugin = $plugin;
-		$this->bans = [
-		    'name' => [],
-            'uid' => [],
-            'ip' => []
-        ];
+		$this->loadBans();
 	}
 
-	public function isBanned(Player $player): bool
+    private function loadBans(): void
+    {
+        $this->compound = new PlayerPunishmentCompound([]);
+        $this->ip_bans = [];
+    }
+
+    // TODO: test performance
+	public function isBanned(CPlayer $player): bool
 	{
-	    $is_ban = function($value) {
-	        return $value instanceof Ban;
-        };
-	    $bans = array_filter(
-	        [
-	            $this->bans['name'][$player->getName()] ?? false,
-                $this->bans['xuid'][Utils::getSafeXuid($player)] ?? false,
-                $this->bans['ip'][$player->getAddress()] ?? false
-            ],
-            $is_ban);
-	    foreach ($bans as $ban) if ($ban->isBanned($player) >= $this->min_ban) return true;
-		return false;
+	    // Player is individually banned
+	    if ($this->compound->getPunishment($player) instanceof Ban) return true;
+
+	    // Player's IP matches an index in ip_bans
+	    if (isset($this->ip_bans[$player->getIp()])) return true;
+
+	    // Loop through IP bans
+	    foreach ($this->ip_bans as $ip_ban)
+	        if ($ip_ban->isPunished($player)) return true;
+
+	    return false;
 	}
 
 	public function ban(CPlayer $player): void
     {
-        $ban = new Ban($player);
-
-        $this->bans['name'][$player->getName()][] = $ban;
-        if (!is_null($player->getUid()))
-            $this->bans['uid'][$player->getUid()][] = $ban;
-        $this->bans['ip'][$player->getIp()][] = $ban;
+        $this->compound->addPunishment(new Ban($player));
     }
 
-    private function loadBans(): void
+    public function ipBan(CPlayer $player): void
     {
-
+        $this->ip_bans[$player->getIp()] = new IpBanList($player->getIp, new Ban($player));
     }
 
 }

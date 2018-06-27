@@ -1,6 +1,6 @@
 <?php
 
-namespace cucumber\ban;
+namespace cucumber\mod;
 
 use cucumber\utils\CPlayer;
 
@@ -12,20 +12,24 @@ use cucumber\utils\CPlayer;
 abstract class PlayerPunishment
 {
 
-    /** @var string */
-    protected $name;
-    /** @var string|null */
-    protected $uid;
+    /** @var CPlayer */
+    protected $player;
 
     public function __construct(CPlayer $player)
     {
-        $this->name = $player->getName();
-        $this->uid = $player->getUid();
+        $this->player = $player;
+    }
+
+    public function getPlayer()
+    {
+        return $this->player;
     }
 
     public function isPunished(CPlayer $player): bool
     {
-        return $player->getName() === $this->name || $player->getUid() === $this->uid;
+        return
+            $player->getName() === $this->getPlayer()->getName() ||
+            $player->getUid() === $this->getPlayer()->getUid();
     }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace cucumber\ban;
+namespace cucumber\mod;
 
 use cucumber\utils\CPlayer;
 
