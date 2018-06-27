@@ -5,19 +5,16 @@ namespace cucumber\event;
 use cucumber\Cucumber;
 use pocketmine\Player;
 
-class CommandEvent extends CEvent
+class CommandEvent extends CPlayerEvent
 {
 
-    /** @var Player */
-    protected $player;
     /** @var string */
     protected $command;
 
     public function __construct(Player $player, string $command)
     {
-        $this->player = $player;
         $this->command = $command;
-        parent::__construct('command');
+        parent::__construct('command', $player);
     }
 
     public function getPlayer(): Player

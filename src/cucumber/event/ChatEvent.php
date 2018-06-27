@@ -4,24 +4,16 @@ namespace cucumber\event;
 
 use pocketmine\Player;
 
-class ChatEvent extends CEvent
+class ChatEvent extends CPlayerEvent
 {
 
-    /** @var Player */
-    protected $player;
     /** @var string */
     protected $message;
 
     public function __construct(Player $player, string $message)
     {
-        $this->player = $player;
         $this->message = $message;
-        parent::__construct('chat');
-    }
-
-    public function getPlayer(): Player
-    {
-        return $this->player;
+        parent::__construct('chat', $player);
     }
 
     public function getMessage(): string
