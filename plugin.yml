@@ -1,0 +1,73 @@
+name: cucumber
+main: cucumber\Cucumber
+version: 0.1.0
+api: 3.0.0
+load: POSTWORLD
+author: alexisdeynes
+description: Advanced, flexible moderation plugin
+website: https://github.com/adeynes
+
+commands:
+  rawtell:
+    description: 'Send a raw message to a player'
+    usage: '/rawtell <player> <message>'
+    permission: cucumber.command.rawtell
+
+  log:
+    description: 'Log a message'
+    usage: '/log <message>'
+    permission: cucumber.command.log
+
+  alert:
+    description: 'Broadcast a message to the server'
+    usage: '/alert <message> [-nom] [-p] [-t]'
+    permission: cucumber.command.alert
+
+  kick:
+    description: 'Kick a player'
+    usage: '/kick <player> [reason]'
+    permission: cucumber.command.kick
+
+  mute:
+    description: 'Mute a player'
+    usage: '/mute <player> [reason] [-d=<duration>]'
+    permission: cucumber.command.mute
+
+  ban:
+    description: 'Ban a player by unique identification (name & XUID)'
+    usage: '/ban <player> [reason] [-d=<duration>]'
+    permission: cucumber.command.ban
+
+  uban:
+    description: 'Perform a /ban on a player and ban their IP'
+    usage: '/uban <player|-i=<ip>> [reason] [-d=<duration>]'
+    permission: cucumber.command.uban
+
+permissions:
+  cucumber.command.rawtell:
+    description: 'Allows for the use of /rawtell'
+    default: op
+
+  cucumber.command.log:
+    description: 'Allows for the use of /log'
+    default: op
+
+  cucumber.command.alert:
+    description: 'Allows for the use of /alert'
+    default: op
+
+  cucumber.command.kick:
+    description: 'Allows for the use of /kick'
+    default: op
+
+  cucumber.command.mute:
+    description: 'Allows for the use of /mute'
+    default: op
+
+  cucumber.command.uban:
+    description: 'Allows for the use of /uban'
+    default: op
+    children:
+      cucumber.command.ban:
+        description: 'Allows for the use of /ban'
+        default: op

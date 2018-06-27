@@ -1,0 +1,17 @@
+moderation:
+  kick:
+    reason: 'Moderator: %name%\nReason %reason%'
+  ban:
+    reason: 'Moderator: %name%\nDuration: %duration%\nReason: %reason%'
+  mute:
+    message:
+      type: message
+      message: '&eYou have been muted by &b%name% &efor &b%duration%. &7Reason: &f%reason%'
+
+log:
+  time-format: Y-m-d\TH:i:s
+  templates:
+    global: '%time% %type% | %...%'
+    chat: '%name%: %message%'
+    command: '%name%: %command%'
+    moderation: '%name% %action% %subject% %extra%'

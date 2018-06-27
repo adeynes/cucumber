@@ -1,0 +1,7 @@
+log:
+  path: log/
+  chat: true
+  command: true
+  moderation: true
+  loggers:
+    \\cucumber\\log\\BaseLogger: []
