@@ -5,12 +5,17 @@ namespace cucumber\mod\ban;
 use cucumber\ban\Punishment;
 use cucumber\utils\CPlayer;
 
+/**
+ * A list of PlayerPunishment triggered by a player
+ * having an IP === to IpPunishmentList::$ip
+ */
 class IpBanList implements Punishment
 {
 
     protected $ip;
     /**
-     * @var Ban[] The list of bans under this IP
+     * The list of bans under this IP
+     * @var Ban[]
      */
     protected $bans;
 
@@ -19,7 +24,7 @@ class IpBanList implements Punishment
         $this->ip = $ip;
     }
 
-    public function addBan(Ban $ban)
+    public function addBan(Ban $ban): void
     {
         $this->bans[] = $ban;
     }

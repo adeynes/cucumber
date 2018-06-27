@@ -5,10 +5,12 @@ namespace cucumber\utils\ds;
 class Stack implements \Iterator, \Countable
 {
 
+    /** @var array */
     protected $stack = [];
+    /** @var int */
     protected $position = 0;
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = 0;
     }
@@ -23,7 +25,7 @@ class Stack implements \Iterator, \Countable
         return $this->position;
     }
 
-    public function next()
+    public function next(): void
     {
         ++$this->position;
     }
@@ -38,16 +40,30 @@ class Stack implements \Iterator, \Countable
         return count($this->stack);
     }
 
-    public function pop()
+    /**
+     * Returns the first element of the internal array
+     * @return Stack
+     */
+    public function pop(): self
     {
-        return array_shift($this->stack);
+        array_shift($this->stack);
+        return $this;
     }
 
-    public function push($value)
+    /**
+     * @param $value Inserts the value at the beginning of the internal array
+     * @return Stack
+     */
+    public function push($value): self
     {
-        return array_unshift($this->stack, $value);
+        array_unshift($this->stack, $value);
+        return $this;
     }
 
+    /**
+     * @param int $index
+     * @return mixed|null
+     */
     public function peek(int $index = 0)
     {
         return $this->stack[$index] ?? null;

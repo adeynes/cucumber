@@ -32,6 +32,10 @@ final class CListener implements Listener
             );
     }
 
+    /**
+     * Logs all CEvent
+     * @param CEvent $ev
+     */
     public function onCEvent(CEvent $ev)
     {
         $log_manager = $this->plugin->getLogManager();
@@ -40,7 +44,7 @@ final class CListener implements Listener
         );
     }
 
-    private function callEvent(Event $ev)
+    private function callEvent(Event $ev): void
     {
         $this->plugin->getServer()->getPluginManager()->callEvent($ev);
     }

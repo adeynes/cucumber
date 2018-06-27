@@ -8,17 +8,16 @@ use pocketmine\Player;
 class CommandEvent extends CEvent
 {
 
-    protected const TYPE = 'command';
-
-    protected $plugin;
+    /** @var Player */
     protected $player;
+    /** @var string */
     protected $command;
 
-    public function __construct(Cucumber $plugin, Player $player, string $command)
+    public function __construct(Player $player, string $command)
     {
-        $this->plugin = $plugin;
         $this->player = $player;
         $this->command = $command;
+        parent::__construct('command');
     }
 
     public function getPlayer(): Player
@@ -34,7 +33,6 @@ class CommandEvent extends CEvent
     public function getData(): array
     {
         return [
-            'type' => self::TYPE,
             'name' => $this->getPlayer()->getName(),
             'command' => $this->getCommand()
         ];

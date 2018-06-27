@@ -2,23 +2,21 @@
 
 namespace cucumber\event;
 
-use cucumber\Cucumber;
 use pocketmine\Player;
 
 class ChatEvent extends CEvent
 {
 
-    protected const TYPE = 'chat';
-
-    protected $plugin;
+    /** @var Player */
     protected $player;
+    /** @var string */
     protected $message;
 
-    public function __construct(Cucumber $plugin, Player $player, string $message)
+    public function __construct(Player $player, string $message)
     {
-        $this->plugin = $plugin;
         $this->player = $player;
         $this->message = $message;
+        parent::__construct('chat');
     }
 
     public function getPlayer(): Player
@@ -34,7 +32,6 @@ class ChatEvent extends CEvent
     public function getData(): array
     {
         return [
-            'type' => self::TYPE,
             'name' => $this->getPlayer()->getName(),
             'message' => $this->getMessage()
         ];

@@ -4,13 +4,26 @@ namespace cucumber\utils;
 
 use pocketmine\Player;
 
+/**
+ * A wrapper for player data (name, IP, UID) that can
+ * be universally passed around across Cucumber's APIs
+ */
 class CPlayer
 {
 
+    /** @var string */
     protected $name;
+    /** @var string */
     protected $ip;
+    /** @var string */
     protected $uid;
 
+    /**
+     * CPlayer constructor.
+     * @param $player
+     * @param string $ip
+     * @param string|null $uid
+     */
     public function __construct($player, string $ip, string $uid = null)
     {
         if ($player instanceof Player)
@@ -21,7 +34,7 @@ class CPlayer
         $this->init(...$unpacked);
     }
 
-    protected function init(string $name, string $ip, ?string $uid)
+    protected function init(string $name, string $ip, ?string $uid): void
     {
         $this->name = $name;
         $this->ip = $ip;
@@ -43,9 +56,15 @@ class CPlayer
         return $this->uid;
     }
 
-    public static function getSafeXuid(Player $player)
+    /**
+     * Returns the player's unique ID (hashed XUID) if
+     * they are logged in to XBL, otherwise returns null
+     * @param Player $player
+     * @return string|null
+     */
+    public static function getSafeXuid(Player $player): ?string
     {
-        return $player->getXuid() !== '' ? $player->getUniqueId() : null;
+        return $player->getXuid() !== '' ? (string) $player->getUniqueId() : null;
     }
 
 }

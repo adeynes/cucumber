@@ -8,14 +8,11 @@ use cucumber\utils\{CPlayer, Utils};
 final class BanManager
 {
 
+    /** @var Cucumber */
 	private $plugin;
-    /**
-     * @var Ban[]
-     */
+    /** @var Ban[] */
 	private $bans;
-    /**
-     * @var IpBanList[]
-     */
+    /** @var IpBanList[] */
 	private $ip_bans;
 
 	public function __construct(Cucumber $plugin)
@@ -28,7 +25,7 @@ final class BanManager
         ];
 	}
 
-	public function isBanned(Player $player)
+	public function isBanned(Player $player): bool
 	{
 	    $is_ban = function($value) {
 	        return $value instanceof Ban;
@@ -44,7 +41,7 @@ final class BanManager
 		return false;
 	}
 
-	public function ban(CPlayer $player)
+	public function ban(CPlayer $player): void
     {
         $ban = new Ban($player);
 
@@ -54,7 +51,7 @@ final class BanManager
         $this->bans['ip'][$player->getIp()][] = $ban;
     }
 
-    private function loadBans()
+    private function loadBans(): void
     {
 
     }

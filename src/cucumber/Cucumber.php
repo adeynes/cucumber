@@ -10,23 +10,14 @@ use pocketmine\utils\Config;
 final class Cucumber extends PluginBase
 {
 
-    /**
-     * @var Cucumber
-     */
+    /** @var Cucumber */
     private static $instance;
-    /**
-     * @var Config
-     */
+    /** @var Config */
     public $messages;
-    /**
-     * @var LogManager
-     */
+    /** @var LogManager */
     private $log_manager;
-    /**
-     * @var MessageFactory
-     */
+    /** @var MessageFactory */
     private $message_factory;
-    private $log_dir;
 
     public static function getInstance(): self
     {
@@ -47,25 +38,37 @@ final class Cucumber extends PluginBase
         $this->getServer()->getPluginManager()->registerEvents(new CListener($this), $this);
     }
 
-    private function initConfigs()
+    private function initConfigs(): void
     {
         @mkdir($this->getDataFolder());
         $this->saveDefaultConfig();
         $this->messages = new Config($this->getDataFolder() . 'messages.yml');
     }
 
-    private function initLog()
+    /**
+     * Creates instances of LogManager and
+     * MessageFactory, and pushes loggers defined
+     * under log.loggers to the logger stack
+     * @return void
+     */
+    private function initLog(): void
     {
         $this->log_manager = new LogManager($this);
+        // Loggers are defined in the config as
+        // fully qualified class name => constructor args
+        // Cucumber instance is always the first arg,
+        // user-supplied ones are passed starting with the second arg
         foreach ($this->getConfig()->getNested('log.loggers') as $logger => $args)
         {
             $args = [$this] + $args;
             $this->getLogManager()->addLogger(new $logger(...$args));
         }
+
         $this->message_factory = new MessageFactory($this);
     }
 
-    private function registerCommands(){
+    private function registerCommands(): void
+    {
         $map = $this->getServer()->getCommandMap();
 
         $commands = [
@@ -79,6 +82,7 @@ final class Cucumber extends PluginBase
         ];
 
         foreach ($commands as $command => $class){
+            // Unregisters the old command if it is a duplicate name
             if (!is_null($old = $map->getCommand($command))) {
                 $old->setLabel($command . '_disabled');
                 $old->unregister($map);
@@ -98,16 +102,16 @@ final class Cucumber extends PluginBase
         return $this->message_factory;
     }
 
-    public function fail(string $message, string $level = 'critical'): bool
-    {
-        $this->log($message, $level);
-        return false;
-    }
-
-    public function log(string $message, string $level = 'info'): bool
+    /**
+     * Logs the supplied message at the supplied
+     * severity level in the server's logger
+     * @param string $message
+     * @param string $level The severity of the message (defined in SPL/LogLevel), default info
+     * @return void
+     */
+    public function log(string $message, string $level = 'info'): void
     {
         $this->getServer()->getLogger()->{$level}($message);
-        return true;
     }
 
 }

@@ -7,6 +7,9 @@ use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
+/**
+ * Sends a raw private message to a player
+ */
 class RawtellCommand extends CCommand
 {
 

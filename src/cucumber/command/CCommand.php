@@ -9,6 +9,7 @@ use pocketmine\command\CommandSender;
 abstract class CCommand extends Command
 {
 
+    /** @var Cucumber */
     protected $plugin;
 
     public function __construct(Cucumber $plugin, string $name, string $description = "", string $usageMessage = null)
@@ -17,13 +18,21 @@ abstract class CCommand extends Command
         parent::__construct($name, $description, $usageMessage);
     }
 
-    public function execute(CommandSender $sender, string $label, array $args)
+    /**
+     * This contains boilerplate code e.g. permission
+     * checking, and executes CCommand::_execute()
+     * @param CommandSender $sender
+     * @param string $label
+     * @param array $args
+     * @return bool
+     */
+    public function execute(CommandSender $sender, string $label, array $args): bool
     {
         if (!$this->testPermission($sender)) return false;
 
-        $this->_execute($sender, $label, $args);
+        return $this->_execute($sender, $label, $args);
     }
 
-    abstract public function _execute(CommandSender $sender, string $label, array $args);
+    abstract public function _execute(CommandSender $sender, string $label, array $args): bool;
 
 }
