@@ -2,7 +2,7 @@
 
 namespace cucumber\mod\ban;
 
-use cucumber\ban\PlayerPunishment;
+use cucumber\mod\PlayerPunishment;
 
 class Ban extends PlayerPunishment
 {

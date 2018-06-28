@@ -4,17 +4,15 @@ namespace cucumber\mod\ban;
 
 use cucumber\Cucumber;
 use cucumber\mod\utils\PlayerPunishmentCompound;
-use cucumber\utils\{CPlayer, Utils};
+use cucumber\utils\CPlayer;
 
-// TODO: Generalize into concrete PunishmentManager, or turn into an interface and have BanManager, MuteManager, etc
-
-final class BanManager
+final class PunishmentManager
 {
 
     /** @var Cucumber */
 	private $plugin;
     /** @var PlayerPunishmentCompound */
-	private $compound;
+	private $ban_compound;
     /** @var IpBanList[] */
 	private $ip_bans;
 
@@ -26,7 +24,7 @@ final class BanManager
 
     private function loadBans(): void
     {
-        $this->compound = new PlayerPunishmentCompound([]);
+        $this->ban_compound = new PlayerPunishmentCompound([]);
         $this->ip_bans = [];
     }
 
@@ -34,7 +32,7 @@ final class BanManager
 	public function isBanned(CPlayer $player): bool
 	{
 	    // Player is individually banned
-	    if ($this->compound->getPunishment($player) instanceof Ban) return true;
+	    if ($this->ban_compound->getPunishment($player) instanceof Ban) return true;
 
 	    // Player's IP matches an index in ip_bans
 	    if (isset($this->ip_bans[$player->getIp()])) return true;
@@ -48,12 +46,12 @@ final class BanManager
 
 	public function ban(CPlayer $player): void
     {
-        $this->compound->addPunishment(new Ban($player));
+        $this->ban_compound->addPunishment(new Ban($player));
     }
 
     public function ipBan(CPlayer $player): void
     {
-        $this->ip_bans[$player->getIp()] = new IpBanList($player->getIp, new Ban($player));
+        $this->ip_bans[$player->getIp()] = new IpBanList($player->getIp(), new Ban($player));
     }
 
 }

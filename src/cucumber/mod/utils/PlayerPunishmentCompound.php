@@ -2,7 +2,7 @@
 
 namespace cucumber\mod\utils;
 
-use cucumber\ban\PlayerPunishment;
+use cucumber\mod\PlayerPunishment;
 use cucumber\utils\CPlayer;
 
 class PlayerPunishmentCompound
