@@ -2,12 +2,14 @@
 
 namespace cucumber\event;
 
+use pocketmine\event\Event;
+
 /**
  * The parent class for all Cucumber events,
  * used to listen for all of them to log
  * @allowHandle
  */
-abstract class CEvent
+abstract class CEvent extends Event
 {
 
     /** @var string */

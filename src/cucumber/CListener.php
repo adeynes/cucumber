@@ -2,9 +2,8 @@
 
 namespace cucumber;
 
-use cucumber\event\CEvent;
-use pocketmine\event\Listener;
-use pocketmine\event\Event;
+use cucumber\event\{CEvent, ChatEvent, CommandEvent};
+use pocketmine\event\{Event, Listener};
 use pocketmine\event\player\{PlayerChatEvent, PlayerCommandPreprocessEvent};
 
 final class CListener implements Listener
@@ -20,7 +19,7 @@ final class CListener implements Listener
     public function onChat(PlayerChatEvent $ev)
     {
         $this->callEvent(
-            new PPMChatEvent($this->plugin, $ev->getPlayer(), $ev->getMessage())
+            new ChatEvent($ev->getPlayer(), $ev->getMessage())
         );
     }
 
@@ -28,7 +27,7 @@ final class CListener implements Listener
     {
         if (strpos(($command = $ev->getMessage()), '/') === 0)
             $this->callEvent(
-                new PPMCommandEvent($this->plugin, $ev->getPlayer(), $command)
+                new CommandEvent($ev->getPlayer(), $command)
             );
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace cucumber\mod\ban;
+namespace cucumber\mod;
 
 use cucumber\mod\PlayerPunishment;
 

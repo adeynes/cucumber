@@ -1,6 +1,6 @@
 <?php
 
-namespace cucumber\log;
+namespace cucumber\utils;
 
 use cucumber\Cucumber;
 

@@ -20,7 +20,7 @@ abstract class PlayerPunishment
         $this->player = $player;
     }
 
-    public function getPlayer()
+    public function getPlayer(): CPlayer
     {
         return $this->player;
     }

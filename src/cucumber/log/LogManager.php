@@ -13,7 +13,7 @@ final class LogManager
     private $plugin;
     /** @var string */
     private $dir;
-    /** @var Stack[Logger] */
+    /** @var Stack<Logger> */
     private $loggers;
     /** @var string[] */
     private $templates;
