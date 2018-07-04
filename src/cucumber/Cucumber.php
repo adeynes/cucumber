@@ -3,6 +3,7 @@
 namespace cucumber;
 
 use cucumber\log\LogManager;
+use cucumber\mod\PunishmentManager;
 use cucumber\utils\MessageFactory;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
@@ -18,6 +19,8 @@ final class Cucumber extends PluginBase
     private $log_manager;
     /** @var MessageFactory */
     private $message_factory;
+    /** @var PunishmentManager */
+    private $punishment_manager;
 
     public static function getInstance(): self
     {
@@ -33,9 +36,15 @@ final class Cucumber extends PluginBase
     {
         $this->initConfigs();
         $this->initLog();
+        $this->initMod();
         $this->registerCommands();
 
         $this->getServer()->getPluginManager()->registerEvents(new CListener($this), $this);
+    }
+
+    public function onDisable()
+    {
+        $this->punishment_manager->save();
     }
 
     private function initConfigs(): void
@@ -46,9 +55,9 @@ final class Cucumber extends PluginBase
     }
 
     /**
-     * Creates instances of LogManager and
-     * MessageFactory, and pushes loggers defined
-     * under log.loggers to the logger stack
+     * Instantiates LogManager & MessageFactory,
+     * and pushes loggers defined under
+     * log.loggers to the logger stack
      * @return void
      */
     private function initLog(): void
@@ -65,6 +74,15 @@ final class Cucumber extends PluginBase
         }
 
         $this->message_factory = new MessageFactory($this);
+    }
+
+    /**
+     * Instantiates PunishmentManager
+     * @return void
+     */
+    private function initMod(): void
+    {
+        $this->punishment_manager = new PunishmentManager($this);
     }
 
     private function registerCommands(): void
@@ -100,6 +118,11 @@ final class Cucumber extends PluginBase
     public function getMessageFactory(): MessageFactory
     {
         return $this->message_factory;
+    }
+
+    public function getPunishmentManager(): PunishmentManager
+    {
+        return $this->punishment_manager;
     }
 
     /**

@@ -3,7 +3,7 @@
 namespace cucumber\mod;
 
 use cucumber\Cucumber;
-use cucumber\mod\utils\PlayerPunishmentList;
+use cucumber\mod\utils\{BanList, MuteList};
 use cucumber\utils\CPlayer;
 
 final class PunishmentManager
@@ -11,27 +11,27 @@ final class PunishmentManager
 
     /** @var Cucumber */
 	private $plugin;
-    /** @var PlayerPunishmentList<Ban> */
+    /** @var BanList */
 	private $bans;
-    /** @var IpBan[][]|Ban[][] */
+    /** @var IpBan[][]|BanList[] */
 	private $ip_bans;
-	/** @var PlayerPunishmentList<Mute> */
+	/** @var MuteList */
 	private $mutes;
 
 	public function __construct(Cucumber $plugin)
 	{
 		$this->plugin = $plugin;
-		$this->loadBans();
+		$this->load();
 	}
 
-    private function loadBans(): void
+    private function load(): void
     {
-        $this->bans = new PlayerPunishmentList([]);
-        $this->ip_bans = ["ip" => [], "uid" => []];
-        $this->mutes = new PlayerPunishmentList([]);
+        $this->bans = new BanList([]);
+        $this->ip_bans = ['ip' => [], 'uid' => new BanList()];
+        $this->mutes = new MuteList([]);
     }
 
-    public function saveBans(): void
+    public function save(): void
     {
 
     }
@@ -45,13 +45,13 @@ final class PunishmentManager
     {
         $ban = new Ban($player);
         if (isset($this->ip_bans[$player->getIp()]))
-            $this->ip_bans["ip"][$player->getIp()]->ban($ban);
+            $this->ip_bans['ip'][$player->getIp()]->ban($ban);
         else {
-            $this->ip_bans["ip"][$player->getIp()] = new IpBan(
+            $this->ip_bans['ip'][$player->getIp()] = new IpBan(
                 $player->getIp(),
                 [$ban]
             );
-            $this->ip_bans["uid"][$player->getUid()] = new Ban($player);
+            $this->ip_bans['uid'][$player->getUid()] = new Ban($player);
         }
     }
 
@@ -66,11 +66,11 @@ final class PunishmentManager
 	    // Player is individually banned
 	    if ($this->bans->isPunished($player)) return true;
 
-	    // Player's IP matches an index in ip_bans[
-	    if (isset($this->ip_bans["ip"][$player->getIp()])) return true;
+	    // Player's IP matches an index in ip_bans[ip]
+	    if (isset($this->ip_bans['ip'][$player->getIp()])) return true;
 
 	    // Player's UID matches an index in ip_bans[uid]
-        if (isset($this->ip_bans["uid"][$player->getUid()])) return true;
+        if (isset($this->ip_bans['uid'][$player->getUid()])) return true;
 
 	    return false;
 	}

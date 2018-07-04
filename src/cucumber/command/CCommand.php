@@ -12,7 +12,7 @@ abstract class CCommand extends Command
     /** @var Cucumber */
     protected $plugin;
 
-    public function __construct(Cucumber $plugin, string $name, string $description = "", string $usageMessage = null)
+    public function __construct(Cucumber $plugin, string $name, string $description = '', string $usageMessage = null)
     {
         $this->plugin = $plugin;
         parent::__construct($name, $description, $usageMessage);

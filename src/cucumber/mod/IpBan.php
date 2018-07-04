@@ -2,7 +2,7 @@
 
 namespace cucumber\mod;
 
-use cucumber\mod\utils\PlayerPunishmentList;
+use cucumber\mod\utils\BanList;
 use cucumber\utils\CPlayer;
 
 /**
@@ -16,7 +16,7 @@ class IpBan implements Punishment
     protected $ip;
     /**
      * The list of bans under this IP
-     * @var PlayerPunishmentList[]
+     * @var BanList[]
      */
     protected $bans;
 
@@ -27,14 +27,14 @@ class IpBan implements Punishment
     public function __construct(string $ip, array $bans = [])
     {
         $this->ip = $ip;
-        $this->bans = new PlayerPunishmentList([]);
+        $this->bans = new BanList([]);
         foreach ($bans as $ban)
             $this->ban($ban);
     }
 
     public function ban(Ban $ban): void
     {
-        $this->bans->punish($ban);
+        $this->bans->ban($ban);
     }
 
     /**
@@ -43,12 +43,9 @@ class IpBan implements Punishment
      * the IpBan's IP or (b) if the player has previously
      * been banned through joining with the list's IP
      * @param CPlayer $player
-     * @param bool $ban_if_not Whether or not the ban the player if
-     * they are banned but have not previously been recorded in the list.
-     * Equivalent to `if (!$list->isPunished($player)) $list->punish(new Ban($player));`
      * @return bool
      */
-    public function isPunished(CPlayer $player, bool $ban_if_not = true): bool
+    public function isPunished(CPlayer $player): bool
     {
         if($this->bans->isPunished($player))
             return true;
@@ -56,11 +53,16 @@ class IpBan implements Punishment
         // Check if player's IP is banned. If it is, it means
         // they don't have a Ban entry as we didn't return above
         if ($player->getIp() === $this->ip) {
-            if ($ban_if_not) $this->ban(new Ban($player));
+            $this->ban(new Ban($player));
             return true;
         }
 
         return false;
+    }
+
+    public function isBanned(CPlayer $player): bool
+    {
+        return $this->isPunished($player);
     }
 
 }
