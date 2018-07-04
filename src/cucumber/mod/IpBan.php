@@ -14,6 +14,7 @@ class IpBan implements Punishment
 
     /** @var string */
     protected $ip;
+
     /**
      * The list of bans under this IP
      * @var BanList[]

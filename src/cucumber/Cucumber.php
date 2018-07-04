@@ -4,6 +4,7 @@ namespace cucumber;
 
 use cucumber\log\LogManager;
 use cucumber\mod\PunishmentManager;
+use cucumber\provider\CProvider;
 use cucumber\utils\MessageFactory;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
@@ -13,12 +14,19 @@ final class Cucumber extends PluginBase
 
     /** @var Cucumber */
     private static $instance;
+
     /** @var Config */
     public $messages;
+
+    /** @var CProvider */
+    private $provider;
+
     /** @var LogManager */
     private $log_manager;
+
     /** @var MessageFactory */
     private $message_factory;
+
     /** @var PunishmentManager */
     private $punishment_manager;
 
@@ -35,6 +43,7 @@ final class Cucumber extends PluginBase
     public function onEnable()
     {
         $this->initConfigs();
+        $this->initProvider();
         $this->initLog();
         $this->initMod();
         $this->registerCommands();
@@ -44,7 +53,10 @@ final class Cucumber extends PluginBase
 
     public function onDisable()
     {
-        $this->punishment_manager->save();
+        $this->getPunishmentManager()->save();
+
+        // Last
+        $this->getProvider()->close();
     }
 
     private function initConfigs(): void
@@ -54,9 +66,14 @@ final class Cucumber extends PluginBase
         $this->messages = new Config($this->getDataFolder() . 'messages.yml');
     }
 
+    private function initProvider(): void
+    {
+        $this->provider = new CProvider($this);
+    }
+
     /**
-     * Instantiates LogManager & MessageFactory,
-     * and pushes loggers defined under
+     * Instantiate LogManager & MessageFactory,
+     * and push loggers defined under
      * log.loggers to the logger stack
      * @return void
      */
@@ -64,7 +81,7 @@ final class Cucumber extends PluginBase
     {
         $this->log_manager = new LogManager($this);
         // Loggers are defined in the config as
-        // fully qualified class name => constructor args
+        // fully-qualified class name => constructor args
         // Cucumber instance is always the first arg,
         // user-supplied ones are passed starting with the second arg
         foreach ($this->getConfig()->getNested('log.loggers') as $logger => $args)
@@ -77,7 +94,7 @@ final class Cucumber extends PluginBase
     }
 
     /**
-     * Instantiates PunishmentManager
+     * Instantiate PunishmentManager & load punishments
      * @return void
      */
     private function initMod(): void
@@ -108,6 +125,11 @@ final class Cucumber extends PluginBase
             $class = '\\cucumber\\command\\' . $class;
             $map->register('cucumber', new $class($this));
         }
+    }
+
+    public function getProvider(): CProvider
+    {
+        return $this->provider;
     }
 
     public function getLogManager(): LogManager

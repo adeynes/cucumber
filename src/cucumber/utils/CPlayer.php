@@ -13,8 +13,10 @@ class CPlayer
 
     /** @var string */
     protected $name;
+
     /** @var string */
     protected $ip;
+
     /** @var string */
     protected $uid;
 

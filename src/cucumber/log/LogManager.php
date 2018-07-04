@@ -11,12 +11,16 @@ final class LogManager
 
     /** @var Cucumber */
     private $plugin;
+
     /** @var string */
     private $dir;
+
     /** @var Stack<Logger> */
     private $loggers;
+
     /** @var string[] */
     private $templates;
+
     /** @var string */
     private $time_format;
 

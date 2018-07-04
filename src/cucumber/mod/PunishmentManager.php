@@ -11,10 +11,13 @@ final class PunishmentManager
 
     /** @var Cucumber */
 	private $plugin;
+
     /** @var BanList */
 	private $bans;
+
     /** @var IpBan[][]|BanList[] */
 	private $ip_bans;
+
 	/** @var MuteList */
 	private $mutes;
 

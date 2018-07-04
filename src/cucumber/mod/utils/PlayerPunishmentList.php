@@ -12,6 +12,7 @@ abstract class PlayerPunishmentList implements Punishment
 
     /** @var PlayerPunishment[] */
     protected $punishments;
+
     /** @var string[] */
     protected static $messages;
 

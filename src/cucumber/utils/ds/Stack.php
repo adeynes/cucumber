@@ -7,6 +7,7 @@ class Stack implements \Iterator, \Countable
 
     /** @var array */
     protected $stack = [];
+
     /** @var int */
     protected $position = 0;
 
@@ -51,7 +52,7 @@ class Stack implements \Iterator, \Countable
     }
 
     /**
-     * @param $value Inserts the value at the beginning of the internal array
+     * @param mixed $value Inserts the value at the beginning of the internal array
      * @return Stack
      */
     public function push($value): self

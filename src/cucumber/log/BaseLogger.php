@@ -7,6 +7,7 @@ class BaseLogger implements Logger
 
     /** @var LogManager */
     protected $manager;
+
     /**
      * The file to which log messages are outputted
      * @var string
