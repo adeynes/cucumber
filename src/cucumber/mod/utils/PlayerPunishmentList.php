@@ -6,6 +6,7 @@ use cucumber\mod\PlayerPunishment;
 use cucumber\mod\Punishment;
 use cucumber\utils\CException;
 use cucumber\utils\CPlayer;
+use cucumber\utils\ErrorCodes;
 
 abstract class PlayerPunishmentList implements Punishment, \Iterator
 {
@@ -41,7 +42,7 @@ abstract class PlayerPunishmentList implements Punishment, \Iterator
             throw new CException(
                 self::$messages['already-punished'],
                 ['name' => $player->getName()],
-                301
+                ErrorCodes::ATTEMPT_PUNISH_PUNISHED
             );
         $this->punishments[$player->getUid()] = $punishment;
     }
@@ -57,7 +58,7 @@ abstract class PlayerPunishmentList implements Punishment, \Iterator
         else throw new CException(
             self::$messages['not-punished'],
             ['name' => $player->getName()],
-            302
+            ErrorCodes::ATTEMPT_PARDON_NOT_PUNISHED
         );
     }
 
