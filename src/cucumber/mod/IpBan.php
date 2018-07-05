@@ -17,7 +17,7 @@ class IpBan implements Punishment
 
     /**
      * The list of bans under this IP
-     * @var BanList[]
+     * @var BanList
      */
     protected $bans;
 
@@ -31,6 +31,14 @@ class IpBan implements Punishment
         $this->bans = new BanList([]);
         foreach ($bans as $ban)
             $this->ban($ban);
+    }
+
+    /**
+     * @return BanList
+     */
+    public function getBans(): BanList
+    {
+        return $this->bans;
     }
 
     public function ban(Ban $ban): void

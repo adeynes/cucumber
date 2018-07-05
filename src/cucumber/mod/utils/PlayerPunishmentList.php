@@ -7,8 +7,11 @@ use cucumber\mod\Punishment;
 use cucumber\utils\CException;
 use cucumber\utils\CPlayer;
 
-abstract class PlayerPunishmentList implements Punishment
+abstract class PlayerPunishmentList implements Punishment, \Iterator
 {
+
+    /** @var int */
+    protected $position = 0;
 
     /** @var PlayerPunishment[] */
     protected $punishments;
@@ -44,12 +47,11 @@ abstract class PlayerPunishmentList implements Punishment
     }
 
     /**
-     * @param PlayerPunishment $punishment
+     * @param CPlayer $player
      * @throws CException If the player isn't banned
      */
-    public function pardon(PlayerPunishment $punishment): void
+    public function pardon(CPlayer $player): void
     {
-        $player = $punishment->getPlayer();
         if (isset($this->punishments[$player->getUid()]))
             unset($this->punishments[$player->getUid()]);
         else throw new CException(
@@ -63,6 +65,39 @@ abstract class PlayerPunishmentList implements Punishment
     {
         return isset($this->punishments[$player->getUid()]) &&
             $this->punishments[$player->getUid()]->isPunished($player);
+    }
+
+    /**
+     * @return PlayerPunishment[]
+     */
+    public function all(): array
+    {
+        return $this->punishments;
+    }
+
+    public function rewind(): void
+    {
+        $this->position = 0;
+    }
+
+    public function current(): PlayerPunishment
+    {
+        return $this->punishments[$this->position];
+    }
+
+    public function key(): int
+    {
+        return $this->position;
+    }
+
+    public function next(): void
+    {
+        ++$this->position;
+    }
+
+    public function valid(): bool
+    {
+        return isset($this->punishments[$this->position]);
     }
 
 }

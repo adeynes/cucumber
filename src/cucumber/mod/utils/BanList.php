@@ -21,6 +21,11 @@ class BanList extends PlayerPunishmentList
         $this->punish($ban, $reban);
     }
 
+    public function unban(CPlayer $player): void
+    {
+        $this->pardon($player);
+    }
+
     public function isBanned(CPlayer $player): bool
     {
         return $this->isPunished($player);

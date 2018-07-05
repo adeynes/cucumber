@@ -21,6 +21,11 @@ class MuteList extends PlayerPunishmentList
         $this->punish($mute, $remute);
     }
 
+    public function unmute(CPlayer $player): void
+    {
+        $this->pardon($player);
+    }
+
     public function isMuted(CPlayer $player): bool
     {
         return $this->isPunished($player);

@@ -44,7 +44,12 @@ final class PunishmentManager
         $this->bans->punish(new Ban($player));
     }
 
-    public function ipBan(CPlayer $player)
+    public function unban(CPlayer $player): void
+    {
+        $this->bans->unban($player);
+    }
+
+    public function ipBan(CPlayer $player): void
     {
         $ban = new Ban($player);
         if (isset($this->ip_bans[$player->getIp()]))
@@ -54,13 +59,27 @@ final class PunishmentManager
                 $player->getIp(),
                 [$ban]
             );
-            $this->ip_bans['uid'][$player->getUid()] = new Ban($player);
         }
+        $this->ip_bans['uid']->ban(new Ban($player));
+    }
+
+    public function ipUnban(CPlayer $player): void
+    {
+        foreach($this->ip_bans['ip'][$player->getIp()]->getBans() as $ban)
+        {
+            $this->ip_bans['uid']->unban($ban->getPlayer());
+        }
+        unset($this->ip_bans['ip'][$player->getIp()]);
     }
 
     public function mute(CPlayer $player): void
     {
         $this->mutes->punish(new Mute($player));
+    }
+
+    public function unmute(CPlayer $player): void
+    {
+        $this->mutes->unmute($player);
     }
 
     // TODO: test performance
@@ -69,11 +88,17 @@ final class PunishmentManager
 	    // Player is individually banned
 	    if ($this->bans->isPunished($player)) return true;
 
-	    // Player's IP matches an index in ip_bans[ip]
-	    if (isset($this->ip_bans['ip'][$player->getIp()])) return true;
-
-	    // Player's UID matches an index in ip_bans[uid]
+        // Player's UID matches an index in ip_bans[uid]
+        // This needs to be before the IP check to ensure
+        // that the same player doesn't have two entries
+        // in ip_bans[uid], which could make ip unban a PITA
         if (isset($this->ip_bans['uid'][$player->getUid()])) return true;
+
+	    // Player's IP matches an index in ip_bans[ip]
+        // Also checks isBanned() to add an indiv ban if the
+        // player's IP is banned but they don't have an entry
+	    if (isset($this->ip_bans['ip'][$player->getIp()])
+            && $this->ip_bans['ip'][$player->getIp()]->isBanned($player)) return true;
 
 	    return false;
 	}
