@@ -10,22 +10,22 @@ final class PunishmentManager
 {
 
     /** @var Cucumber */
-	private $plugin;
+    private $plugin;
 
     /** @var BanList */
-	private $bans;
+    private $bans;
 
     /** @var IpBan[][]|BanList[] */
-	private $ip_bans;
+    private $ip_bans;
 
-	/** @var MuteList */
-	private $mutes;
+    /** @var MuteList */
+    private $mutes;
 
-	public function __construct(Cucumber $plugin)
-	{
-		$this->plugin = $plugin;
-		$this->load();
-	}
+    public function __construct(Cucumber $plugin)
+    {
+        $this->plugin = $plugin;
+        $this->load();
+    }
 
     private function load(): void
     {
@@ -83,10 +83,10 @@ final class PunishmentManager
     }
 
     // TODO: test performance
-	public function isBanned(CPlayer $player): bool
-	{
-	    // Player is individually banned
-	    if ($this->bans->isPunished($player)) return true;
+    public function isBanned(CPlayer $player): bool
+    {
+        // Player is individually banned
+        if ($this->bans->isPunished($player)) return true;
 
         // Player's UID matches an index in ip_bans[uid]
         // This needs to be before the IP check to ensure
@@ -94,13 +94,13 @@ final class PunishmentManager
         // in ip_bans[uid], which could make ip unban a PITA
         if (isset($this->ip_bans['uid'][$player->getUid()])) return true;
 
-	    // Player's IP matches an index in ip_bans[ip]
+        // Player's IP matches an index in ip_bans[ip]
         // Also checks isBanned() to add an indiv ban if the
         // player's IP is banned but they don't have an entry
-	    if (isset($this->ip_bans['ip'][$player->getIp()])
+        if (isset($this->ip_bans['ip'][$player->getIp()])
             && $this->ip_bans['ip'][$player->getIp()]->isBanned($player)) return true;
 
-	    return false;
-	}
+        return false;
+    }
 
 }
