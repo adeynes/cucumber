@@ -83,30 +83,57 @@ final class PunishmentManager
         $this->mutes->unmute($player);
     }
 
+    // TODO (isBanned & isMuted) refactor time check for DRY
     // TODO: test performance
     public function isBanned(CPlayer $player): bool
     {
+        $banned = false;
+
         // Player is individually banned
-        if ($this->bans->isBanned($player)) return true;
+        if ($this->bans->isBanned($player)) {
+            if (self::isTimeOver($this->bans->get($player)))
+                $this->bans->unban($player);
+            else
+                $banned = true;
+        }
 
         // Player's UID matches an index in ip_bans[uid]
         // This needs to be before the IP check to ensure
         // that the same player doesn't have two entries
         // in ip_bans[uid], which could make ip unban a PITA
-        if (isset($this->ip_bans['uid'][$player->getUid()])) return true;
+        else if (isset($this->ip_bans['uid'][$player->getUid()])) $banned = true;
 
         // Player's IP matches an index in ip_bans[ip]
         // Also checks isBanned() to add an indiv ban if the
         // player's IP is banned but they don't have an entry
-        if (isset($this->ip_bans['ip'][$player->getIp()])
-            && $this->ip_bans['ip'][$player->getIp()]->isBanned($player)) return true;
+        else if (isset($this->ip_bans['ip'][$player->getIp()])
+            && $this->ip_bans['ip'][$player->getIp()]->isBanned($player)) $banned = true;
 
-        return false;
+        return $banned;
     }
 
     public function isMuted(CPlayer $player): bool
     {
-        return $this->mutes->isMuted($player);
+        $muted = false;
+
+        if ($this->mutes->isMuted($player)) {
+            if (self::isTimeOver($this->mutes->get($player)))
+                $this->unmute($player);
+            else
+                $muted = true;
+        }
+
+        return $muted;
+    }
+
+    /**
+     * Checks whether a punishment is over
+     * @param PlayerPunishment $punishment
+     * @return bool
+     */
+    public static function isTimeOver(PlayerPunishment $punishment): bool
+    {
+        return time() >= $punishment->until;
     }
 
 }

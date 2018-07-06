@@ -68,10 +68,16 @@ abstract class PlayerPunishmentList implements Punishment, \Iterator
             $this->punishments[$player->getUid()]->isPunished($player);
     }
 
+    public function get(CPlayer $player): ?PlayerPunishment
+    {
+        if (!$this->isPunished($player)) return null;
+        return $this->punishments[$player->getUid()];
+    }
+
     /**
      * @return PlayerPunishment[]
      */
-    public function all(): array
+    public function getAll(): array
     {
         return $this->punishments;
     }
