@@ -3,7 +3,8 @@
 namespace cucumber\mod;
 
 use cucumber\Cucumber;
-use cucumber\mod\utils\{BanList, MuteList};
+use cucumber\mod\utils\BanList;
+use cucumber\mod\utils\MuteList;
 use cucumber\utils\CPlayer;
 
 final class PunishmentManager

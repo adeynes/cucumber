@@ -3,8 +3,10 @@
 namespace cucumber;
 
 use cucumber\log\LogManager;
+use cucumber\mod\PlayerPunishment;
 use cucumber\mod\PunishmentManager;
 use cucumber\provider\CProvider;
+use cucumber\task\PardonCheckerTask;
 use cucumber\utils\MessageFactory;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
@@ -157,6 +159,11 @@ final class Cucumber extends PluginBase
     public function log(string $message, string $level = 'info'): void
     {
         $this->getServer()->getLogger()->{$level}($message);
+    }
+
+    public function cancelTask(int $id)
+    {
+        $this->getScheduler()->cancelTask($id);
     }
 
 }

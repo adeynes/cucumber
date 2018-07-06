@@ -2,9 +2,13 @@
 
 namespace cucumber;
 
-use cucumber\event\{CEvent, ChatEvent, CommandEvent};
-use pocketmine\event\{Event, Listener};
-use pocketmine\event\player\{PlayerChatEvent, PlayerCommandPreprocessEvent};
+use cucumber\event\CEvent;
+use cucumber\event\ChatEvent;
+use cucumber\event\CommandEvent;
+use pocketmine\event\Event;
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerChatEvent;
+use pocketmine\event\player\PlayerCommandPreprocessEvent;
 
 final class CListener implements Listener
 {

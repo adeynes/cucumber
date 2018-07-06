@@ -2,22 +2,25 @@
 
 namespace cucumber\mod;
 
+use cucumber\Cucumber;
 use cucumber\utils\CPlayer;
 
 /**
- * The base class for any punishment that punishes
- * players through data that uniquely identifies
- * them, namely name and UID (XUID)
+ * The base class for any punishment that punishes players
+ * through data that uniquely identifies them (XUID)
  */
 abstract class PlayerPunishment
 {
 
     /** @var CPlayer */
     protected $player;
+    /** @var int */
+    public $until;
 
-    public function __construct(CPlayer $player)
+    public function __construct(CPlayer $player, int $until = null)
     {
         $this->player = $player;
+        $this->until = $until ?? strtotime('+10 years');
     }
 
     public function getPlayer(): CPlayer
@@ -27,9 +30,7 @@ abstract class PlayerPunishment
 
     public function isPunished(CPlayer $player): bool
     {
-        return
-            $player->getName() === $this->getPlayer()->getName() ||
-            $player->getUid() === $this->getPlayer()->getUid();
+        return $player->getUid() === $this->getPlayer()->getUid();
     }
 
 }
