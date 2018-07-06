@@ -87,7 +87,7 @@ final class PunishmentManager
     public function isBanned(CPlayer $player): bool
     {
         // Player is individually banned
-        if ($this->bans->isPunished($player)) return true;
+        if ($this->bans->isBanned($player)) return true;
 
         // Player's UID matches an index in ip_bans[uid]
         // This needs to be before the IP check to ensure
@@ -102,6 +102,11 @@ final class PunishmentManager
             && $this->ip_bans['ip'][$player->getIp()]->isBanned($player)) return true;
 
         return false;
+    }
+
+    public function isMuted(CPlayer $player): bool
+    {
+        return $this->mutes->isMuted($player);
     }
 
 }
