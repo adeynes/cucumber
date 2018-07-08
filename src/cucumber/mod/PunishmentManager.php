@@ -49,9 +49,9 @@ final class PunishmentManager
         $this->bans->ban(new Ban($player, $until));
     }
 
-    public function unban(CPlayer $player): void
+    public function unban(string $uid): void
     {
-        $this->bans->unban($player->getUid());
+        $this->bans->unban($uid);
     }
 
     public function ipBan(CPlayer $player): void
@@ -69,19 +69,17 @@ final class PunishmentManager
         $this->mutes->punish(new Mute($player, $until));
     }
 
-    public function unmute(CPlayer $player): void
+    public function unmute(string $uid): void
     {
-        $this->mutes->unmute($player->getUid());
+        $this->mutes->unmute($uid);
     }
 
-    // TODO (isBanned & isMuted) refactor time check for DRY
-    // TODO: test performance
     public function isBanned(CPlayer $player): bool
     {
         $banned = false;
 
         if ($this->bans->isBanned($player)) {
-            if (self::isTimeOver($this->bans->get($player)))
+            if ($this->bans->get($player)->isExpired())
                 $this->bans->unban($player);
             else
                 $banned = true;
@@ -97,23 +95,13 @@ final class PunishmentManager
         $muted = false;
 
         if ($this->mutes->isMuted($player)) {
-            if (self::isTimeOver($this->mutes->get($player)))
+            if ($this->mutes->get($player)->isExpired())
                 $this->unmute($player);
             else
                 $muted = true;
         }
 
         return $muted;
-    }
-
-    /**
-     * Checks whether a punishment is over
-     * @param PlayerPunishment $punishment
-     * @return bool
-     */
-    public static function isTimeOver(PlayerPunishment $punishment): bool
-    {
-        return time() >= $punishment->until;
     }
 
 }

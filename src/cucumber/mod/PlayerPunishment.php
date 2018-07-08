@@ -15,12 +15,12 @@ abstract class PlayerPunishment implements Punishment
     protected $player;
 
     /** @var int */
-    public $until;
+    public $expiration;
 
-    public function __construct(CPlayer $player, int $until = null)
+    public function __construct(CPlayer $player, int $expiration = null)
     {
         $this->player = $player;
-        $this->until = $until ?? strtotime('+10 years');
+        $this->expiration = $expiration ?? strtotime('+10 years');
     }
 
     public function getPlayer(): CPlayer
@@ -31,6 +31,11 @@ abstract class PlayerPunishment implements Punishment
     public function isPunished(CPlayer $player): bool
     {
         return $player->getUid() === $this->getPlayer()->getUid();
+    }
+
+    public function isExpired(): bool
+    {
+        return time() > $this->expiration;
     }
 
 }
