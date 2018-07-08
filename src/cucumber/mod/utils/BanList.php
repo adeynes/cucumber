@@ -12,7 +12,7 @@ class BanList extends PlayerPunishmentList
     {
         self::$messages = [
             'already-punished' => '%name% is already banned!',
-            'not-punished' => '%name% has not been banned!'
+            'not-punished' => '%uid% has not been banned!'
         ];
     }
 
@@ -21,9 +21,9 @@ class BanList extends PlayerPunishmentList
         $this->punish($ban, $reban);
     }
 
-    public function unban(CPlayer $player): void
+    public function unban(string $uid): void
     {
-        $this->pardon($player);
+        $this->pardon($uid);
     }
 
     public function isBanned(CPlayer $player): bool

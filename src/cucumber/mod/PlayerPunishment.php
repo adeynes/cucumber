@@ -2,14 +2,13 @@
 
 namespace cucumber\mod;
 
-use cucumber\Cucumber;
 use cucumber\utils\CPlayer;
 
 /**
  * The base class for any punishment that punishes players
  * through data that uniquely identifies them (XUID)
  */
-abstract class PlayerPunishment
+abstract class PlayerPunishment implements Punishment
 {
 
     /** @var CPlayer */

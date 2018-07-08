@@ -12,7 +12,7 @@ class MuteList extends PlayerPunishmentList
     {
         self::$messages = [
             'already-punished' => '%name% is already muted!',
-            'not-banned' => '%name% has not been muted!'
+            'not-banned' => '%uid% has not been muted!'
         ];
     }
 
@@ -21,9 +21,9 @@ class MuteList extends PlayerPunishmentList
         $this->punish($mute, $remute);
     }
 
-    public function unmute(CPlayer $player): void
+    public function unmute(string $uid): void
     {
-        $this->pardon($player);
+        $this->pardon($uid);
     }
 
     public function isMuted(CPlayer $player): bool

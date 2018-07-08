@@ -28,7 +28,7 @@ final class LogManager
     {
         $this->plugin = $plugin;
         $this->dir = $this->plugin->getConfig()->getNested('log.path') ?? 'log/';
-        $this->loggers = new Stack();
+        $this->loggers = new Stack;
         $messages = $this->plugin->messages;
         $this->templates = $messages->getNested('log.templates');
         $this->time_format = $messages->getNested('log.time-format') ?? 'Y-m-d\TH:i:s';

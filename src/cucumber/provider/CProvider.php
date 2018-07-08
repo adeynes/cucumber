@@ -6,7 +6,7 @@ use cucumber\Cucumber;
 use poggit\libasynql\DataConnector;
 use poggit\libasynql\libasynql;
 
-class CProvider
+class CProvider implements CProviderInterface
 {
 
     /** @var Cucumber */
@@ -24,7 +24,7 @@ class CProvider
             ]);
     }
 
-    public function close()
+    public function close(): void
     {
         $this->database->close();
     }

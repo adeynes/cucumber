@@ -3,6 +3,7 @@
 namespace cucumber\mod;
 
 use cucumber\mod\utils\BanList;
+use cucumber\utils\CException;
 use cucumber\utils\CPlayer;
 
 /**
@@ -24,13 +25,19 @@ class IpBan implements Punishment
     /**
      * @param string $ip
      * @param Ban[] $bans
+     * @throws CException If one of the bans exists twice
      */
     public function __construct(string $ip, array $bans = [])
     {
         $this->ip = $ip;
-        $this->bans = new BanList([]);
+        $this->bans = new BanList();
         foreach ($bans as $ban)
             $this->ban($ban);
+    }
+
+    public function getIp(): string
+    {
+        return $this->ip;
     }
 
     /**
@@ -56,7 +63,7 @@ class IpBan implements Punishment
      */
     public function isPunished(CPlayer $player): bool
     {
-        if($this->bans->isPunished($player))
+        if ($this->bans->isBanned($player))
             return true;
 
         // Check if player's IP is banned. If it is, it means

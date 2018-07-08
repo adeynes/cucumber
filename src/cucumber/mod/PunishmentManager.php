@@ -4,6 +4,7 @@ namespace cucumber\mod;
 
 use cucumber\Cucumber;
 use cucumber\mod\utils\BanList;
+use cucumber\mod\utils\IpBanList;
 use cucumber\mod\utils\MuteList;
 use cucumber\utils\CPlayer;
 
@@ -16,7 +17,7 @@ final class PunishmentManager
     /** @var BanList */
     private $bans;
 
-    /** @var IpBan[][]|BanList[] */
+    /** @var IpBanList */
     private $ip_bans;
 
     /** @var MuteList */
@@ -30,57 +31,47 @@ final class PunishmentManager
 
     private function load(): void
     {
-        $this->bans = new BanList([]);
-        $this->ip_bans = ['ip' => [], 'uid' => new BanList()];
-        $this->mutes = new MuteList([]);
+        $this->bans = new BanList;
+        $this->ip_bans = new IpBanList;
+        $this->mutes = new MuteList;
     }
 
     public function save(): void
     {
-
+        $provider = $this->plugin->getProvider();
+        $provider->saveBans($this->bans);
+        $provider->saveIpBans($this->ip_bans);
+        $provider->saveMutes($this->mutes);
     }
 
-    public function ban(CPlayer $player): void
+    public function ban(CPlayer $player, int $until = null): void
     {
-        $this->bans->punish(new Ban($player));
+        $this->bans->ban(new Ban($player, $until));
     }
 
     public function unban(CPlayer $player): void
     {
-        $this->bans->unban($player);
+        $this->bans->unban($player->getUid());
     }
 
     public function ipBan(CPlayer $player): void
     {
-        $ban = new Ban($player);
-        if (isset($this->ip_bans[$player->getIp()]))
-            $this->ip_bans['ip'][$player->getIp()]->ban($ban);
-        else {
-            $this->ip_bans['ip'][$player->getIp()] = new IpBan(
-                $player->getIp(),
-                [$ban]
-            );
-        }
-        $this->ip_bans['uid']->ban(new Ban($player));
+        $this->ip_bans->ban($player);
     }
 
-    public function ipUnban(CPlayer $player): void
+    public function ipUnban(string $ip): void
     {
-        foreach($this->ip_bans['ip'][$player->getIp()]->getBans() as $ban)
-        {
-            $this->ip_bans['uid']->unban($ban->getPlayer());
-        }
-        unset($this->ip_bans['ip'][$player->getIp()]);
+        $this->ip_bans->unban($ip);
     }
 
-    public function mute(CPlayer $player): void
+    public function mute(CPlayer $player, int $until = null): void
     {
-        $this->mutes->punish(new Mute($player));
+        $this->mutes->punish(new Mute($player, $until));
     }
 
     public function unmute(CPlayer $player): void
     {
-        $this->mutes->unmute($player);
+        $this->mutes->unmute($player->getUid());
     }
 
     // TODO (isBanned & isMuted) refactor time check for DRY
@@ -89,7 +80,6 @@ final class PunishmentManager
     {
         $banned = false;
 
-        // Player is individually banned
         if ($this->bans->isBanned($player)) {
             if (self::isTimeOver($this->bans->get($player)))
                 $this->bans->unban($player);
@@ -97,17 +87,7 @@ final class PunishmentManager
                 $banned = true;
         }
 
-        // Player's UID matches an index in ip_bans[uid]
-        // This needs to be before the IP check to ensure
-        // that the same player doesn't have two entries
-        // in ip_bans[uid], which could make ip unban a PITA
-        else if (isset($this->ip_bans['uid'][$player->getUid()])) $banned = true;
-
-        // Player's IP matches an index in ip_bans[ip]
-        // Also checks isBanned() to add an indiv ban if the
-        // player's IP is banned but they don't have an entry
-        else if (isset($this->ip_bans['ip'][$player->getIp()])
-            && $this->ip_bans['ip'][$player->getIp()]->isBanned($player)) $banned = true;
+        if ($this->ip_bans->isBanned($player)) $banned = true;
 
         return $banned;
     }
