@@ -29,10 +29,7 @@ class CommandEvent extends CPlayerEvent
 
     public function getData(): array
     {
-        return [
-            'name' => $this->getPlayer()->getName(),
-            'command' => $this->getCommand()
-        ];
+        return parent::getData() + ['command' => $this->getCommand()];
     }
 
 }

@@ -106,7 +106,11 @@ final class Cucumber extends PluginBase
     private function initEvents(): void
     {
         $events = [
+            'join' => ['join', 'JoinEvent'],
+            'join-attempt' => ['join attempt', 'JoinAttemptEvent'],
+            'quit' => ['quit', 'QuitEvent'],
             'chat' => ['chat', 'ChatEvent'],
+            'chat-attempt' => ['chat attempt', 'ChatAttemptEvent'],
             'command' => ['command', 'CommandEvent'],
             'moderation' => ['moderation', 'ModerationEvent']
         ];

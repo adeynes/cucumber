@@ -14,7 +14,7 @@ class ModerationEvent extends CPlayerEvent
 
     public function getData(): array
     {
-        return [];
+        return parent::getData();
     }
 
 }

@@ -20,4 +20,9 @@ abstract class CPlayerEvent extends CEvent
         return $this->player;
     }
 
+    public function getData(): array
+    {
+        return ['name' => $this->getPlayer()->getName()];
+    }
+
 }

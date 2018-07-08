@@ -12,6 +12,10 @@ log:
   time-format: Y-m-d\TH:i:s
   templates:
     global: '%time% %type% | %...%'
+    join: '%name% joined'
+    join-attempt: '%name tried joining while banned'
+    quit: '%name quit'
     chat: '%name%: %message%'
+    chat-attempt: '[MUTED] %name%: %message'
     command: '%name%: %command%'
     moderation: '%name% %action% %subject% %extra%'

@@ -67,11 +67,9 @@ final class LogManager
      */
     public function formatEventMessage(CEvent $ev): string
     {
-        $data = $ev->getData();
-        $type = $ev->getType();
         return $this->plugin->getMessageFactory()->format(
             $this->global_template,
-            $this->generateGlobalTemplateData($ev->getTemplate(), $type, $data)
+            $this->generateGlobalTemplateData($ev->getTemplate(), $ev->getType(), $ev->getData())
         );
     }
 
@@ -87,7 +85,10 @@ final class LogManager
         return [
             'time' => date($this->time_format),
             'type' => $type,
-            '...' => $this->plugin->getMessageFactory()->format($template, $data)
+            '...' => $this->plugin->getMessageFactory()->format(
+                $template,
+                $data
+            )
         ];
     }
 

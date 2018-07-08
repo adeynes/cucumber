@@ -23,10 +23,7 @@ class ChatEvent extends CPlayerEvent
 
     public function getData(): array
     {
-        return [
-            'name' => $this->getPlayer()->getName(),
-            'message' => $this->getMessage()
-        ];
+        return parent::getData() + ['message' => $this->getMessage()];
     }
 
 }
