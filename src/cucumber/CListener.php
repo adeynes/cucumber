@@ -5,10 +5,12 @@ namespace cucumber;
 use cucumber\event\CEvent;
 use cucumber\event\ChatEvent;
 use cucumber\event\CommandEvent;
+use cucumber\utils\CPlayer;
 use pocketmine\event\Event;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerCommandPreprocessEvent;
+use pocketmine\event\player\PlayerPreLoginEvent;
 
 final class CListener implements Listener
 {
@@ -22,6 +24,8 @@ final class CListener implements Listener
 
     public function onChat(PlayerChatEvent $ev)
     {
+        if ($this->plugin->getPunishmentManager()->isMuted(new CPlayer($ev->getPlayer())))
+            $ev->setCancelled();
         $this->callEvent(
             new ChatEvent($ev->getPlayer(), $ev->getMessage())
         );
@@ -33,6 +37,13 @@ final class CListener implements Listener
             $this->callEvent(
                 new CommandEvent($ev->getPlayer(), $command)
             );
+    }
+
+    // Detect if player is banned
+    public function onPreLogin(PlayerPreLoginEvent $ev)
+    {
+        if ($this->plugin->getPunishmentManager()->isBanned(new CPlayer($ev->getPlayer())))
+            $ev->setCancelled();
     }
 
     /**

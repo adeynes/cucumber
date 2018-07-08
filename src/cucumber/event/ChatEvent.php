@@ -13,7 +13,7 @@ class ChatEvent extends CPlayerEvent
     public function __construct(Player $player, string $message)
     {
         $this->message = $message;
-        parent::__construct('chat', $player);
+        parent::__construct($player);
     }
 
     public function getMessage(): string

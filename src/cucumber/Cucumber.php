@@ -46,6 +46,7 @@ final class Cucumber extends PluginBase
         $this->initProvider();
         $this->initLog();
         $this->initMod();
+        $this->initEvents();
         $this->registerCommands();
 
         $this->getServer()->getPluginManager()->registerEvents(new CListener($this), $this);
@@ -100,6 +101,22 @@ final class Cucumber extends PluginBase
     private function initMod(): void
     {
         $this->punishment_manager = new PunishmentManager($this);
+    }
+
+    private function initEvents(): void
+    {
+        $events = [
+            'chat' => ['chat', 'ChatEvent'],
+            'command' => ['command', 'CommandEvent'],
+            'moderation' => ['moderation', 'ModerationEvent']
+        ];
+
+        foreach ($events as $type => $class)
+            call_user_func(
+                ['\\cucumber\\event\\' . $class[1], 'init'],
+                $class[0],
+                $this->messages->getNested('log.templates.' . $type)
+            );
     }
 
     private function registerCommands(): void

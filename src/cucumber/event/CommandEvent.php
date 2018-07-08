@@ -14,7 +14,7 @@ class CommandEvent extends CPlayerEvent
     public function __construct(Player $player, string $command)
     {
         $this->command = $command;
-        parent::__construct('command', $player);
+        parent::__construct($player);
     }
 
     public function getPlayer(): Player

@@ -18,8 +18,8 @@ final class LogManager
     /** @var Stack<Logger> */
     private $loggers;
 
-    /** @var string[] */
-    private $templates;
+    /** @var string */
+    private $global_template;
 
     /** @var string */
     private $time_format;
@@ -30,7 +30,7 @@ final class LogManager
         $this->dir = $this->plugin->getConfig()->getNested('log.path') ?? 'log/';
         $this->loggers = new Stack;
         $messages = $this->plugin->messages;
-        $this->templates = $messages->getNested('log.templates');
+        $this->global_template = $messages->getNested('log.templates.global');
         $this->time_format = $messages->getNested('log.time-format') ?? 'Y-m-d\TH:i:s';
     }
 
@@ -68,31 +68,26 @@ final class LogManager
     public function formatEventMessage(CEvent $ev): string
     {
         $data = $ev->getData();
-        $type = $data['type'];
-        unset($data['type']);
+        $type = $ev->getType();
         return $this->plugin->getMessageFactory()->format(
-            $this->templates['global'],
-            $this->generateTemplateData($type, $data)
+            $this->global_template,
+            $this->generateGlobalTemplateData($ev->getTemplate(), $type, $data)
         );
     }
 
     /**
-     * Generates data for the global template
-     * Tags are "time", "type", "..." (the actual log
-     * message generate by LogManager::formatEventMessage())
+     * Generates the data for the global template
+     * @param string $template The event message template
      * @param string $type
      * @param array $data
      * @return array
      */
-    private function generateTemplateData(string $type, array $data): array
+    private function generateGlobalTemplateData(string $template, string $type, array $data): array
     {
         return [
             'time' => date($this->time_format),
             'type' => $type,
-            '...' => $this->plugin->getMessageFactory()->format(
-                $this->templates[$type],
-                $data
-            )
+            '...' => $this->plugin->getMessageFactory()->format($template, $data)
         ];
     }
 

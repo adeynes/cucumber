@@ -26,7 +26,7 @@ class CPlayer
      * @param string $ip
      * @param string|null $uid
      */
-    public function __construct($player, string $ip, string $uid = null)
+    public function __construct($player, string $ip = null, string $uid = null)
     {
         if ($player instanceof Player)
             $unpacked = [$player->getName(), $player->getAddress(), self::getSafeXuid($player)];

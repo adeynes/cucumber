@@ -15,13 +15,17 @@ abstract class CEvent extends Event
     /** @var string */
     protected static $type;
 
-    public function __construct(string $type)
+    /** @var string */
+    protected static $template;
+
+    public static function init(string $type, string $template): void
     {
         self::$type = $type;
+        self::$template = $template;
     }
 
     /**
-     * Returns the values that will replace populate the message template
+     * Returns the values that will populate the message template
      * @return array
      */
     abstract public function getData(): array;
@@ -29,6 +33,11 @@ abstract class CEvent extends Event
     public function getType(): string
     {
         return self::$type;
+    }
+
+    public function getTemplate(): string
+    {
+        return self::$template;
     }
 
 }
