@@ -3,19 +3,12 @@
 namespace cucumber\mod\utils;
 
 use cucumber\mod\PlayerPunishment;
-use cucumber\mod\Punishment;
 use cucumber\utils\CException;
 use cucumber\utils\CPlayer;
 use cucumber\utils\ErrorCodes;
 
-abstract class PlayerPunishmentList implements Punishment
+abstract class PlayerPunishmentList extends PunishmentList
 {
-
-    /** @var string[] */
-    protected static $messages;
-
-    /** @var int */
-    protected $position = 0;
 
     /** @var PlayerPunishment[] */
     protected $punishments = [];
@@ -30,8 +23,6 @@ abstract class PlayerPunishmentList implements Punishment
         foreach ($punishments as $punishment)
             $this->punish($punishment);
     }
-
-    abstract protected static function initMessages(): void;
 
     /**
      * @param PlayerPunishment $punishment
@@ -49,6 +40,7 @@ abstract class PlayerPunishmentList implements Punishment
                 ['name' => $player->getName()],
                 ErrorCodes::ATTEMPT_PUNISH_PUNISHED
             );
+
         $this->punishments[$uid] = $punishment;
     }
 
@@ -64,20 +56,20 @@ abstract class PlayerPunishmentList implements Punishment
                 ['uid' => $uid],
                 ErrorCodes::ATTEMPT_PARDON_NOT_PUNISHED
             );
-        unset($this->punishments[$uid]);
 
+        unset($this->punishments[$uid]);
     }
 
     public function isPunished(CPlayer $player): bool
     {
-        return isset($this->punishments[$player->getUid()]) &&
-            $this->punishments[$player->getUid()]->isPunished($player);
+        $uid = $player->getUid();
+        return isset($this->punishments[$uid]) &&
+            $this->punishments[$uid]->isPunished($player);
     }
 
     public function get(CPlayer $player): ?PlayerPunishment
     {
-        if (!$this->isPunished($player)) return null;
-        return $this->punishments[$player->getUid()];
+        return $this->isPunished($player) ? $this->punishments[$player->getUid()] : null;
     }
 
     /**
@@ -88,24 +80,9 @@ abstract class PlayerPunishmentList implements Punishment
         return $this->punishments;
     }
 
-    public function rewind(): void
-    {
-        $this->position = 0;
-    }
-
     public function current(): PlayerPunishment
     {
         return $this->punishments[$this->position];
-    }
-
-    public function key(): int
-    {
-        return $this->position;
-    }
-
-    public function next(): void
-    {
-        ++$this->position;
     }
 
     public function valid(): bool

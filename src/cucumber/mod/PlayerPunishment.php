@@ -13,6 +13,7 @@ abstract class PlayerPunishment implements Punishment
 
     /** @var CPlayer */
     protected $player;
+
     /** @var int */
     public $until;
 

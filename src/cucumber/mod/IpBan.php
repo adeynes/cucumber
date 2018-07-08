@@ -6,10 +6,6 @@ use cucumber\mod\utils\BanList;
 use cucumber\utils\CException;
 use cucumber\utils\CPlayer;
 
-/**
- * A list of PlayerPunishment. Addition of a punishment is triggered
- * if a player attempts to join with an IP that matches the list's
- */
 class IpBan implements Punishment
 {
 
@@ -30,7 +26,7 @@ class IpBan implements Punishment
     public function __construct(string $ip, array $bans = [])
     {
         $this->ip = $ip;
-        $this->bans = new BanList();
+        $this->bans = new BanList;
         foreach ($bans as $ban)
             $this->ban($ban);
     }
@@ -40,9 +36,6 @@ class IpBan implements Punishment
         return $this->ip;
     }
 
-    /**
-     * @return BanList
-     */
     public function getBans(): BanList
     {
         return $this->bans;
@@ -63,17 +56,7 @@ class IpBan implements Punishment
      */
     public function isPunished(CPlayer $player): bool
     {
-        if ($this->bans->isBanned($player))
-            return true;
-
-        // Check if player's IP is banned. If it is, it means
-        // they don't have a Ban entry as we didn't return above
-        if ($player->getIp() === $this->ip) {
-            $this->ban(new Ban($player));
-            return true;
-        }
-
-        return false;
+        return $player->getIp() === $this->getIp() || $this->getBans()->isBanned($player);
     }
 
     public function isBanned(CPlayer $player): bool

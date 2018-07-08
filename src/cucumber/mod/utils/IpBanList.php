@@ -4,25 +4,17 @@ namespace cucumber\mod\utils;
 
 use cucumber\mod\Ban;
 use cucumber\mod\IpBan;
-use cucumber\mod\Punishment;
 use cucumber\utils\CException;
 use cucumber\utils\CPlayer;
 use cucumber\utils\ErrorCodes;
 
-// TODO: Refactor this & PlayerPunishmentList, *we /really/ need generics*
-class IpBanList implements Punishment
+class IpBanList extends PunishmentList
 {
-
-    /** @var string[] */
-    protected static $messages;
-
-    /** @var int */
-    protected $position = 0;
 
     /** @var IpBan[] */
     protected $ip_bans = [];
 
-    /** @var BanList */
+    /** @var Ban[][] */
     protected $indiv_bans;
 
     /**
@@ -54,7 +46,7 @@ class IpBanList implements Punishment
         else
             $this->ip_bans[$ip] = new IpBan($ip, $ban);
 
-        $this->indiv_bans->ban($ban, true);
+        $this->indiv_bans[$player->getUid()][$ip] = $ban;
     }
 
     /**
@@ -69,8 +61,10 @@ class IpBanList implements Punishment
                 ['ip' => $ip],
                 ErrorCodes::ATTEMPT_PARDON_NOT_PUNISHED
             );
+
         foreach ($this->ip_bans[$ip]->getBans()->getAll() as $ban)
-            $this->indiv_bans->unban($ban->getPlayer()->getUid());
+            unset($this->indiv_bans[$ban->getPlayer()->getUid()][$ip]);
+
         unset($this->ip_bans[$ip]);
     }
 
@@ -78,7 +72,7 @@ class IpBanList implements Punishment
     {
         return
             (isset($this->ip_bans[$player->getIp()]) && $this->ip_bans[$player->getIp()]->isBanned($player)) ||
-            $this->indiv_bans->isBanned($player);
+            !empty($this->indiv_bans[$player->getUid()]);
     }
 
     public function isBanned(CPlayer $player): bool
@@ -99,24 +93,9 @@ class IpBanList implements Punishment
         return $this->ip_bans;
     }
 
-    public function rewind(): void
-    {
-        $this->position = 0;
-    }
-
-    public function current(): Punishment
+    public function current(): IpBan
     {
         return $this->ip_bans[$this->position];
-    }
-
-    public function key(): int
-    {
-        return $this->position;
-    }
-
-    public function next(): void
-    {
-        ++$this->position;
     }
 
     public function valid(): bool
