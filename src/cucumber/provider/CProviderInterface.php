@@ -2,7 +2,6 @@
 
 namespace cucumber\provider;
 
-use cucumber\mod\IpBan;
 use cucumber\mod\utils\BanList;
 use cucumber\mod\utils\IpBanList;
 use cucumber\mod\utils\MuteList;

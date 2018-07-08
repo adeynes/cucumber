@@ -10,7 +10,7 @@ use pocketmine\utils\TextFormat;
 /**
  * Sends a raw private message to a player
  */
-class RawtellCommand extends CCommand
+class RawtellCommand extends BaseCommand
 {
 
     public function __construct(Cucumber $plugin)

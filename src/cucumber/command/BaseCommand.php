@@ -6,7 +6,7 @@ use cucumber\Cucumber;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 
-abstract class CCommand extends Command
+abstract class BaseCommand extends Command
 {
 
     /** @var Cucumber */
@@ -20,7 +20,7 @@ abstract class CCommand extends Command
 
     /**
      * This contains boilerplate code e.g. permission
-     * checking, and executes CCommand::_execute()
+     * checking, and executes BaseCommand::_execute()
      * @param CommandSender $sender
      * @param string $label
      * @param array $args
