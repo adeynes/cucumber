@@ -3,9 +3,9 @@
 namespace cucumber\mod;
 
 use cucumber\Cucumber;
-use cucumber\mod\utils\BanList;
-use cucumber\mod\utils\IpBanList;
-use cucumber\mod\utils\MuteList;
+use cucumber\mod\lists\BanList;
+use cucumber\mod\lists\IpBanList;
+use cucumber\mod\lists\MuteList;
 use cucumber\utils\CPlayer;
 
 final class PunishmentManager
@@ -56,7 +56,7 @@ final class PunishmentManager
 
     public function ipBan(CPlayer $player): void
     {
-        $this->ip_bans->ban($player);
+        $this->ip_bans->ban(new IpBan($player->getIp()));
     }
 
     public function ipUnban(string $ip): void
@@ -66,7 +66,7 @@ final class PunishmentManager
 
     public function mute(CPlayer $player, int $until = null): void
     {
-        $this->mutes->punish(new Mute($player, $until));
+        $this->mutes->mute(new Mute($player, $until));
     }
 
     public function unmute(string $uid): void

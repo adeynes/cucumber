@@ -8,7 +8,7 @@ use cucumber\utils\CPlayer;
  * The base class for any punishment that punishes players
  * through data that uniquely identifies them (XUID)
  */
-abstract class PlayerPunishment implements Punishment
+abstract class PlayerPunishment extends SimplePunishment implements Expirable
 {
 
     /** @var CPlayer */
@@ -21,6 +21,7 @@ abstract class PlayerPunishment implements Punishment
     {
         $this->player = $player;
         $this->expiration = $expiration ?? strtotime('+10 years');
+        parent::__construct('getUid', $player->getUid());
     }
 
     public function getPlayer(): CPlayer
@@ -28,9 +29,9 @@ abstract class PlayerPunishment implements Punishment
         return $this->player;
     }
 
-    public function isPunished(CPlayer $player): bool
+    public function getUid(): string
     {
-        return $player->getUid() === $this->getPlayer()->getUid();
+        return $this->getCheck();
     }
 
     public function isExpired(): bool

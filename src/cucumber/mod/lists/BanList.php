@@ -1,6 +1,6 @@
 <?php
 
-namespace cucumber\mod\utils;
+namespace cucumber\mod\lists;
 
 use cucumber\mod\Ban;
 use cucumber\utils\CPlayer;
@@ -8,22 +8,14 @@ use cucumber\utils\CPlayer;
 class BanList extends PlayerPunishmentList
 {
 
-    protected static function initMessages(): void
+    public function ban(Ban $ban): void
     {
-        self::$messages = [
-            'already-punished' => '%name% is already banned!',
-            'not-punished' => '%uid% has not been banned!'
-        ];
-    }
-
-    public function ban(Ban $ban, $reban = false): void
-    {
-        $this->punish($ban, $reban);
+        $this->add($ban);
     }
 
     public function unban(string $uid): void
     {
-        $this->pardon($uid);
+        $this->remove($uid);
     }
 
     public function isBanned(CPlayer $player): bool

@@ -2,9 +2,9 @@
 
 namespace cucumber\provider;
 
-use cucumber\mod\utils\BanList;
-use cucumber\mod\utils\IpBanList;
-use cucumber\mod\utils\MuteList;
+use cucumber\mod\lists\BanList;
+use cucumber\mod\lists\IpBanList;
+use cucumber\mod\lists\MuteList;
 
 interface CProviderInterface
 {

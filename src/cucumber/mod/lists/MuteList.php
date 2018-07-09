@@ -1,6 +1,6 @@
 <?php
 
-namespace cucumber\mod\utils;
+namespace cucumber\mod\lists;
 
 use cucumber\mod\Mute;
 use cucumber\utils\CPlayer;
@@ -8,22 +8,14 @@ use cucumber\utils\CPlayer;
 class MuteList extends PlayerPunishmentList
 {
 
-    protected static function initMessages(): void
+    public function mute(Mute $mute): void
     {
-        self::$messages = [
-            'already-punished' => '%name% is already muted!',
-            'not-banned' => '%uid% has not been muted!'
-        ];
-    }
-
-    public function mute(Mute $mute, $remute): void
-    {
-        $this->punish($mute, $remute);
+        $this->add($mute);
     }
 
     public function unmute(string $uid): void
     {
-        $this->pardon($uid);
+        $this->remove($uid);
     }
 
     public function isMuted(CPlayer $player): bool

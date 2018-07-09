@@ -1,6 +1,6 @@
 <?php
 
-namespace cucumber\mod\utils;
+namespace cucumber\mod\lists;
 
 use cucumber\mod\Punishment;
 
@@ -8,18 +8,19 @@ use cucumber\mod\Punishment;
 abstract class PunishmentList implements Punishment, \Iterator
 {
 
-    /** @var string[] */
-    protected static $messages;
-
     /** @var int */
     protected $position = 0;
 
-    abstract protected static function initMessages(): void;
+    /** @var Punishment[] */
+    protected $punishments = [];
 
     /**
      * @return Punishment[]
      */
-    abstract public function getAll(): array;
+    public function getAll(): array
+    {
+        return $this->punishments;
+    }
 
     public function rewind(): void
     {
@@ -34,6 +35,16 @@ abstract class PunishmentList implements Punishment, \Iterator
     public function next(): void
     {
         ++$this->position;
+    }
+
+    public function current(): Punishment
+    {
+        return $this->punishments[$this->position];
+    }
+
+    public function valid(): bool
+    {
+        return isset($this->punishments[$this->position]);
     }
 
 }

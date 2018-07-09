@@ -1,93 +1,54 @@
 <?php
 
-namespace cucumber\mod\utils;
+namespace cucumber\mod\lists;
 
-use cucumber\mod\PlayerPunishment;
-use cucumber\utils\CException;
-use cucumber\utils\CPlayer;
+use cucumber\mod\SimplePunishment;
 use cucumber\utils\ErrorCodes;
 
-abstract class PlayerPunishmentList extends PunishmentList
+abstract class SimplePunishmentList extends PunishmentList
 {
 
-    /** @var PlayerPunishment[] */
-    protected $punishments = [];
-
     /**
-     * @param PlayerPunishment[] $punishments
-     * @throws CException If one of the punishments exists twice
+     * @param SimplePunishment[] $punishments
+     * @throws \Exception If one of the punishments exists twice
      */
     public function __construct(array $punishments = [])
     {
-        self::initMessages();
         foreach ($punishments as $punishment)
-            $this->punish($punishment);
+            $this->add($punishment);
     }
 
     /**
-     * @param PlayerPunishment $punishment
-     * @param bool $repunish Repunish the player is they already are (does not throw exception)
-     * @throws CException If the player is already punished
+     * @param SimplePunishment $punishment
+     * @throws \Exception If the player is already punished
      */
 
-    public function punish(PlayerPunishment $punishment, bool $repunish = false): void
+    public function add(SimplePunishment $punishment): void
     {
-        $player = $punishment->getPlayer();
-        $uid = $player->getUid();
-        if (isset($this->punishments[$uid]) && !$repunish)
-            throw new CException(
-                self::$messages['already-punished'],
-                ['name' => $player->getName()],
+        $check = $punishment->getCheck();
+
+        if (isset($this->punishments[$check]))
+            throw new \Exception(
+                'Attempted to add already-punished ' . $check . ' to punishment list',
                 ErrorCodes::ATTEMPT_PUNISH_PUNISHED
             );
 
-        $this->punishments[$uid] = $punishment;
+        $this->punishments[$check] = $punishment;
     }
 
     /**
-     * @param string $uid
-     * @throws CException If the player isn't punished
+     * @param mixed $check
+     * @throws \Exception If the player isn't punished
      */
-    public function pardon(string $uid): void
+    public function remove($check): void
     {
-        if (!isset($this->punishments[$uid]))
-            throw new CException(
-                self::$messages['not-punished'],
-                ['uid' => $uid],
+        if (!isset($this->punishments[$check]))
+            throw new \Exception(
+                'Attempted tp remove not punished ' . $check . ' from punishment list',
                 ErrorCodes::ATTEMPT_PARDON_NOT_PUNISHED
             );
 
-        unset($this->punishments[$uid]);
-    }
-
-    public function isPunished(CPlayer $player): bool
-    {
-        $uid = $player->getUid();
-        return isset($this->punishments[$uid]) &&
-            $this->punishments[$uid]->isPunished($player);
-    }
-
-    public function get(CPlayer $player): ?PlayerPunishment
-    {
-        return $this->isPunished($player) ? $this->punishments[$player->getUid()] : null;
-    }
-
-    /**
-     * @return PlayerPunishment[]
-     */
-    public function getAll(): array
-    {
-        return $this->punishments;
-    }
-
-    public function current(): PlayerPunishment
-    {
-        return $this->punishments[$this->position];
-    }
-
-    public function valid(): bool
-    {
-        return isset($this->punishments[$this->position]);
+        unset($this->punishments[$check]);
     }
 
 }
