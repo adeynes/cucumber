@@ -5,6 +5,7 @@ namespace cucumber\log;
 use cucumber\Cucumber;
 use cucumber\event\CEvent;
 use cucumber\utils\ds\Stack;
+use cucumber\utils\MessageFactory;
 
 final class LogManager
 {
@@ -67,7 +68,7 @@ final class LogManager
      */
     public function formatEventMessage(CEvent $ev): string
     {
-        return $this->plugin->getMessageFactory()->format(
+        return MessageFactory::format(
             $this->global_template,
             $this->generateGlobalTemplateData($ev->getTemplate(), $ev->getType(), $ev->getData())
         );
@@ -85,7 +86,7 @@ final class LogManager
         return [
             'time' => date($this->time_format),
             'type' => $type,
-            '...' => $this->plugin->getMessageFactory()->format(
+            '...' => MessageFactory::format(
                 $template,
                 $data
             )

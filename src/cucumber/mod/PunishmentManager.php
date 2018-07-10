@@ -3,10 +3,9 @@
 namespace cucumber\mod;
 
 use cucumber\Cucumber;
-use cucumber\mod\lists\BanList;
-use cucumber\mod\lists\IpBanList;
-use cucumber\mod\lists\MuteList;
+use cucumber\utils\CException;
 use cucumber\utils\CPlayer;
+use cucumber\utils\ErrorCodes;
 
 final class PunishmentManager
 {
@@ -14,26 +13,48 @@ final class PunishmentManager
     /** @var Cucumber */
     private $plugin;
 
-    /** @var BanList */
+    /** @var string[][] */
+    private $messages;
+
+    /** @var SimplePunishment[] */
     private $bans;
 
-    /** @var IpBanList */
+    /** @var SimplePunishment[] */
     private $ip_bans;
 
-    /** @var MuteList */
+    /** @var SimplePunishment[] */
     private $mutes;
 
     public function __construct(Cucumber $plugin)
     {
         $this->plugin = $plugin;
+        $this->initMessages();
         $this->load();
+    }
+
+    private function initMessages(): void
+    {
+        $this->messages = [
+            'ban' => [
+                'already-banned' => '%player% is already banned!',
+                'not-banned' => '%player% is not banned!'
+            ],
+            'ip-ban' => [
+                'already-banned' => 'IP %ip% is already banned!',
+                'not-banned' => 'IP %ip% is not banned!',
+            ],
+            'mute' => [
+                'already-muted' => '%player% is already muted!',
+                'not-muted' => '%player% is not muted!'
+            ]
+        ];
     }
 
     private function load(): void
     {
-        $this->bans = new BanList;
-        $this->ip_bans = new IpBanList;
-        $this->mutes = new MuteList;
+        $this->bans = [];
+        $this->ip_bans = [];
+        $this->mutes = [];
     }
 
     public function save(): void
@@ -44,64 +65,151 @@ final class PunishmentManager
         $provider->saveMutes($this->mutes);
     }
 
-    public function ban(CPlayer $player, int $until = null): void
+    public function playerPunish(CPlayer $player, SimplePunishment $punishment, array &$storage, string $error_message)
     {
-        $this->bans->ban(new Ban($player, $until));
+        $uid = $player->getUid();
+
+        if (isset($storage[$uid]))
+            throw new CException(
+                $error_message,
+                ['player' => $player->getName()],
+                ErrorCodes::ATTEMPT_PUNISH_PUNISHED
+            );
+
+        $storage[$uid] = $punishment;
     }
 
-    public function unban(string $uid): void
+    public function playerPardon(CPlayer $player, array &$storage, string $error_message)
     {
-        $this->bans->unban($uid);
+        $uid = $player->getUid();
+
+        if (!isset($storage[$uid]))
+            throw new CException(
+                $error_message,
+                ['player' => $player->getName()],
+                ErrorCodes::ATTEMPT_PARDON_NOT_PUNISHED
+            );
+
+        unset($storage[$uid]);
     }
 
-    public function ipBan(CPlayer $player): void
+    /**
+     * @param CPlayer $player
+     * @param string|null $reason
+     * @param int|null $expiration
+     * @throws CException If the player is already banned
+     */
+    public function ban(CPlayer $player, string $reason = null, int $expiration = null): void
     {
-        $this->ip_bans->ban(new IpBan($player->getIp()));
+        $this->playerPunish(
+            $player,
+            new SimplePunishment($reason, $expiration),
+            $this->bans,
+            $this->messages['ban']['already-banned']
+        );
     }
 
-    public function ipUnban(string $ip): void
+    /**
+     * @param CPlayer $player
+     * @throws CException If the player is not banned
+     */
+    public function unban(CPlayer $player): void
     {
-        $this->ip_bans->unban($ip);
+        $this->playerPardon($player, $this->bans, $this->messages['ban']['not-banned']);
     }
 
-    public function mute(CPlayer $player, int $until = null): void
+    /**
+     * @param int $ip
+     * @param string|null $reason
+     * @param int|null $expiration
+     * @throws CException If the IP is already banned
+     */
+    public function ipBan(int $ip, string $reason = null, int $expiration = null): void
     {
-        $this->mutes->mute(new Mute($player, $until));
+        if (isset($this->ip_bans[$ip]))
+            throw new CException(
+                $this->messages['ip-ban']['already-banned'],
+                ['ip' => $ip],
+                ErrorCodes::ATTEMPT_PUNISH_PUNISHED
+            );
+
+        $this->ip_bans[$ip] = new SimplePunishment($reason, $expiration);
     }
 
-    public function unmute(string $uid): void
+    /**
+     * @param int $ip
+     * @throws CException If the IP is not banned
+     */
+    public function ipUnban(int $ip)
     {
-        $this->mutes->unmute($uid);
+        if (!isset($this->ip_bans[$ip]))
+            throw new CException(
+                $this->messages['ip-ban']['not-banned'],
+                ['ip' => $ip],
+                ErrorCodes::ATTEMPT_PARDON_NOT_PUNISHED
+            );
+
+        unset($this->ip_bans[$ip]);
+    }
+
+    /**
+     * @param CPlayer $player
+     * @param string|null $reason
+     * @param int|null $expiration
+     * @throws CException If the player is already muted
+     */
+    public function mute(CPlayer $player, string $reason = null, int $expiration = null): void
+    {
+        $this->playerPunish(
+            $player,
+            new SimplePunishment($reason, $expiration),
+            $this->mutes,
+            $this->messages['mute']['already-muted']
+        );
+    }
+
+    /**
+     * @param CPlayer $player
+     * @throws CException If the player is not muted
+     */
+    public function unmute(CPlayer $player): void
+    {
+        $this->playerPardon($player, $this->mutes, $this->messages['mute']['not-muted']);
     }
 
     public function isBanned(CPlayer $player): bool
     {
         $banned = false;
+        $uid = $player->getUid();
+        $ip = $player->getIp();
 
-        if ($this->bans->isBanned($player)) {
-            if ($this->bans->get($player)->isExpired())
-                $this->bans->unban($player);
-            else
-                $banned = true;
+        if (isset($this->bans[$uid])) {
+            if ($this->bans[$uid]->isExpired())
+                $this->unban($player);
+            else $banned = true;
         }
 
-        if ($this->ip_bans->isBanned($player)) $banned = true;
+        if (isset($this->ip_bans[$ip])) {
+            if ($this->ip_bans[$ip]->isExpired())
+                $this->ipUnban($ip);
+            else $banned = true;
+        }
 
         return $banned;
     }
 
     public function isMuted(CPlayer $player): bool
     {
-        $muted = false;
+        $banned = false;
+        $uid = $player->getUid();
 
-        if ($this->mutes->isMuted($player)) {
-            if ($this->mutes->get($player)->isExpired())
+        if (isset($this->mutes[$uid])) {
+            if ($this->bans[$uid]->isExpired())
                 $this->unmute($player);
-            else
-                $muted = true;
+            else $banned = true;
         }
 
-        return $muted;
+        return $banned;
     }
 
 }

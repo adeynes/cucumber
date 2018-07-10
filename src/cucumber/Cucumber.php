@@ -24,9 +24,6 @@ final class Cucumber extends PluginBase
     /** @var LogManager */
     private $log_manager;
 
-    /** @var MessageFactory */
-    private $message_factory;
-
     /** @var PunishmentManager */
     private $punishment_manager;
 
@@ -73,9 +70,8 @@ final class Cucumber extends PluginBase
     }
 
     /**
-     * Instantiate LogManager & MessageFactory,
-     * and push loggers defined under
-     * log.loggers to the logger stack
+     * Instantiate LogManager & push loggers defined
+     * under log.loggers to the logger stack
      * @return void
      */
     private function initLog(): void
@@ -90,8 +86,6 @@ final class Cucumber extends PluginBase
             $args = [$this] + $args;
             $this->getLogManager()->addLogger(new $logger(...$args));
         }
-
-        $this->message_factory = new MessageFactory($this);
     }
 
     /**
@@ -156,11 +150,6 @@ final class Cucumber extends PluginBase
     public function getLogManager(): LogManager
     {
         return $this->log_manager;
-    }
-
-    public function getMessageFactory(): MessageFactory
-    {
-        return $this->message_factory;
     }
 
     public function getPunishmentManager(): PunishmentManager

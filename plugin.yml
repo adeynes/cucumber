@@ -30,7 +30,7 @@ commands:
 
   unmute:
     description: 'Unmute a player'
-    usage: '/unmute <player> [reason]'
+    usage: '/unmute <player>'
     permission: cucumber.command.unmute
 
   ban:
@@ -40,18 +40,23 @@ commands:
 
   pardon:
     description: 'Pardons a player (undoes a /ban)'
-    usage: '/pardon <player> [reason]'
+    usage: '/pardon <player>'
     permission: cucumber.command.pardon
 
-  uban:
-    description: 'Perform a /ban on a player and ban their IP'
-     usage: '/uban <player|-i <ip>> [reason] [-d <duration>]'
+  ipban:
+    description: 'Bans an IP'
+    usage: '/ipban <-p <player>|-i <ip>> [reason]'
+    permission: cucumber.command.ipban
+
+  ippardon:
+    description: 'Pardons an IP (undoes a /ipban)'
+    usage: '/ippardon <ip>'
     permission: cucumber.command.uban
 
-  upardon:
-    description: 'Pardons a player and their IP (undoes a /uban)':
-    usage: '/upardon <player|-i <ip>> [reason]'
-    permission: cucumber.command.upardon
+  uban:
+    description: 'Bans an IP and all players who join with it. Irreversible'
+    usage: '/uban <-p <player>|-i <ip>> [reason]'
+    permission: cucumber.command.uban
 
 permissions:
   cucumber.command.rawtell:

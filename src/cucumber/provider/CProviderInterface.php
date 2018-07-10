@@ -2,21 +2,42 @@
 
 namespace cucumber\provider;
 
-use cucumber\mod\lists\BanList;
-use cucumber\mod\lists\IpBanList;
-use cucumber\mod\lists\MuteList;
+
+use cucumber\mod\SimplePunishment;
 
 interface CProviderInterface
 {
 
     public function close(): void;
 
-    public function loadBans(): BanList;
-    public function loadIpBans(): IpBanList;
-    public function loadMutes(): MuteList;
+    /**
+     * @return SimplePunishment[]
+     */
+    public function loadBans(): array;
 
-    public function saveBans(BanList $bans): void;
-    public function saveIpBans(IpBanList $ip_bans): void;
-    public function saveMutes(MuteList $mutes): void;
+    /**
+     * @return SimplePunishment[]
+     */
+    public function loadIpBans(): array;
+
+    /**
+     * @return SimplePunishment[]
+     */
+    public function loadMutes(): array;
+
+    /**
+     * @param SimplePunishment[] $bans
+     */
+    public function saveBans(array $bans): void;
+
+    /**
+     * @param SimplePunishment[] $ip_bans
+     */
+    public function saveIpBans(array $ip_bans): void;
+
+    /**
+     * @param SimplePunishment[] $mutes
+     */
+    public function saveMutes(array $mutes): void;
 
 }

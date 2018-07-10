@@ -2,37 +2,29 @@
 
 namespace cucumber\mod;
 
-use cucumber\utils\CPlayer;
-
-abstract class SimplePunishment implements Punishment
+class SimplePunishment implements Expirable
 {
 
-    /**
-     * The method used on CPlayer in isPunished()
-     * @var string
-     */
-    protected $method; // TODO: figure out how to make this static and how to do init cleanly
+    /** @var string|null */
+    protected $reason;
 
-    /**
-     * The value against which player data will be checked
-     * @var mixed
-     */
-    protected $check;
+    /** @var int */
+    protected $expiration;
 
-    public function __construct(string $method, $check)
+    public function __construct(string $reason = null, int $expiration = null)
     {
-        $this->method = $method;
-        $this->check = $check;
+        $this->reason = $reason;
+        $this->expiration = $expiration ?? strtotime('+10 years');
     }
 
-    public function getCheck()
+    public function getReason(): string
     {
-        return $this->check;
+        return $this->reason;
     }
 
-    public function isPunished(CPlayer $player): bool
+    public function isExpired(): bool
     {
-        return $player->{$this->method}() === $this->check;
+        return time() > $this->expiration;
     }
 
 }
