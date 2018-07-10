@@ -3,14 +3,20 @@
 namespace cucumber;
 
 use cucumber\event\CEvent;
+use cucumber\event\ChatAttemptEvent;
 use cucumber\event\ChatEvent;
 use cucumber\event\CommandEvent;
+use cucumber\event\JoinAttemptEvent;
+use cucumber\event\JoinEvent;
+use cucumber\event\QuitEvent;
 use cucumber\utils\CPlayer;
 use pocketmine\event\Event;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerCommandPreprocessEvent;
+use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerPreLoginEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 
 final class CListener implements Listener
 {
@@ -24,11 +30,18 @@ final class CListener implements Listener
 
     public function onChat(PlayerChatEvent $ev)
     {
-        if ($this->plugin->getPunishmentManager()->isMuted(new CPlayer($ev->getPlayer())))
+        $player = $ev->getPlayer();
+        $message = $ev->getMessage();
+
+        if ($this->plugin->getPunishmentManager()->isMuted(new CPlayer($player))) {
             $ev->setCancelled();
-        $this->callEvent(
-            new ChatEvent($ev->getPlayer(), $ev->getMessage())
-        );
+            $this->callEvent(
+                new ChatAttemptEvent($player, $message)
+            );
+        } else
+            $this->callEvent(
+                new ChatEvent($player, $message)
+            );
     }
 
     public function onCommandPreprocess(PlayerCommandPreprocessEvent $ev)
@@ -42,8 +55,28 @@ final class CListener implements Listener
     // Detect if player is banned
     public function onPreLogin(PlayerPreLoginEvent $ev)
     {
-        if ($this->plugin->getPunishmentManager()->isBanned(new CPlayer($ev->getPlayer())))
+        $player = $ev->getPlayer();
+
+        if ($this->plugin->getPunishmentManager()->isBanned(new CPlayer($player))) {
             $ev->setCancelled();
+            $this->callEvent(
+                new JoinAttemptEvent($player)
+            );
+        }
+    }
+
+    public function onJoin(PlayerJoinEvent $ev)
+    {
+        $this->callEvent(
+            new JoinEvent($ev->getPlayer())
+        );
+    }
+
+    public function onQuit(PlayerQuitEvent $ev)
+    {
+        $this->callEvent(
+            new QuitEvent($ev->getPlayer())
+        );
     }
 
     /**
