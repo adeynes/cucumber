@@ -4,8 +4,7 @@ namespace cucumber;
 
 use cucumber\log\LogManager;
 use cucumber\mod\PunishmentManager;
-use cucumber\provider\CProvider;
-use cucumber\utils\MessageFactory;
+use cucumber\provider\Provider;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 
@@ -18,7 +17,7 @@ final class Cucumber extends PluginBase
     /** @var Config */
     public $messages;
 
-    /** @var CProvider */
+    /** @var Provider */
     private $provider;
 
     /** @var LogManager */
@@ -66,7 +65,7 @@ final class Cucumber extends PluginBase
 
     private function initProvider(): void
     {
-        $this->provider = new CProvider($this);
+        $this->provider = new Provider($this);
     }
 
     /**
@@ -142,7 +141,7 @@ final class Cucumber extends PluginBase
         }
     }
 
-    public function getProvider(): CProvider
+    public function getProvider(): Provider
     {
         return $this->provider;
     }

@@ -1,5 +1,6 @@
 database:
   type: mysql # only mysql is supported as of now
+
   # Only edit these settings if you selected mysql for type
   mysql:
     host: 127.0.0.1

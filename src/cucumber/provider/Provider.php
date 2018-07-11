@@ -3,25 +3,27 @@
 namespace cucumber\provider;
 
 use cucumber\Cucumber;
-use poggit\libasynql\DataConnector;
+use cucumber\mod\SimplePunishment;
 use poggit\libasynql\libasynql;
 
-class CProvider implements CProviderInterface
+final class Provider implements IProvider
 {
 
     /** @var Cucumber */
     private $plugin;
 
-    /** @var DataConnector */
+    /** @var \mysqli */
     private $database;
 
     public function __construct(Cucumber $plugin)
     {
         $this->plugin = $plugin;
-        $this->database = libasynql::create($plugin, $plugin->getConfig()->get('database'),
-            [
-                'mysql' => 'mysql.sql'
-            ]);
+        $this->database = libasynql::create($plugin, $plugin->getConfig(), ['mysql' => 'mysql.sql']);
+    }
+
+    private function initTables(): void
+    {
+
     }
 
     public function close(): void

@@ -5,7 +5,7 @@ namespace cucumber\provider;
 
 use cucumber\mod\SimplePunishment;
 
-interface CProviderInterface
+interface IProvider
 {
 
     public function close(): void;
