@@ -4,6 +4,7 @@ namespace cucumber;
 
 use cucumber\log\LogManager;
 use cucumber\mod\PunishmentManager;
+use cucumber\task\PunishmentSaveTask;
 use cucumber\utils\CException;
 use cucumber\utils\ErrorCodes;
 use cucumber\utils\Queries;
@@ -35,12 +36,12 @@ final class Cucumber extends PluginBase
         return self::$instance;
     }
 
-    public function onLoad()
+    public function onLoad(): void
     {
         self::$instance = $this;
     }
 
-    public function onEnable()
+    public function onEnable(): void
     {
         $this->initConfigs();
         $this->initDatabase();
@@ -52,7 +53,7 @@ final class Cucumber extends PluginBase
         $this->getServer()->getPluginManager()->registerEvents(new CListener($this), $this);
     }
 
-    public function onDisable()
+    public function onDisable(): void
     {
         $this->getPunishmentManager()->save();
 
@@ -106,6 +107,8 @@ final class Cucumber extends PluginBase
     private function initMod(): void
     {
         $this->punishment_manager = new PunishmentManager($this);
+        // Save punishments every hour
+        $this->getScheduler()->scheduleRepeatingTask(new PunishmentSaveTask($this), 3600 * 20);
     }
 
     private function initEvents(): void
