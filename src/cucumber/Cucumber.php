@@ -4,9 +4,13 @@ namespace cucumber;
 
 use cucumber\log\LogManager;
 use cucumber\mod\PunishmentManager;
-use cucumber\provider\Provider;
+use cucumber\utils\CException;
+use cucumber\utils\ErrorCodes;
+use cucumber\utils\Queries;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
+use poggit\libasynql\DataConnector;
+use poggit\libasynql\libasynql;
 
 final class Cucumber extends PluginBase
 {
@@ -17,8 +21,8 @@ final class Cucumber extends PluginBase
     /** @var Config */
     public $messages;
 
-    /** @var Provider */
-    private $provider;
+    /** @var DataConnector */
+    private $connector;
 
     /** @var LogManager */
     private $log_manager;
@@ -39,7 +43,7 @@ final class Cucumber extends PluginBase
     public function onEnable()
     {
         $this->initConfigs();
-        $this->initProvider();
+        $this->initDatabase();
         $this->initLog();
         $this->initMod();
         $this->initEvents();
@@ -52,8 +56,7 @@ final class Cucumber extends PluginBase
     {
         $this->getPunishmentManager()->save();
 
-        // Last
-        $this->getProvider()->close();
+        $this->getConnector()->close(); // last
     }
 
     private function initConfigs(): void
@@ -63,9 +66,18 @@ final class Cucumber extends PluginBase
         $this->messages = new Config($this->getDataFolder() . 'messages.yml');
     }
 
-    private function initProvider(): void
+    private function initDatabase(): void
     {
-        $this->provider = new Provider($this);
+        $this->connector = libasynql::create($this, $this->getConfig()->get('database'),
+            ['mysql' => 'mysql.sql']);
+        $queries = [Queries::CUCUMBER_INIT_PLAYERS, Queries::CUCUMBER_INIT_PUNISHMENTS_BANS,
+            Queries::CUCUMBER_INIT_PUNISHMENTS_IP_BANS, Queries::CUCUMBER_GET_PUNISHMENTS_MUTES];
+
+        foreach ($queries as $query)
+            $this->getConnector()->executeGeneric($query);
+
+        // stop execution until init is completed
+        $this->getConnector()->waitAll();
     }
 
     /**
@@ -141,9 +153,9 @@ final class Cucumber extends PluginBase
         }
     }
 
-    public function getProvider(): Provider
+    public function getConnector(): DataConnector
     {
-        return $this->provider;
+        return $this->connector;
     }
 
     public function getLogManager(): LogManager
