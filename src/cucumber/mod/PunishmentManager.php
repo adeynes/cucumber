@@ -108,13 +108,13 @@ final class PunishmentManager
 
     /**
      * @param $id
-     * @param SimplePunishment $punishment
+     * @param Punishment $punishment
      * @param string $type
      * @param array $storage
      * @param CException $exception
      * @throws CException If the ID is already punished
      */
-    private function punish($id, SimplePunishment $punishment, string $type, array &$storage, CException $exception)
+    private function punish($id, Punishment $punishment, string $type, array &$storage, CException $exception)
     {
         if (isset($storage[$id]))
             throw $exception;
@@ -141,20 +141,32 @@ final class PunishmentManager
 
     /**
      * @param CPlayer $player
-     * @param SimplePunishment $punishment
+     * @param string|null $reason
+     * @param string|null $expiration
+     * @param string $moderator
      * @param string $type
      * @param array $storage
      * @param string $error_message
      * @throws CException If the player is already punished
      */
-    private function playerPunish(CPlayer $player, SimplePunishment $punishment, string $type, array &$storage, string $error_message)
+    private function playerPunish(CPlayer $player, ?string $reason, ?string $expiration, string $moderator,
+                                  string $type, array &$storage, string $error_message)
     {
-        $this->punish($player->getUid(), $punishment, $type, $storage,
-            new CException(
-                $error_message,
-                ['player' => $player->getName()],
-                ErrorCodes::ATTEMPT_PUNISH_PUNISHED
-            ));
+        $uid = $player->getUid();
+        $name = $player->getName();
+        $exception = new CException($error_message, ['player' => $name], ErrorCodes::ATTEMPT_PUNISH_PUNISHED);
+
+        if (isset($storage[$uid]))
+            throw $exception;
+
+        $punish = function(SqlSelectResult $result) use ($uid, $reason, $expiration, $type, &$storage, $exception) {
+            $id = $result->getRows()[0]['id'];
+            $punishment = new SimplePunishment($reason, $expiration, $id);
+            $this->punish($uid, $punishment, $type, $storage, $exception);
+        };
+
+        $this->plugin->getConnector()->executeSelect(Queries::CUCUMBER_GET_FIND_PLAYER_BY_NAME,
+            ['name' => $moderator], $punish);
     }
 
     /**
@@ -174,26 +186,22 @@ final class PunishmentManager
             ));
     }
 
+    public function getBan(string $uid): ?SimplePunishment
+    {
+        return $this->bans[$uid] ?? null;
+    }
+
     /**
      * @param CPlayer $player
      * @param string|null $reason
      * @param int|null $expiration
      * @param string $moderator
+     * @throws CException If the player is already banned
      */
     public function ban(CPlayer $player, ?string $reason, ?int $expiration, string $moderator): void
     {
-        $this->plugin->getConnector()->executeSelect(Queries::CUCUMBER_GET_FIND_PLAYER_BY_NAME,
-            ['name' => $moderator],
-            function(SqlSelectResult $result) use ($player, $reason, $expiration) {
-                $id = $result[0]['id'];
-                $this->playerPunish(
-                    $player,
-                    new SimplePunishment($reason, $expiration, $id),
-                    'ban',
-                    $this->bans,
-                    $this->messages['ban']['already-banned']
-                );
-            });
+        $this->playerPunish($player, $reason, $expiration, $moderator, 'ban', $this->bans,
+            $this->messages['ban']['already-banned']);
     }
 
     /**
@@ -205,28 +213,34 @@ final class PunishmentManager
         $this->playerPardon($player, 'ban', $this->bans, $this->messages['ban']['not-banned']);
     }
 
+    public function getIpBan(string $ip): ?SimplePunishment
+    {
+        return $this->ip_bans[$ip] ?? null;
+    }
+
     /**
      * @param int $ip
      * @param string|null $reason
      * @param int|null $expiration
      * @param string $moderator
+     * @throws CException If the IP is already banned
      */
     public function ipBan(int $ip, string $reason = null, int $expiration = null, string $moderator): void
     {
+        $exception = new CException($this->messages['ip-ban']['already-banned'], ['ip' => $ip],
+            ErrorCodes::ATTEMPT_PUNISH_PUNISHED);
+
+        if (isset($this->ip_bans[$ip]))
+            throw $exception;
+
+        $ban = function(SqlSelectResult $result) use ($ip, $reason, $expiration, $exception) {
+            $id = $result->getRows()[0]['id'];
+            $punishment = new SimplePunishment($reason, $expiration, $id);
+            $this->punish($ip, $punishment, 'ip-ban', $this->ip_bans, $exception);
+        };
+
         $this->plugin->getConnector()->executeSelect(Queries::CUCUMBER_GET_FIND_PLAYER_BY_NAME,
-            ['name' => $moderator],
-            function(SqlSelectResult $result) use ($ip, $reason, $expiration) {
-                $id = $result[0]['id'];
-                $this->punish($ip,
-                    new SimplePunishment($reason, $expiration, $id),
-                    'ip-ban',
-                    $this->ip_bans,
-                    new CException(
-                        $this->messages['ip-ban']['already-banned'],
-                        ['ip' => $ip],
-                        ErrorCodes::ATTEMPT_PUNISH_PUNISHED
-                    ));
-            });
+            ['name' => $moderator], $ban);
     }
 
     /**
@@ -243,26 +257,22 @@ final class PunishmentManager
             ));
     }
 
+    public function getMute(string $uid): ?SimplePunishment
+    {
+        return $this->mutes[$uid] ?? null;
+    }
+
     /**
      * @param CPlayer $player
      * @param string|null $reason
      * @param int|null $expiration
      * @param string $moderator
+     * @throws CException If the player is already muted
      */
     public function mute(CPlayer $player, ?string $reason, ?int $expiration, string $moderator): void
     {
-        $this->plugin->getConnector()->executeSelect(Queries::CUCUMBER_GET_FIND_PLAYER_BY_NAME,
-            ['name' => $moderator],
-            function(SqlSelectResult $result) use ($player, $reason, $expiration) {
-                $id = $result[0]['id'];
-                $this->playerPunish(
-                    $player,
-                    new SimplePunishment($reason, $expiration, $id),
-                    'mute',
-                    $this->bans,
-                    $this->messages['mute']['already-muted']
-                );
-            });
+        $this->playerPunish($player, $reason, $expiration, $moderator, 'mute', $this->mutes,
+            $this->messages['mute']['already-muted']);
     }
 
     /**
@@ -280,14 +290,14 @@ final class PunishmentManager
         $uid = $player->getUid();
         $ip = $player->getIp();
 
-        if (isset($this->bans[$uid])) {
-            if ($this->bans[$uid]->isExpired())
+        if ($ban = $this->getBan($uid)) {
+            if ($ban->isExpired())
                 $this->unban($player);
             else $banned = true;
         }
 
-        if (isset($this->ip_bans[$ip])) {
-            if ($this->ip_bans[$ip]->isExpired())
+        if ($ip_ban = $this->getIpBan($ip)) {
+            if ($ip_ban->isExpired())
                 $this->ipUnban($ip);
             else $banned = true;
         }

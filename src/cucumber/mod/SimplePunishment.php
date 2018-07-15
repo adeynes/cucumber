@@ -2,7 +2,7 @@
 
 namespace cucumber\mod;
 
-class SimplePunishment implements Expirable
+class SimplePunishment implements Punishment, Expirable
 {
 
     /** @var string|null */
