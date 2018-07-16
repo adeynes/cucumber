@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace src\cucumber\command;
 
 use cucumber\Cucumber;
+use cucumber\utils\CPlayer;
+use cucumber\utils\MessageFactory;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
@@ -28,9 +30,27 @@ class RawtellCommand extends CucumberCommand
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
         [$target_name, $message] = $command->get([0, [1, -1]]);
-        $target = $this->plugin->getServer()->getPlayer($target_name);
-        if (is_null($target) || !$target->isOnline())
+        $message = MessageFactory::colorize($message);
+        if (!is_null($target = CPlayer::getOnlinePlayer($target_name))) {
+            $sender->sendMessage(
+                MessageFactory::colorize(
+                    MessageFactory::format($this->plugin->getMessage(
+                        'error.target-offline'),
+                        ['player' => $target_name]
+                    )
+                )
+            );
+            return true;
+        }
+
+        if (!is_null($command->getTag('nom')))
             $target->sendMessage($message);
+
+        if (!is_null($command->getTag('p')))
+            $target->sendPopup($message);
+
+        if (!is_null($command->getTag('t')))
+            $target->addSubTitle($message);
 
         return true;
     }
