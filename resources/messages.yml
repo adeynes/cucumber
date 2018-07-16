@@ -1,3 +1,6 @@
+error:
+  target-offline: '&b%player% &cis not online!'
+
 moderation:
   kick:
     reason: 'Moderator: %name%\nReason %reason%'
@@ -6,7 +9,7 @@ moderation:
   mute:
     message:
       type: message
-      message: '&eYou have been muted by &b%name% &efor &b%duration%. &7Reason: &f%reason%'
+      message: '&eYou have been muted by &b%name% &efor &b%duration%&e. &7Reason: &f%reason%'
 
 log:
   time-format: Y-m-d\TH:i:s

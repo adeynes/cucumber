@@ -37,7 +37,7 @@ class SimplePunishment implements Punishment, Expirable
         return $this->expiration;
     }
 
-    public function getModeratorId(): string
+    public function getModeratorId(): int
     {
         return $this->moderator_id;
     }

@@ -6,8 +6,8 @@ namespace cucumber;
 use cucumber\log\LogManager;
 use cucumber\mod\PunishmentManager;
 use cucumber\task\PunishmentSaveTask;
-use cucumber\utils\CException;
-use cucumber\utils\ErrorCodes;
+
+
 use cucumber\utils\Queries;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
@@ -21,7 +21,7 @@ final class Cucumber extends PluginBase
     private static $instance;
 
     /** @var Config */
-    public $messages;
+    private $messages;
 
     /** @var DataConnector */
     private $connector;
@@ -128,7 +128,7 @@ final class Cucumber extends PluginBase
             call_user_func(
                 ['\\cucumber\\event\\' . $class[1], 'init'],
                 $class[0],
-                $this->messages->getNested('log.templates.' . $type)
+                $this->getMessage('log.templates.' . $type)
             );
     }
 
@@ -155,6 +155,16 @@ final class Cucumber extends PluginBase
             $class = '\\cucumber\\command\\' . $class;
             $map->register('cucumber', new $class($this));
         }
+    }
+
+    public function getMessageConfig(): Config
+    {
+        return $this->messages;
+    }
+
+    public function getMessage(string $path): ?string
+    {
+        return $this->getMessageConfig()->getNested($path);
     }
 
     public function getConnector(): DataConnector

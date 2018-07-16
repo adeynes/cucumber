@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace cucumber\utils;
 
 use pocketmine\Player;
+use pocketmine\Server;
 
 /**
  * A wrapper for player data (name, IP, UID) that can
@@ -57,6 +58,15 @@ class CPlayer
     public function getUid(): ?string
     {
         return $this->uid;
+    }
+
+    public static function getOnlinePlayer(string $name): ?Player
+    {
+        $player = Server::getInstance()->getPlayer($name);
+        if (!is_null($player) && $player instanceof Player && $player->isOnline())
+            return $player;
+        else
+            return null;
     }
 
     /**

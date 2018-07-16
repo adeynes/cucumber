@@ -245,10 +245,10 @@ final class PunishmentManager
     }
 
     /**
-     * @param int $ip
+     * @param string $ip
      * @throws CException If the IP is not banned
      */
-    public function ipUnban(int $ip)
+    public function ipUnban(string $ip)
     {
         $this->pardon($ip, 'ip-ban', $this->ip_bans,
             new CException(

@@ -31,9 +31,9 @@ final class LogManager
         $this->plugin = $plugin;
         $this->dir = $this->plugin->getConfig()->getNested('log.path') ?? 'log/';
         $this->loggers = new Stack;
-        $messages = $this->plugin->messages;
-        $this->global_template = $messages->getNested('log.templates.global');
-        $this->time_format = $messages->getNested('log.time-format') ?? 'Y-m-d\TH:i:s';
+        $messages = $this->plugin->getMessageConfig();
+        [$this->global_template, $this->time_format] = [$this->plugin->getMessage('log.templates.global'),
+                                                        $this->plugin->getMessage('log.time-format') ?? 'Y-m-d\TH:i:s'];
     }
 
     public function getDirectory(): string

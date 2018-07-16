@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace cucumber\utils;
 
+use pocketmine\utils\TextFormat;
+
 final class MessageFactory
 {
 
@@ -25,6 +27,11 @@ final class MessageFactory
             $template = str_replace($tags[0][$key], $data[$tag], $template);
 
         return $template;
+    }
+
+    public static function colorize(string $string): string
+    {
+        return TextFormat::colorize($string);
     }
 
 }
