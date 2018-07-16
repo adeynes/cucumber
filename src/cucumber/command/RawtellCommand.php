@@ -25,12 +25,14 @@ class RawtellCommand extends CucumberCommand
         $this->setPermission('cucumber.command.rawtell');
     }
 
-    public function _execute(CommandSender $sender, string $label, array $args): bool
+    public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        $target = $this->plugin->getServer()->getPlayer(array_shift($args));
-        if ($target instanceof Player && $target->isOnline()) {
-            $target->sendMessage(TextFormat::colorize(trim(implode(' ', $args))));
-        }
+        [$target_name, $message] = $command->get([0, [1, -1]]);
+        $target = $this->plugin->getServer()->getPlayer($target_name);
+        if (is_null($target) || !$target->isOnline())
+            $target->sendMessage($message);
+
+        return true;
     }
 
 }

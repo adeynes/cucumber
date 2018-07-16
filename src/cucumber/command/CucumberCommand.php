@@ -41,10 +41,10 @@ abstract class CucumberCommand extends Command
     {
         if (!$this->testPermission($sender)) return false;
 
-        return $this->_execute($sender, $label, $args);
+        return $this->_execute($sender, CommandParser::parse($this, $args));
     }
 
-    abstract public function _execute(CommandSender $sender, string $label, array $args): bool;
+    abstract public function _execute(CommandSender $sender, ParsedCommand $command): bool;
 
     /**
      * @return int[]
