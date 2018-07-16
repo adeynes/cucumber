@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace src\cucumber\command;
 
@@ -15,7 +16,12 @@ class RawtellCommand extends CucumberCommand
 
     public function __construct(Cucumber $plugin)
     {
-        parent::__construct($plugin, 'rawtell', 'Send a raw message to a player', '/rawtell <player> <message>');
+        parent::__construct($plugin, 'rawtell', 'Send a raw message to a player',
+            '/rawtell <player> <message>', [
+                'nom' => 0,
+                'p' => 0,
+                't' => 0
+            ]);
         $this->setPermission('cucumber.command.rawtell');
     }
 

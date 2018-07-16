@@ -10,7 +10,7 @@ website: https://github.com/adeynes
 commands:
   rawtell:
     description: 'Send a raw message to a player'
-    usage: '/rawtell <player> <message> [-m] [-p] [-t]'
+    usage: '/rawtell <player> <message> [-nom] [-p] [-t]'
     permission: cucumber.command.rawtell
 
   log:
