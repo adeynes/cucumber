@@ -2,6 +2,9 @@
 
 namespace cucumber\log;
 
+/**
+ * For future use
+ */
 interface LogLevels
 {
 
