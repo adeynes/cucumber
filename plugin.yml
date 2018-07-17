@@ -59,41 +59,54 @@ commands:
     permission: cucumber.command.unmute
 
 permissions:
-  cucumber.command.rawtell:
-    description: 'Allows for the use of /rawtell'
-    default: op
-
-  cucumber.command.log:
-    description: 'Allows for the use of /log'
-    default: op
-
-  cucumber.command.alert:
-    description: 'Allows for the use of /alert'
-    default: op
-
-  cucumber.mute:
-    description: 'Mute-related commands'
+  cucumber:
     default: op
     children:
-      cucumber.command.mute:
-        description: 'Allows for the use of /mute'
-        default: op
-      cucumber.command.unmute:
-        description: 'Allows for the use of /unmute'
+      cucumber.command.rawtell:
+        description: 'Allows for the use of /rawtell'
         default: op
 
-  cucumber.uban:
-    cucumber.command.uban:
-      description: 'Allows for the use of /uban'
-      default: op
-      children:
-        cucumber.command.ban:
-          description: 'Allows for the use of /ban'
-          default: op
-    cucumber.command.upardon:
-      description: 'Allows for the use of /upardon'
-      default: op
-      children:
-        cucumber.command.pardon:
-          description: 'Allows for the use of /pardon'
-          default: op
+      cucumber.command.log:
+        description: 'Allows for the use of /log'
+        default: op
+
+      cucumber.command.alert:
+        description: 'Allows for the use of /alert'
+        default: op
+
+      cucumber.mute:
+        description: 'Mute-related commands'
+        default: op
+        children:
+          cucumber.command.mute:
+            description: 'Allows for the use of /mute'
+            default: op
+          cucumber.command.unmute:
+            description: 'Allows for the use of /unmute'
+            default: op
+
+      cucumber.ban:
+        description: 'Ban-related commands'
+        default: op
+        children:
+          cucumber.command.uban:
+            description: 'Allows for the use of /uban and all ban commands'
+            default: op
+            children:
+              cucumber.command.ban:
+                description: 'Allows for the use of /ban'
+                default: op
+              cucumber.command.ipban:
+                description: 'Allows for the use of /ipban'
+                default: op
+
+          cucumber.command.upardon:
+            description: 'Allows for the use of /upardon and all pardon commands'
+            default: op
+            children:
+              cucumber.command.pardon:
+                description: 'Allows for the use of /pardon'
+                default: op
+              cucumber.command.ippardon:
+                description: 'Allows for the use of /ippardon'
+                default: op
