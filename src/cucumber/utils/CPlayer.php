@@ -16,16 +16,15 @@ class CPlayer
     /** @var string */
     protected $name;
 
-    /** @var string */
+    /** @var string|null */
     protected $ip;
 
-    /** @var string */
+    /** @var string|null */
     protected $uid;
 
     /**
-     * CPlayer constructor.
-     * @param $player
-     * @param string $ip
+     * @param Player|string $player
+     * @param string|null $ip
      * @param string|null $uid
      */
     public function __construct($player, string $ip = null, string $uid = null)
@@ -38,7 +37,7 @@ class CPlayer
         $this->init(...$unpacked);
     }
 
-    protected function init(string $name, string $ip, ?string $uid): void
+    protected function init(string $name, ?string $ip, ?string $uid): void
     {
         $this->name = $name;
         $this->ip = $ip;
@@ -50,7 +49,7 @@ class CPlayer
         return $this->name;
     }
 
-    public function getIp(): string
+    public function getIp(): ?string
     {
         return $this->ip;
     }

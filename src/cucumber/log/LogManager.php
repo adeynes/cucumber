@@ -31,7 +31,6 @@ final class LogManager
         $this->plugin = $plugin;
         $this->dir = $this->plugin->getConfig()->getNested('log.path') ?? 'log/';
         $this->loggers = new Stack;
-        $messages = $this->plugin->getMessageConfig();
         [$this->global_template, $this->time_format] = [$this->plugin->getMessage('log.templates.global'),
                                                         $this->plugin->getMessage('log.time-format') ?? 'Y-m-d\TH:i:s'];
     }
@@ -69,7 +68,7 @@ final class LogManager
      */
     public function formatEventMessage(CEvent $ev): string
     {
-        return MessageFactory::format(
+        return MessageFactory::formatNoColor(
             $this->global_template,
             $this->generateGlobalTemplateData($ev->getTemplate(), $ev->getType(), $ev->getData())
         );
@@ -87,7 +86,7 @@ final class LogManager
         return [
             'time' => date($this->time_format),
             'type' => $type,
-            '...' => MessageFactory::format(
+            '...' => MessageFactory::formatNoColor(
                 $template,
                 $data
             )

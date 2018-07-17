@@ -29,22 +29,22 @@ commands:
     permission: cucumber.command.ban
 
   pardon:
-    description: 'Pardons a player (undoes a /ban)'
+    description: 'Pardon a player (undoes a /ban)'
     usage: '/pardon <player>'
     permission: cucumber.command.pardon
 
   ipban:
-    description: 'Bans an IP'
+    description: 'Ban an IP'
     usage: '/ipban <-p <player>|-i <ip>> [reason]'
     permission: cucumber.command.ipban
 
   ippardon:
-    description: 'Pardons an IP (undoes a /ipban)'
+    description: 'Pardon an IP (undoes a /ipban)'
     usage: '/ippardon <ip>'
     permission: cucumber.command.uban
 
   uban:
-    description: 'Bans an IP and all players who join with it. Irreversible'
+    description: 'Ban an IP and all players who join with it. Irreversible'
     usage: '/uban <-p <player>|-i <ip>> [reason]'
     permission: cucumber.command.uban
 

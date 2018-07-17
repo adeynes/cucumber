@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace src\cucumber\command;
+namespace cucumber\command;
 
 class ParsedCommand
 {

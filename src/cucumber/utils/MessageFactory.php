@@ -15,7 +15,7 @@ final class MessageFactory
      * i.e. ["tag" => "my cool tag"] will turn "this is %tag%" into "this is my cool tag"
      * @return string The formatted message
      */
-    public static function format(string $template, array $data): string
+    public static function formatNoColor(string $template, array $data): string
     {
         $tags = [];
         // Find everything between two %
@@ -32,6 +32,11 @@ final class MessageFactory
     public static function colorize(string $string): string
     {
         return TextFormat::colorize($string);
+    }
+
+    public static function format(string $template, array $data): string
+    {
+        return self::colorize(self::formatNoColor($template, $data));
     }
 
 }

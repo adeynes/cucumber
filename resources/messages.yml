@@ -1,24 +1,28 @@
 error:
-  target-offline: '&b%player% &cis not online!'
+  player-offline: '&b%player% &cis not online!'
+  player-does-not-exist: '&b%player% &chas never joined this server!'
+
+success:
+  ban: '&aYou have successfully banned &b%player%&a!'
 
 moderation:
   kick:
-    reason: 'Moderator: %name%\nReason %reason%'
+    reason: 'Moderator: %moderator%\nReason %reason%'
   ban:
-    reason: 'Moderator: %name%\nDuration: %duration%\nReason: %reason%'
+    reason: 'Moderator: %moderator%\nDuration: %duration%\nReason: %reason%'
   mute:
     message:
       type: message
-      message: '&eYou have been muted by &b%name% &efor &b%duration%&e. &7Reason: &f%reason%'
+      message: '&eYou have been muted by &b%moderator% &efor &b%duration%&e. &7Reason: &f%reason%'
 
 log:
   time-format: Y-m-d\TH:i:s
   templates:
     global: '%time% %type% | %...%'
-    join: '%name% joined'
-    join-attempt: '%name tried joining while banned'
-    quit: '%name quit'
-    chat: '%name%: %message%'
-    chat-attempt: '[MUTED] %name%: %message'
-    command: '%name%: %command%'
-    moderation: '%name% %action% %subject% %extra%'
+    join: '%player% joined'
+    join-attempt: '%player tried joining while banned'
+    quit: '%player quit'
+    chat: '%player%: %message%'
+    chat-attempt: '[MUTED] %player%: %message'
+    command: '%player%: %command%'
+    moderation: '%player% %action% %subject% %extra%'

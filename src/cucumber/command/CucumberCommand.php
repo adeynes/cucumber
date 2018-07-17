@@ -1,12 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace src\cucumber\command;
+namespace cucumber\command;
 
 use cucumber\Cucumber;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
+use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\plugin\Plugin;
 
 abstract class CucumberCommand extends Command implements PluginIdentifiableCommand
@@ -14,6 +15,14 @@ abstract class CucumberCommand extends Command implements PluginIdentifiableComm
 
     /** @var Cucumber */
     protected $plugin;
+
+    /**
+     * The minimum amount of arguments the command
+     * must have. Anything less than this will
+     * throw an InvalidCommandSyntaxException
+     * @var int
+     */
+    protected $min_args;
 
     /**
      * The list of tags for this command
@@ -24,9 +33,10 @@ abstract class CucumberCommand extends Command implements PluginIdentifiableComm
     protected $tags;
 
     protected function __construct(Cucumber $plugin, string $name, string $permission = null, string $description = '',
-                                   string $usageMessage = null, array $tags = [])
+                                   int $min_args = 0, string $usageMessage = null, array $tags = [])
     {
         $this->plugin = $plugin;
+        $this->min_args = $min_args;
         $this->tags = $tags;
         $this->setPermission($permission);
         parent::__construct($name, $description, $usageMessage);
@@ -51,6 +61,7 @@ abstract class CucumberCommand extends Command implements PluginIdentifiableComm
     public function execute(CommandSender $sender, string $label, array $args): bool
     {
         if (!$this->testPermission($sender)) return false;
+        if (count($args) < $this->min_args) throw new InvalidCommandSyntaxException();
 
         return $this->_execute($sender, CommandParser::parse($this, $args));
     }

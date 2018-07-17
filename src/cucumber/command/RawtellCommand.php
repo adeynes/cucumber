@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace src\cucumber\command;
+namespace cucumber\command;
 
 use cucumber\Cucumber;
 use cucumber\utils\CPlayer;
@@ -19,7 +19,7 @@ class RawtellCommand extends CucumberCommand
     public function __construct(Cucumber $plugin)
     {
         parent::__construct($plugin, 'rawtell', 'cucumber.command.rawtell', 'Send a raw message to a player',
-            '/rawtell <player> <message> [-nom] [-p] [-t]', [
+            1, '/rawtell <player> <message> [-nom] [-p] [-t]', [
                 'nom' => 0,
                 'p' => 0,
                 't' => 0
@@ -40,7 +40,7 @@ class RawtellCommand extends CucumberCommand
                     )
                 )
             );
-            return true;
+            return false;
         }
 
         if (is_null($command->getTag('nom')))

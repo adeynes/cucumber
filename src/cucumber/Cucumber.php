@@ -141,9 +141,13 @@ final class Cucumber extends PluginBase
             'log' => 'LogCommand',
             'alert' => 'AlertCommand',
             'kick' => 'KickCommand',
-            'mute' => 'MuteCommand',
             'ban' => 'BanCommand',
-            'uban' => 'UbanCommand'
+            'pardon' => 'PardonCommand',
+            'ipban' => 'IpBanCommand',
+            'ippardon' => 'IpPardonCommand',
+            'uban' => 'UbanCommand',
+            'mute' => 'MuteCommand',
+            'unmute' => 'UnmuteCommand'
         ];
 
         foreach ($commands as $command => $class){

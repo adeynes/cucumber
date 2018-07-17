@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace src\cucumber\command;
+namespace cucumber\command;
 
 class CommandParser
 {
@@ -15,10 +15,33 @@ class CommandParser
                 continue;
 
             $tags[$tag] = array_slice($args, $key + 1, $length);
+
+            // Remove tag & tag parameters
+            // array_diff_key() doesn't reorder the keys
             $args = array_diff_key($args, self::makeKeys(range($key, $key + $length)));
         }
 
         return new ParsedCommand($command->getName(), $args, $tags);
+    }
+
+    public static function parseDuration(string $duration): int
+    {
+        $parts = str_split($duration);
+        $current = 0;
+        $time_units = ['y' => 'year', 'M' => 'month', 'w' => 'week', 'd' => 'day', 'h' => 'hour', 'm' => 'minute'];
+        $time = '';
+
+        foreach ($time_units as $symbol => $unit) {
+            if (($length = array_search($symbol, $parts)) === false)
+                continue;
+
+            $n = implode('', array_slice($parts, $current, $length)); // not $length-1 bc it's a length not an offset
+            $time .= "$n $unit ";
+            array_splice($parts, $current, $length + 1);
+        }
+
+        $time = trim($time);
+        return $time === '' ? time() : strtotime($time);
     }
 
     /**

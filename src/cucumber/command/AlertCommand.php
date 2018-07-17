@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace src\cucumber\command;
+namespace cucumber\command;
 
 use cucumber\Cucumber;
 use cucumber\utils\MessageFactory;
@@ -13,7 +13,7 @@ class AlertCommand extends CucumberCommand
     public function __construct(Cucumber $plugin)
     {
         parent::__construct($plugin, 'alert', 'cucumber.command.alert', 'Broadcast a message to the server',
-            '/alert <message> [-nom] [-p] [-t]', [
+            1, '/alert <message> [-nom] [-p] [-t]', [
                 'nom' => 0,
                 'p' => 0,
                 't' => 0
