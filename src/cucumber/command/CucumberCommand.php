@@ -6,8 +6,10 @@ namespace src\cucumber\command;
 use cucumber\Cucumber;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\command\PluginIdentifiableCommand;
+use pocketmine\plugin\Plugin;
 
-abstract class CucumberCommand extends Command
+abstract class CucumberCommand extends Command implements PluginIdentifiableCommand
 {
 
     /** @var Cucumber */
@@ -21,12 +23,21 @@ abstract class CucumberCommand extends Command
      */
     protected $tags;
 
-    protected function __construct(Cucumber $plugin, string $name, string $description = '', string $usageMessage = null,
-                                   array $tags)
+    protected function __construct(Cucumber $plugin, string $name, string $permission = null, string $description = '',
+                                   string $usageMessage = null, array $tags = [])
     {
         $this->plugin = $plugin;
         $this->tags = $tags;
+        $this->setPermission($permission);
         parent::__construct($name, $description, $usageMessage);
+    }
+
+    /**
+     * @return Cucumber
+     */
+    public function getPlugin(): Plugin
+    {
+        return $this->plugin;
     }
 
     /**

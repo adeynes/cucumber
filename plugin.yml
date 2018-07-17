@@ -20,18 +20,8 @@ commands:
 
   alert:
     description: 'Broadcast a message to the server'
-    usage: '/alert <message> [-m] [-p] [-t]'
+    usage: '/alert <message> [-nom] [-p] [-t]'
     permission: cucumber.command.alert
-
-  mute:
-    description: 'Mute a player'
-    usage: '/mute <player> [reason] [-d <duration>]'
-    permission: cucumber.command.mute
-
-  unmute:
-    description: 'Unmute a player'
-    usage: '/unmute <player>'
-    permission: cucumber.command.unmute
 
   ban:
     description: 'Ban a player by unique identification (XUID)'
@@ -57,6 +47,16 @@ commands:
     description: 'Bans an IP and all players who join with it. Irreversible'
     usage: '/uban <-p <player>|-i <ip>> [reason]'
     permission: cucumber.command.uban
+
+  mute:
+    description: 'Mute a player'
+    usage: '/mute <player> [reason] [-d <duration>]'
+    permission: cucumber.command.mute
+
+  unmute:
+    description: 'Unmute a player'
+    usage: '/unmute <player>'
+    permission: cucumber.command.unmute
 
 permissions:
   cucumber.command.rawtell:
