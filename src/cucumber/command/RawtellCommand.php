@@ -52,6 +52,13 @@ class RawtellCommand extends CucumberCommand
         if (!is_null($command->getTag('t')))
             $target->addSubTitle($message); // title is too big
 
+        $sender->sendMessage(
+            MessageFactory::format(
+                $this->getPlugin()->getMessage('success.rawtell'),
+                ['player' => $target_name, 'message' => $message]
+            )
+        );
+
         return true;
     }
 

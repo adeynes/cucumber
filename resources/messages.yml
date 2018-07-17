@@ -1,28 +1,48 @@
 error:
+  # %player%
   player-offline: '&b%player% &cis not online!'
+  # %player%
   player-does-not-exist: '&b%player% &chas never joined this server!'
 
 success:
-  ban: '&aYou have successfully banned &b%player%&a!'
+  # %player% %message%
+  rawtell: '&e[&bYOU &r-> &b%player%&e] &7%message%'
+  # %message%
+  log: '&aYou have successfully logged &7%message%&a!'
+  # %message%
+  alert: '' # the sender will get the alert message
+  # %player% %reason% %expiration%
+  ban: '&aYou have successfully banned &b%player% &auntil &b%expiration%!'
 
 moderation:
   kick:
+    # %moderator% %reason%
     reason: 'Moderator: %moderator%\nReason %reason%'
   ban:
-    reason: 'Moderator: %moderator%\nDuration: %duration%\nReason: %reason%'
+    # %moderator% %reason% %expiration%
+    reason: 'Moderator: %moderator%\nExpiration: %expiration%\nReason: %reason%'
   mute:
     message:
       type: message
-      message: '&eYou have been muted by &b%moderator% &efor &b%duration%&e. &7Reason: &f%reason%'
+      # %moderator% %reason% %expiration%
+      message: '&eYou have been muted by &b%moderator% &euntil &b%expiration%&e. &7Reason: &f%reason%'
 
 log:
+  # Symbols: https://secure.php.net/manual/en/function.date.php
   time-format: Y-m-d\TH:i:s
   templates:
+    # %type% %time% %...%
     global: '%time% %type% | %...%'
+    # %player%
     join: '%player% joined'
+    # %player%
     join-attempt: '%player tried joining while banned'
-    quit: '%player quit'
+    # %player%
+    quit: '%player% quit'
+    # %player% %message%
     chat: '%player%: %message%'
+    # %player% %message%
     chat-attempt: '[MUTED] %player%: %message'
+    # %player% %command%
     command: '%player%: %command%'
-    moderation: '%player% %action% %subject% %extra%'
+    moderation: [] # TODO

@@ -35,6 +35,13 @@ class AlertCommand extends CucumberCommand
         if (!is_null($command->getTag('t')))
             $server->broadcastTitle('', $message); // broadcast a subtitle
 
+        $sender->sendMessage(
+            MessageFactory::format(
+                $this->getPlugin()->getMessage('success.alert'),
+                ['message' => $message]
+            )
+        );
+
         return true;
     }
 

@@ -44,7 +44,12 @@ class BanCommand extends CucumberCommand
 
                 try {
                     $this->getPlugin()->getPunishmentManager()->ban($target, $reason, $expiration, $sender->getName());
-                    $sender->sendMessage($this->getPlugin()->getMessage('success.ban'));
+                    $sender->sendMessage(
+                        MessageFactory::format(
+                            $this->getPlugin()->getMessage('success.ban'),
+                            ['player' => $target_name, 'reason' => $reason, 'expiration' => $expiration]
+                        )
+                    );
                 } catch(CException $exception) {
                     $sender->sendMessage($exception->getMessage());
                 }
@@ -55,7 +60,12 @@ class BanCommand extends CucumberCommand
         } else {
             try {
                 $this->getPlugin()->getPunishmentManager()->ban(new CPlayer($target), $reason, $expiration, $sender->getName());
-                $sender->sendMessage($this->getPlugin()->getMessage('success.ban'));
+                $sender->sendMessage(
+                    MessageFactory::format(
+                        $this->getPlugin()->getMessage('success.ban'),
+                        ['player' => $target_name, 'reason' => $reason, 'expiration' => $expiration]
+                    )
+                );
             } catch(CException $exception) {
                 $sender->sendMessage($exception->getMessage());
                 return false;
