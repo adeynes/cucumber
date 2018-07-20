@@ -5,7 +5,7 @@ namespace cucumber\event;
 
 use pocketmine\Player;
 
-class ChatEvent extends CPlayerEvent
+class ChatEvent extends CucumberPlayerEvent
 {
 
     /** @var string */

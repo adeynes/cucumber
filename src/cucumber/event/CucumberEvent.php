@@ -11,7 +11,7 @@ use pocketmine\event\Event;
  * used to listen for all of them to log
  * @allowHandle
  */
-abstract class CEvent extends Event implements HasData
+abstract class CucumberEvent extends Event implements HasData
 {
 
     /** @var string */

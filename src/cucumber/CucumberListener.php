@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace cucumber;
 
-use cucumber\event\CEvent;
+use cucumber\event\CucumberEvent;
 use cucumber\event\ChatAttemptEvent;
 use cucumber\event\ChatEvent;
 use cucumber\event\CommandEvent;
 use cucumber\event\JoinAttemptEvent;
 use cucumber\event\JoinEvent;
 use cucumber\event\QuitEvent;
-use cucumber\utils\CPlayer;
+use cucumber\utils\CucumberPlayer;
 use cucumber\utils\MessageFactory;
 use pocketmine\event\Event;
 use pocketmine\event\Listener;
@@ -20,7 +20,7 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerPreLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 
-final class CListener implements Listener
+final class CucumberListener implements Listener
 {
 
     private $plugin;
@@ -40,7 +40,7 @@ final class CListener implements Listener
         $player = $ev->getPlayer();
         $message = $ev->getMessage();
 
-        if ($this->getPlugin()->getPunishmentManager()->isMuted(new CPlayer($player))) {
+        if ($this->getPlugin()->getPunishmentManager()->isMuted(new CucumberPlayer($player))) {
             $ev->setCancelled();
             $this->callEvent(
                 new ChatAttemptEvent($player, $message)
@@ -64,7 +64,7 @@ final class CListener implements Listener
     {
         $player = $ev->getPlayer();
 
-        if (!is_null($ban = $this->getPlugin()->getPunishmentManager()->isBanned(new CPlayer($player)))) {
+        if (!is_null($ban = $this->getPlugin()->getPunishmentManager()->isBanned(new CucumberPlayer($player)))) {
             $ev->setKickMessage(
                 MessageFactory::format($this->getPlugin()->getMessage('moderation.ban.reason'), $ban->getData())
             );
@@ -90,10 +90,10 @@ final class CListener implements Listener
     }
 
     /**
-     * Logs all CEvent
-     * @param CEvent $ev
+     * Logs all CucumberEvent
+     * @param CucumberEvent $ev
      */
-    public function onCEvent(CEvent $ev)
+    public function onCucumberEvent(CucumberEvent $ev)
     {
         $log_manager = $this->getPlugin()->getLogManager();
         $log_manager->log(

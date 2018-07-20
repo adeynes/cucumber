@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace cucumber\command;
 
 use cucumber\Cucumber;
-use cucumber\utils\CException;
+use cucumber\utils\CucumberException;
 use cucumber\utils\MessageFactory;
 use pocketmine\command\CommandSender;
 
@@ -26,7 +26,7 @@ class PardonCommand extends CucumberCommand
             $sender->sendMessage(
                 MessageFactory::format($this->getPlugin()->getMessage('success.unban'), [$target_name])
             );
-        } catch (CException $exception) {
+        } catch (CucumberException $exception) {
             $sender->sendMessage($exception->getMessage());
         }
 

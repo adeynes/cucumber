@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace cucumber\task;
 
-class PunishmentSaveTask extends CTask
+class PunishmentSaveTask extends CucumberTask
 {
 
     public function onRun(int $tick): void

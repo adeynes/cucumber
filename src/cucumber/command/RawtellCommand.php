@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace cucumber\command;
 
 use cucumber\Cucumber;
-use cucumber\utils\CPlayer;
+use cucumber\utils\CucumberPlayer;
 use cucumber\utils\MessageFactory;
 use pocketmine\command\CommandSender;
 
@@ -29,7 +29,7 @@ class RawtellCommand extends CucumberCommand
         [$target_name, $message] = $command->get([0, [1, -1]]);
         $message = MessageFactory::colorize($message);
 
-        if (is_null($target = CPlayer::getOnlinePlayer($target_name))) {
+        if (is_null($target = CucumberPlayer::getOnlinePlayer($target_name))) {
             $sender->sendMessage(
                 MessageFactory::colorize(
                     MessageFactory::format($this->getPlugin()->getMessage(

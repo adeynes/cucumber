@@ -5,7 +5,7 @@ namespace cucumber\utils;
 
 
 
-class CException extends \Exception
+class CucumberException extends \Exception
 {
 
     /**

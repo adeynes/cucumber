@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace cucumber\mod;
 
 use cucumber\Cucumber;
-use cucumber\utils\CException;
-use cucumber\utils\CPlayer;
+use cucumber\utils\CucumberException;
+use cucumber\utils\CucumberPlayer;
 use cucumber\utils\ErrorCodes;
 use cucumber\utils\Queries;
 use poggit\libasynql\result\SqlSelectResult;
@@ -150,10 +150,10 @@ final class PunishmentManager
      * @param Punishment $punishment
      * @param string $type
      * @param array $storage
-     * @param CException $exception
-     * @throws CException If the ID is already punished
+     * @param CucumberException $exception
+     * @throws CucumberException If the ID is already punished
      */
-    private function punish($id, Punishment $punishment, string $type, array &$storage, CException $exception): void
+    private function punish($id, Punishment $punishment, string $type, array &$storage, CucumberException $exception): void
     {
         if (isset($storage[$id]))
             throw $exception;
@@ -166,10 +166,10 @@ final class PunishmentManager
      * @param $id
      * @param string $type
      * @param array $storage
-     * @param CException $exception
-     * @throws CException If the ID is not punished
+     * @param CucumberException $exception
+     * @throws CucumberException If the ID is not punished
      */
-    private function pardon($id, string $type, array &$storage, CException $exception): void
+    private function pardon($id, string $type, array &$storage, CucumberException $exception): void
     {
         if (!isset($storage[$id]))
             throw $exception;
@@ -187,14 +187,14 @@ final class PunishmentManager
      * @param array $storage
      * @param string $error_message
      * @return SimplePunishment The new punishment
-     * @throws CException If the player is already punished
+     * @throws CucumberException If the player is already punished
      */
     private function playerPunish(string $name, ?string $reason, ?string $expiration, string $moderator,
                                   string $type, array &$storage, string $error_message): SimplePunishment
     {
         $punishment = new SimplePunishment($reason, $expiration, $moderator);
         $this->punish($name, $punishment, $type, $storage,
-                new CException($error_message, ['player' => $name],
+                new CucumberException($error_message, ['player' => $name],
                     ErrorCodes::ATTEMPT_PUNISH_PUNISHED));
         return $punishment;
     }
@@ -204,12 +204,12 @@ final class PunishmentManager
      * @param string $type
      * @param array $storage
      * @param string $error_message
-     * @throws CException If the player is not punished
+     * @throws CucumberException If the player is not punished
      */
     private function playerPardon(string $name, string $type, array &$storage, string $error_message)
     {
         $this->pardon($name, $type, $storage,
-            new CException(
+            new CucumberException(
                 $error_message,
                 ['player' => $name],
                 ErrorCodes::ATTEMPT_PARDON_NOT_PUNISHED
@@ -227,7 +227,7 @@ final class PunishmentManager
      * @param int|null $expiration
      * @param string $moderator
      * @return SimplePunishment
-     * @throws CException If the player is already banned
+     * @throws CucumberException If the player is already banned
      */
     public function ban(string $name, ?string $reason, ?int $expiration, string $moderator): SimplePunishment
     {
@@ -237,7 +237,7 @@ final class PunishmentManager
 
     /**
      * @param string $name
-     * @throws CException If the player is not banned
+     * @throws CucumberException If the player is not banned
      */
     public function unban(string $name): void
     {
@@ -255,13 +255,13 @@ final class PunishmentManager
      * @param int|null $expiration
      * @param string $moderator
      * @return SimplePunishment
-     * @throws CException If the IP is already banned
+     * @throws CucumberException If the IP is already banned
      */
     public function ipBan(int $ip, string $reason = null, int $expiration = null, string $moderator): SimplePunishment
     {
         $punishment = new SimplePunishment($reason, $expiration, $moderator);
         $this->punish($ip, $punishment, 'ip-ban', $this->ip_bans,
-            new CException(
+            new CucumberException(
                 $this->getMessages()['ip-ban']['already-banned'],
                 ['ip' => $ip],
                 ErrorCodes::ATTEMPT_PUNISH_PUNISHED
@@ -272,12 +272,12 @@ final class PunishmentManager
 
     /**
      * @param string $ip
-     * @throws CException If the IP is not banned
+     * @throws CucumberException If the IP is not banned
      */
     public function ipUnban(string $ip): void
     {
         $this->pardon($ip, 'ip-ban', $this->ip_bans,
-            new CException(
+            new CucumberException(
                 $this->getMessages()['ip-ban']['not-banned'],
                 ['ip' => $ip],
                 ErrorCodes::ATTEMPT_PARDON_NOT_PUNISHED
@@ -296,7 +296,7 @@ final class PunishmentManager
      * @param int|null $expiration
      * @param string $moderator
      * @return SimplePunishment
-     * @throws CException If the player is already muted
+     * @throws CucumberException If the player is already muted
      */
     public function mute(string $name, ?string $reason, ?int $expiration, string $moderator): SimplePunishment
     {
@@ -306,14 +306,14 @@ final class PunishmentManager
 
     /**
      * @param string $name
-     * @throws CException If the player is not muted
+     * @throws CucumberException If the player is not muted
      */
     public function unmute(string $name): void
     {
         $this->playerPardon($name, 'mute', $this->mutes, $this->getMessages()['mute']['not-muted']);
     }
 
-    public function isBanned(CPlayer $player): ?SimplePunishment
+    public function isBanned(CucumberPlayer $player): ?SimplePunishment
     {
         $name = $player->getName();
         if (!is_null($ban = $this->getBan($name))) {
@@ -332,7 +332,7 @@ final class PunishmentManager
         return null;
     }
 
-    public function isMuted(CPlayer $player): ?SimplePunishment
+    public function isMuted(CucumberPlayer $player): ?SimplePunishment
     {
         $name = $player->getName();
         if (!is_null($mute = $this->getMute($name))) {

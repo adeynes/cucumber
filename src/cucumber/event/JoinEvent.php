@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace cucumber\event;
 
-class JoinEvent extends CPlayerEvent
+class JoinEvent extends CucumberPlayerEvent
 {
 
 }

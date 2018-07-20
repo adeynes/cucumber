@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace cucumber\log;
 
 use cucumber\Cucumber;
-use cucumber\event\CEvent;
+use cucumber\event\CucumberEvent;
 use cucumber\utils\ds\Stack;
 use cucumber\utils\MessageFactory;
 
@@ -67,11 +67,11 @@ final class LogManager
      * Creates a log message for the given event
      * Uses the template for the event type
      * specified in messages.yml and populates
-     * it with the data in CEvent::getData()
-     * @param CEvent $ev
+     * it with the data in CucumberEvent::getData()
+     * @param CucumberEvent $ev
      * @return string
      */
-    public function formatEventMessage(CEvent $ev): string
+    public function formatEventMessage(CucumberEvent $ev): string
     {
         return MessageFactory::formatNoColor(
             $this->global_template,

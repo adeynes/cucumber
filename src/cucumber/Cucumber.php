@@ -49,7 +49,7 @@ final class Cucumber extends PluginBase
         $this->initEvents();
         $this->registerCommands();
 
-        $this->getServer()->getPluginManager()->registerEvents(new CListener($this), $this);
+        $this->getServer()->getPluginManager()->registerEvents(new CucumberListener($this), $this);
     }
 
     public function onDisable(): void

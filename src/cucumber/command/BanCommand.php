@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace cucumber\command;
 
 use cucumber\Cucumber;
-use cucumber\utils\CException;
-use cucumber\utils\CPlayer;
+use cucumber\utils\CucumberException;
+use cucumber\utils\CucumberPlayer;
 use cucumber\utils\MessageFactory;
 use pocketmine\command\CommandSender;
 
@@ -29,7 +29,7 @@ class BanCommand extends CucumberCommand
             $ban = $this->getPlugin()->getPunishmentManager()->ban($target_name, $reason, $expiration, $sender->getName());
             $ban_data = $ban->getData() + ['player' => $target_name];
 
-            if (!is_null($target = CPlayer::getOnlinePlayer($target_name)))
+            if (!is_null($target = CucumberPlayer::getOnlinePlayer($target_name)))
                 $target->kick(
                     MessageFactory::format($this->getPlugin()->getMessage('moderation.ban.reason'),
                         $ban_data + ['moderator' => $sender->getName()])
@@ -38,7 +38,7 @@ class BanCommand extends CucumberCommand
             $sender->sendMessage(
                 MessageFactory::format($this->getPlugin()->getMessage('success.ban'), $ban_data)
             );
-        } catch(CException $exception) {
+        } catch(CucumberException $exception) {
             $sender->sendMessage($exception->getMessage());
             return false;
         }

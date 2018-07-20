@@ -10,7 +10,7 @@ use pocketmine\Server;
  * A wrapper for player data (name, IP, UID) that can
  * be universally passed around across Cucumber's APIs
  */
-class CPlayer
+class CucumberPlayer
 {
 
     /** @var string */

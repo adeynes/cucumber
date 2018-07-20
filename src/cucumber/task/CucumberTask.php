@@ -6,7 +6,7 @@ namespace cucumber\task;
 use cucumber\Cucumber;
 use pocketmine\scheduler\Task;
 
-abstract class CTask extends Task
+abstract class CucumberTask extends Task
 {
 
     /** @var Cucumber */

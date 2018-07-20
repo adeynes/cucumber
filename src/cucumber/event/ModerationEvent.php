@@ -5,7 +5,7 @@ namespace cucumber\event;
 
 use pocketmine\Player;
 
-class ModerationEvent extends CPlayerEvent
+class ModerationEvent extends CucumberPlayerEvent
 {
 
     public function __construct(Player $player, array $data)
