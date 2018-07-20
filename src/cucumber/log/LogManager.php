@@ -29,15 +29,20 @@ final class LogManager
     public function __construct(Cucumber $plugin)
     {
         $this->plugin = $plugin;
-        $this->dir = $this->plugin->getConfig()->getNested('log.path') ?? 'log/';
+        $this->dir = $this->getPlugin()->getConfig()->getNested('log.path') ?? 'log/';
         $this->loggers = new Stack;
-        [$this->global_template, $this->time_format] = [$this->plugin->getMessage('log.templates.global'),
-                                                        $this->plugin->getMessage('log.time-format') ?? 'Y-m-d\TH:i:s'];
+        [$this->global_template, $this->time_format] = [$this->getPlugin()->getMessage('log.templates.global'),
+                                                        $this->getPlugin()->getMessage('log.time-format') ?? 'Y-m-d\TH:i:s'];
+    }
+
+    public function getPlugin(): Cucumber
+    {
+        return $this->plugin;
     }
 
     public function getDirectory(): string
     {
-        return $this->plugin->getDataFolder() . $this->dir;
+        return $this->getPlugin()->getDataFolder() . $this->dir;
     }
 
     public function log(string $message): void

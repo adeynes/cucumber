@@ -17,9 +17,14 @@ abstract class CTask extends Task
         $this->plugin = $plugin;
     }
 
+    public function getPlugin(): Cucumber
+    {
+        return $this->plugin;
+    }
+
     public function cancel(): void
     {
-        $this->plugin->cancelTask($this->getTaskId());
+        $this->getPlugin()->cancelTask($this->getTaskId());
     }
 
 }

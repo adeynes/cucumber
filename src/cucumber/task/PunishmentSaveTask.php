@@ -8,8 +8,8 @@ class PunishmentSaveTask extends CTask
 
     public function onRun(int $tick): void
     {
-        $this->plugin->log('Saving punishments...');
-        $this->plugin->getPunishmentManager()->save();
+        $this->getPlugin()->log('Saving punishments...');
+        $this->getPlugin()->getPunishmentManager()->save();
     }
 
 }

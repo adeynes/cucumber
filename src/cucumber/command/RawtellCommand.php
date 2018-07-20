@@ -32,7 +32,7 @@ class RawtellCommand extends CucumberCommand
         if (is_null($target = CPlayer::getOnlinePlayer($target_name))) {
             $sender->sendMessage(
                 MessageFactory::colorize(
-                    MessageFactory::format($this->plugin->getMessage(
+                    MessageFactory::format($this->getPlugin()->getMessage(
                         'error.target-offline'),
                         ['player' => $target_name]
                     )
