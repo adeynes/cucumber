@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace cucumber\utils;
 
-use pocketmine\utils\TextFormat;
+
 
 class CException extends \Exception
 {
@@ -15,9 +15,9 @@ class CException extends \Exception
      */
     public function __construct(string $message, array $data = [], int $code = 800)
     {
-        $message = '&c' . $message;
+        $message = "&c$message";
         $apply_colors = function(&$value) {
-            $value = '&b' . $value . '&c';
+            $value = "&b$value&c";
         };
         array_walk($data, $apply_colors);
         parent::__construct(

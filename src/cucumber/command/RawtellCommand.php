@@ -7,8 +7,6 @@ use cucumber\Cucumber;
 use cucumber\utils\CPlayer;
 use cucumber\utils\MessageFactory;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
-use pocketmine\utils\TextFormat;
 
 /**
  * Sends a raw private message to a player

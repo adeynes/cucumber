@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace cucumber\event;
 
-
 use pocketmine\Player;
 
 class CommandEvent extends CPlayerEvent

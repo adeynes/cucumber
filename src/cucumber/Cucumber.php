@@ -6,8 +6,6 @@ namespace cucumber;
 use cucumber\log\LogManager;
 use cucumber\mod\PunishmentManager;
 use cucumber\task\PunishmentSaveTask;
-
-
 use cucumber\utils\Queries;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
@@ -72,14 +70,15 @@ final class Cucumber extends PluginBase
     {
         $this->connector = libasynql::create($this, $this->getConfig()->get('database'),
             ['mysql' => 'mysql.sql']);
+        $connector = $this->getConnector();
         $queries = [Queries::CUCUMBER_INIT_PLAYERS, Queries::CUCUMBER_INIT_PUNISHMENTS_BANS,
             Queries::CUCUMBER_INIT_PUNISHMENTS_IP_BANS, Queries::CUCUMBER_GET_PUNISHMENTS_MUTES];
 
         foreach ($queries as $query)
-            $this->getConnector()->executeGeneric($query);
+            $connector->executeGeneric($query);
 
         // stop execution until init is completed
-        $this->getConnector()->waitAll();
+        $connector->waitAll();
     }
 
     /**
@@ -126,9 +125,9 @@ final class Cucumber extends PluginBase
 
         foreach ($events as $type => $class)
             call_user_func(
-                ['\\cucumber\\event\\' . $class[1], 'init'],
+                ["\\cucumber\\event\\$class[1]", 'init'],
                 $class[0],
-                $this->getMessage('log.templates.' . $type)
+                $this->getMessage("log.templates.$type")
             );
     }
 
@@ -142,11 +141,15 @@ final class Cucumber extends PluginBase
             'alert' => 'AlertCommand',
             'kick' => 'KickCommand',
             'ban' => 'BanCommand',
+            'banlist' => 'BanlistCommand',
             'pardon' => 'PardonCommand',
-            'ipban' => 'IpBanCommand',
-            'ippardon' => 'IpPardonCommand',
+            'ipban' => 'IpbanCommand',
+            'ipbanlist' => 'IpbanlistCommand',
+            'ippardon' => 'IppardonCommand',
             'uban' => 'UbanCommand',
+            'ubanlist' => 'UbanlistCommand',
             'mute' => 'MuteCommand',
+            'mutelist' => 'MutelistCommand',
             'unmute' => 'UnmuteCommand'
         ];
 
@@ -156,7 +159,7 @@ final class Cucumber extends PluginBase
                 $old->setLabel($command . '_disabled');
                 $old->unregister($map);
             }
-            $class = '\\cucumber\\command\\' . $class;
+            $class = "\\cucumber\\command\\$class";
             $map->register('cucumber', new $class($this));
         }
     }

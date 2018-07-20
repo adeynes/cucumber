@@ -11,6 +11,7 @@ use cucumber\event\JoinAttemptEvent;
 use cucumber\event\JoinEvent;
 use cucumber\event\QuitEvent;
 use cucumber\utils\CPlayer;
+use cucumber\utils\MessageFactory;
 use pocketmine\event\Event;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
@@ -29,12 +30,17 @@ final class CListener implements Listener
         $this->plugin = $plugin;
     }
 
+    public function getPlugin(): Cucumber
+    {
+        return $this->plugin;
+    }
+
     public function onChat(PlayerChatEvent $ev)
     {
         $player = $ev->getPlayer();
         $message = $ev->getMessage();
 
-        if ($this->plugin->getPunishmentManager()->isMuted(new CPlayer($player))) {
+        if ($this->getPlugin()->getPunishmentManager()->isMuted(new CPlayer($player))) {
             $ev->setCancelled();
             $this->callEvent(
                 new ChatAttemptEvent($player, $message)
@@ -58,7 +64,10 @@ final class CListener implements Listener
     {
         $player = $ev->getPlayer();
 
-        if ($this->plugin->getPunishmentManager()->isBanned(new CPlayer($player))) {
+        if (!is_null($ban = $this->getPlugin()->getPunishmentManager()->isBanned(new CPlayer($player)))) {
+            $ev->setKickMessage(
+                MessageFactory::format($this->getPlugin()->getMessage('moderation.ban.reason'), $ban->getData())
+            );
             $ev->setCancelled();
             $this->callEvent(
                 new JoinAttemptEvent($player)
@@ -86,7 +95,7 @@ final class CListener implements Listener
      */
     public function onCEvent(CEvent $ev)
     {
-        $log_manager = $this->plugin->getLogManager();
+        $log_manager = $this->getPlugin()->getLogManager();
         $log_manager->log(
             $log_manager->formatEventMessage($ev)
         );
@@ -94,7 +103,7 @@ final class CListener implements Listener
 
     private function callEvent(Event $ev): void
     {
-        $this->plugin->getServer()->getPluginManager()->callEvent($ev);
+        $this->getPlugin()->getServer()->getPluginManager()->callEvent($ev);
     }
 
 }

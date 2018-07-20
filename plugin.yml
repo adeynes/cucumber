@@ -28,8 +28,13 @@ commands:
     usage: '/ban <player> [reason] [-d <duration>]'
     permission: cucumber.command.ban
 
+  banlist:
+    description: 'See the list of bans'
+    usage: '/banlist'
+    permission: cucumber.command.banlist
+
   pardon:
-    description: 'Pardon a player (undoes a /ban)'
+    description: 'Pardon a player (undo a /ban)'
     usage: '/pardon <player>'
     permission: cucumber.command.pardon
 
@@ -38,8 +43,13 @@ commands:
     usage: '/ipban <-p <player>|-i <ip>> [reason]'
     permission: cucumber.command.ipban
 
+  ipbanlist:
+    description: 'See the list of IP bans'
+    usage: '/ipbanlist'
+    permission: 'cucumber.command.ipbanlist'
+
   ippardon:
-    description: 'Pardon an IP (undoes a /ipban)'
+    description: 'Pardon an IP (undo a /ipban)'
     usage: '/ippardon <ip>'
     permission: cucumber.command.uban
 
@@ -48,10 +58,20 @@ commands:
     usage: '/uban <-p <player>|-i <ip>> [reason]'
     permission: cucumber.command.uban
 
+  ubanlist:
+    description: 'See the list of UBans'
+    usage: '/ubanlist'
+    permission: cucumber.command.ubanlist
+
   mute:
     description: 'Mute a player'
     usage: '/mute <player> [reason] [-d <duration>]'
     permission: cucumber.command.mute
+
+  mutelist:
+    description: 'See the list of mutes'
+    usage: '/mutelist'
+    permission: cucumber.command.mutelist
 
   unmute:
     description: 'Unmute a player'
@@ -81,6 +101,9 @@ permissions:
           cucumber.command.mute:
             description: 'Allows for the use of /mute'
             default: op
+          cucumber.command.mutelist:
+            description: 'Allows for the use of /mutelist'
+            default: op
           cucumber.command.unmute:
             description: 'Allows for the use of /unmute'
             default: op
@@ -89,24 +112,29 @@ permissions:
         description: 'Ban-related commands'
         default: op
         children:
+          cucumber.command.ban:
+            description: 'Allows for the use of /ban'
+            default: op
+          cucumber.command.ipban:
+            description: 'Allows for the use of /ipban'
+            default: op
           cucumber.command.uban:
             description: 'Allows for the use of /uban and all ban commands'
             default: op
-            children:
-              cucumber.command.ban:
-                description: 'Allows for the use of /ban'
-                default: op
-              cucumber.command.ipban:
-                description: 'Allows for the use of /ipban'
-                default: op
 
-          cucumber.command.upardon:
-            description: 'Allows for the use of /upardon and all pardon commands'
+          cucumber.command.pardon:
+            description: 'Allows for the use of /pardon'
             default: op
-            children:
-              cucumber.command.pardon:
-                description: 'Allows for the use of /pardon'
-                default: op
-              cucumber.command.ippardon:
-                description: 'Allows for the use of /ippardon'
-                default: op
+          cucumber.command.ippardon:
+            description: 'Allows for the use of /ippardon'
+            default: op
+
+          cucumber.command.banlist:
+            description: 'Allows for the use of /banlist'
+            default: op
+          cucumber.command.ipbanlist:
+                      description: 'Allows for the use of /ipbanlist'
+                      default: op
+          cucumber.command.ubanlist:
+                      description: 'Allows for the use of /ubanlist'
+                      default: op

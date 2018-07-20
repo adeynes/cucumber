@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS players (
   id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(30) UNIQUE NOT NULL,
   ip VARCHAR(20) NOT NULL,
-  uid VARCHAR(255) UNIQUE NOT NULL,
   first_join INT(11) UNSIGNED NOT NULL,
   last_join INT(11) UNSIGNED NOT NULL
 );
@@ -15,12 +14,12 @@ CREATE TABLE IF NOT EXISTS players (
 -- #      {bans
 CREATE TABLE IF NOT EXISTS bans (
   id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  uid VARCHAR(255) UNIQUE NOT NULL,
+  player INT(7) UNIQUE NOT NULL,
   reason VARCHAR(500) UNIQUE DEFAULT '',
   expiration INT(11) NOT NULL,
-  moderator INT(7) NOT NULL,
-  FOREIGN KEY (uid) REFERENCES players(uid),
-  FOREIGN KEY (moderator) REFERENCES players(id)
+  moderator VARCHAR(30) NOT NULL,
+  FOREIGN KEY (player) REFERENCES players(id),
+  FOREIGN KEY (moderator) REFERENCES players(name)
 );
 -- #      }
 -- #      {ip-bans
@@ -29,20 +28,20 @@ CREATE TABLE IF NOT EXISTS ip_bans (
   ip VARCHAR(20) UNIQUE NOT NULL,
   reason VARCHAR(511) UNIQUE DEFAULT '',
   expiration INT(11) NOT NULL,
-  moderator INT(7) NOT NULL,
+  moderator VARCHAR(30) NOT NULL,
   FOREIGN KEY (ip) REFERENCES players(ip),
-  FOREIGN KEY (moderator) REFERENCES players(id)
+  FOREIGN KEY (moderator) REFERENCES players(name)
 );
 -- #      }
 -- #      {mutes
 CREATE TABLE IF NOT EXISTS mutes (
   id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  uid VARCHAR(255) UNIQUE NOT NULL,
+  player INT(7) UNIQUE NOT NULL,
   reason VARCHAR(500) UNIQUE DEFAULT '',
   expiration INT(11) NOT NULL,
-  moderator INT(7) NOT NULL,
-  FOREIGN KEY (uid) REFERENCES players(uid),
-  FOREIGN KEY (moderator) REFERENCES players(id)
+  moderator VARCHAR(30) NOT NULL,
+  FOREIGN KEY (player) REFERENCES players(id),
+  FOREIGN KEY (moderator) REFERENCES players(name)
 );
 -- #      }
 -- #    }
@@ -52,34 +51,43 @@ CREATE TABLE IF NOT EXISTS mutes (
 -- #      {player
 -- #        {by-name
 -- #          :name string
-SELECT id, ip, uid FROM players WHERE name = :name;
+SELECT * FROM players WHERE name = :name;
 -- #        }
 -- #      }
 -- #    }
 -- #    {punishments
 -- #      {bans
-SELECT id, uid, reason, expiration, moderator FROM bans;
+SELECT bans.*, players.*
+FROM bans
+INNER JOIN players ON bans.player = players.id;
 -- #      }
 -- #      {ip-bans
-SELECT id, ip, reason, expiration, moderator FROM ip_bans;
+SELECT * FROM ip_bans;
 -- #      }
 -- #      {mutes
-SELECT id, uid, reason, expiration, moderator FROM mutes;
+SELECT mutes.*, players.*
+FROM mutes
+INNER JOIN players ON mutes.player = players.id;
 -- #      }
 -- #    }
 -- #  }
 -- #  {punish
 -- #    {ban
--- #      :uid string
+-- #      :name string
 -- #      :reason string
 -- #      :expiration int
 -- #      :moderator int
-INSERT INTO bans (uid, reason, expiration, moderator)
-VALUES (:uid, :reason, :expiration, :moderator);
+INSERT INTO bans (id, reason, expiration, moderator)
+SELECT id, :reason, :expiration, :moderator FROM players WHERE name = :name;
 -- #    }
 -- #    {unban
--- #      :uid string
-DELETE FROM bans WHERE uid = :uid;
+-- #      :name string
+DELETE FROM bans
+WHERE id IN (
+  SELECT * FROM (
+    SELECT id FROM players WHERE name = :name
+  ) AS a
+);
 -- #    }
 -- #    {ip-ban
 -- #      :ip string
@@ -94,16 +102,21 @@ VALUES (:ip, :reason, :expiration, :moderator);
 DELETE FROM ip_bans WHERE ip = :ip;
 -- #    }
 -- #    {mute
--- #      :uid string
+-- #      :name string
 -- #      :reason string
 -- #      :expiration int
 -- #      :moderator int
-INSERT INTO mutes (uid, reason, expiration, moderator)
-VALUES (:uid, :reason, :expiration, :moderator);
+INSERT INTO mutes (id, reason, expiration, moderator)
+SELECT id, :reason, :expiration, :moderator FROM players WHERE name = :name;
 -- #    }
 -- #    {unmute
--- #      :uid string
-DELETE FROM mutes WHERE uid = :uid;
+-- #      :name string
+DELETE FROM mutes
+WHERE id IN (
+  SELECT * FROM (
+    SELECT id FROM players WHERE name = :name
+  ) AS a
+);
 -- #    }
 -- #  }
 -- #}

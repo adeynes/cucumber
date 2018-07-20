@@ -19,29 +19,18 @@ class CPlayer
     /** @var string|null */
     protected $ip;
 
-    /** @var string|null */
-    protected $uid;
-
     /**
      * @param Player|string $player
      * @param string|null $ip
-     * @param string|null $uid
      */
-    public function __construct($player, string $ip = null, string $uid = null)
+    public function __construct($player, ?string $ip = null)
     {
         if ($player instanceof Player)
-            $unpacked = [$player->getName(), $player->getAddress(), self::getSafeXuid($player)];
+            $properties = [$player->getName(), $player->getAddress()];
         else
-            $unpacked = [$player, $ip, $uid];
+            $properties = [$player, $ip];
 
-        $this->init(...$unpacked);
-    }
-
-    protected function init(string $name, ?string $ip, ?string $uid): void
-    {
-        $this->name = $name;
-        $this->ip = $ip;
-        $this->uid = $uid;
+        [$this->name, $this->ip] = $properties;
     }
 
     public function getName(): string
@@ -54,9 +43,9 @@ class CPlayer
         return $this->ip;
     }
 
-    public function getUid(): ?string
+    public static function from(array $row): self
     {
-        return $this->uid;
+        return new self($row['name'], $row['ip']);
     }
 
     public static function getOnlinePlayer(string $name): ?Player
@@ -66,17 +55,6 @@ class CPlayer
             return $player;
         else
             return null;
-    }
-
-    /**
-     * Returns the player's unique ID (hashed XUID) if
-     * they are logged in to XBL, otherwise returns null
-     * @param Player $player
-     * @return string|null
-     */
-    public static function getSafeXuid(Player $player): ?string
-    {
-        return $player->getXuid() !== '' ? (string) $player->getUniqueId() : null;
     }
 
 }

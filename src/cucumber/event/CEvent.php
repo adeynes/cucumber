@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace cucumber\event;
 
+use cucumber\utils\HasData;
 use pocketmine\event\Event;
 
 /**
@@ -10,7 +11,7 @@ use pocketmine\event\Event;
  * used to listen for all of them to log
  * @allowHandle
  */
-abstract class CEvent extends Event
+abstract class CEvent extends Event implements HasData
 {
 
     /** @var string */
@@ -24,12 +25,6 @@ abstract class CEvent extends Event
         self::$type = $type;
         self::$template = $template;
     }
-
-    /**
-     * Returns the values that will populate the message template
-     * @return array
-     */
-    abstract public function getData(): array;
 
     public function getType(): string
     {

@@ -7,9 +7,7 @@ use cucumber\Cucumber;
 use cucumber\utils\CException;
 use cucumber\utils\CPlayer;
 use cucumber\utils\MessageFactory;
-use cucumber\utils\Queries;
 use pocketmine\command\CommandSender;
-use poggit\libasynql\result\SqlSelectResult;
 
 class BanCommand extends CucumberCommand
 {
@@ -27,49 +25,22 @@ class BanCommand extends CucumberCommand
         [$target_name, $reason] = $command->get([0, [1, -1]]);
         $expiration = CommandParser::parseDuration($command->getTag('d') ?? '');
 
-        if (is_null($target = CPlayer::getOnlinePlayer($target_name))) {
-            $ban = function(SqlSelectResult $result) use ($sender, $target_name, $reason, $expiration) {
-                if (empty($rows = $result->getRows())) {
-                    $sender->sendMessage(
-                        MessageFactory::format(
-                            $this->getPlugin()->getMessage('error.target-does-not-exist'),
-                            ['player' => $target_name]
-                        )
-                    );
-                    return;
-                }
+        try {
+            $ban = $this->getPlugin()->getPunishmentManager()->ban($target_name, $reason, $expiration, $sender->getName());
+            $ban_data = $ban->getData() + ['player' => $target_name];
 
-                $row = $rows[0];
-                $target = new CPlayer($row['name'], $row['ip'], $row['uid']);
-
-                try {
-                    $this->getPlugin()->getPunishmentManager()->ban($target, $reason, $expiration, $sender->getName());
-                    $sender->sendMessage(
-                        MessageFactory::format(
-                            $this->getPlugin()->getMessage('success.ban'),
-                            ['player' => $target_name, 'reason' => $reason, 'expiration' => $expiration]
-                        )
-                    );
-                } catch(CException $exception) {
-                    $sender->sendMessage($exception->getMessage());
-                }
-            };
-
-            $this->plugin->getConnector()->executeSelect(Queries::CUCUMBER_GET_FIND_PLAYER_BY_NAME,
-                    ['name' => $target_name], $ban);
-        } else {
-            try {
-                $this->getPlugin()->getPunishmentManager()->ban(new CPlayer($target), $reason, $expiration, $sender->getName());
-                $sender->sendMessage(
-                    MessageFactory::format(
-                        $this->getPlugin()->getMessage('success.ban'),
-                        ['player' => $target_name, 'reason' => $reason, 'expiration' => $expiration]
-                    )
+            if (!is_null($target = CPlayer::getOnlinePlayer($target_name)))
+                $target->kick(
+                    MessageFactory::format($this->getPlugin()->getMessage('moderation.ban.reason'),
+                        $ban_data + ['moderator' => $sender->getName()])
                 );
-            } catch(CException $exception) {
-                $sender->sendMessage($exception->getMessage());
-                return false;
-            }
+
+            $sender->sendMessage(
+                MessageFactory::format($this->getPlugin()->getMessage('success.ban'), $ban_data)
+            );
+        } catch(CException $exception) {
+            $sender->sendMessage($exception->getMessage());
+            return false;
         }
 
         return true;
