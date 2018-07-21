@@ -29,7 +29,7 @@ class RawtellCommand extends CucumberCommand
         [$target_name, $message] = $command->get([0, [1, -1]]);
         $message = MessageFactory::colorize($message);
 
-        if (is_null($target = CucumberPlayer::getOnlinePlayer($target_name))) {
+        if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
             $sender->sendMessage(
                 MessageFactory::colorize(
                     MessageFactory::format($this->getPlugin()->getMessage(
@@ -41,13 +41,13 @@ class RawtellCommand extends CucumberCommand
             return false;
         }
 
-        if (is_null($command->getTag('nom')))
+        if (!$command->getTag('nom'))
             $target->sendMessage($message);
 
-        if (!is_null($command->getTag('p')))
+        if ($command->getTag('p'))
             $target->sendPopup($message);
 
-        if (!is_null($command->getTag('t')))
+        if ($command->getTag('t'))
             $target->addSubTitle($message); // title is too big
 
         $sender->sendMessage(

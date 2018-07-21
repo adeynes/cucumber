@@ -11,7 +11,7 @@ class CommandParser
         $tags = [];
 
         foreach ($args as $key => $arg) {
-            if (is_null($length = $command->getTag($tag = substr($arg, 1))))
+            if (!$length = $command->getTag($tag = substr($arg, 1)))
                 continue;
 
             $tags[$tag] = array_slice($args, $key + 1, $length);

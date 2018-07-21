@@ -24,7 +24,7 @@ commands:
     permission: cucumber.command.alert
 
   ban:
-    description: 'Ban a player by unique identification (XUID)'
+    description: 'Ban a player by name'
     usage: '/ban <player> [reason] [-d <duration>]'
     permission: cucumber.command.ban
 
@@ -40,7 +40,7 @@ commands:
 
   ipban:
     description: 'Ban an IP'
-    usage: '/ipban <-p <player>|-i <ip>> [reason]'
+    usage: '/ipban <-p <player>|-ip <ip>> [reason] [-d <duration>]'
     permission: cucumber.command.ipban
 
   ipbanlist:
@@ -52,16 +52,6 @@ commands:
     description: 'Pardon an IP (undo a /ipban)'
     usage: '/ippardon <ip>'
     permission: cucumber.command.uban
-
-  uban:
-    description: 'Ban an IP and all players who join with it. Irreversible'
-    usage: '/uban <-p <player>|-i <ip>> [reason]'
-    permission: cucumber.command.uban
-
-  ubanlist:
-    description: 'See the list of UBans'
-    usage: '/ubanlist'
-    permission: cucumber.command.ubanlist
 
   mute:
     description: 'Mute a player'
@@ -118,9 +108,6 @@ permissions:
           cucumber.command.ipban:
             description: 'Allows for the use of /ipban'
             default: op
-          cucumber.command.uban:
-            description: 'Allows for the use of /uban and all ban commands'
-            default: op
 
           cucumber.command.pardon:
             description: 'Allows for the use of /pardon'
@@ -133,8 +120,5 @@ permissions:
             description: 'Allows for the use of /banlist'
             default: op
           cucumber.command.ipbanlist:
-                      description: 'Allows for the use of /ipbanlist'
-                      default: op
-          cucumber.command.ubanlist:
-                      description: 'Allows for the use of /ubanlist'
-                      default: op
+            description: 'Allows for the use of /ipbanlist'
+            default: op

@@ -64,7 +64,7 @@ final class CucumberListener implements Listener
     {
         $player = $ev->getPlayer();
 
-        if (!is_null($ban = $this->getPlugin()->getPunishmentManager()->isBanned(new CucumberPlayer($player)))) {
+        if ($ban = $this->getPlugin()->getPunishmentManager()->isBanned(new CucumberPlayer($player))) {
             $ev->setKickMessage(
                 MessageFactory::format($this->getPlugin()->getMessage('moderation.ban.reason'), $ban->getData())
             );

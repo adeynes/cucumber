@@ -316,14 +316,14 @@ final class PunishmentManager
     public function isBanned(CucumberPlayer $player): ?SimplePunishment
     {
         $name = $player->getName();
-        if (!is_null($ban = $this->getBan($name))) {
+        if ($ban = $this->getBan($name)) {
             if ($ban->isExpired())
                 $this->unban($name);
             else return $ban;
         }
 
         $ip = $player->getIp();
-        if (!is_null($ip_ban = $this->getIpBan($ip))) {
+        if ($ip_ban = $this->getIpBan($ip)) {
             if ($ip_ban->isExpired())
                 $this->ipUnban($ip);
             else return $ip_ban;
@@ -335,7 +335,7 @@ final class PunishmentManager
     public function isMuted(CucumberPlayer $player): ?SimplePunishment
     {
         $name = $player->getName();
-        if (!is_null($mute = $this->getMute($name))) {
+        if ($mute = $this->getMute($name)) {
             if ($mute->isExpired())
                 $this->unmute($name);
             else return $mute;

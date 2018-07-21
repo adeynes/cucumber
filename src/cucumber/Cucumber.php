@@ -139,7 +139,6 @@ final class Cucumber extends PluginBase
             'rawtell' => 'RawtellCommand',
             'log' => 'LogCommand',
             'alert' => 'AlertCommand',
-            'kick' => 'KickCommand',
             'ban' => 'BanCommand',
             'banlist' => 'BanlistCommand',
             'pardon' => 'PardonCommand',
@@ -155,7 +154,7 @@ final class Cucumber extends PluginBase
 
         foreach ($commands as $command => $class){
             // Unregisters the old command if it is a duplicate name
-            if (!is_null($old = $map->getCommand($command))) {
+            if ($old = $map->getCommand($command)) {
                 $old->setLabel($command . '_disabled');
                 $old->unregister($map);
             }

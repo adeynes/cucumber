@@ -51,7 +51,7 @@ class CucumberPlayer
     public static function getOnlinePlayer(string $name): ?Player
     {
         $player = Server::getInstance()->getPlayer($name);
-        if (!is_null($player) && $player instanceof Player && $player->isOnline())
+        if ($player && $player instanceof Player && $player->isOnline())
             return $player;
         else
             return null;
