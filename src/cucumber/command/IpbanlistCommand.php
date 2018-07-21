@@ -23,16 +23,9 @@ class IpbanlistCommand extends CucumberCommand
         $display_bans = function(SqlSelectResult $result) use ($sender) {
             $message = '';
             foreach ($result->getRows() as $row)
-                $message .= MessageFactory::format(
-                    $this->getPlugin()->getMessage('success.ipbanlist.list'),
-                    $row
-                );
-            $sender->sendMessage(
-                MessageFactory::format(
-                    $this->getPlugin()->getMessage('success.ipbanlist.intro'),
-                    [count($result->getRows())]
-                )
-            );
+                $message .= $this->formatMessage('success.ipbanlist.list', $row);
+
+            $this->formatAndSend($sender, 'success.ipbanlist.intro', ['count' => count($result->getRows())]);
             $sender->sendMessage(trim($message));
         };
 

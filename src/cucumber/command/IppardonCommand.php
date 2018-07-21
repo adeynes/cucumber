@@ -23,10 +23,7 @@ class IppardonCommand extends CucumberCommand
 
         try {
             $this->getPlugin()->getPunishmentManager()->ipUnban($ip);
-            $sender->sendMessage(
-                MessageFactory::format($this->getPlugin()->getMessage('success.ippardon'), ['ip' => $ip])
-            );
-
+            $this->formatAndSend($sender, 'success.ippardon', ['ip' => $ip]);
             return true;
         } catch (CucumberException $exception) {
             $sender->sendMessage($exception->getMessage());

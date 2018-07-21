@@ -18,15 +18,10 @@ class LogCommand extends CucumberCommand
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$message] = $command->get([0, -1]);
+        [$message] = $command->get([[0, -1]]);
         $this->getPlugin()->getLogManager()->log($message);
 
-        $sender->sendMessage(
-            MessageFactory::format(
-                $this->getPlugin()->getMessage('success.log'),
-                ['message' => $message]
-            )
-        );
+        $this->formatAndSend($sender, 'success.log', ['message' => $message]);
 
         return true;
     }

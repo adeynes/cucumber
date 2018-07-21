@@ -30,14 +30,7 @@ class RawtellCommand extends CucumberCommand
         $message = MessageFactory::colorize($message);
 
         if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
-            $sender->sendMessage(
-                MessageFactory::colorize(
-                    MessageFactory::format($this->getPlugin()->getMessage(
-                        'error.target-offline'),
-                        ['player' => $target_name]
-                    )
-                )
-            );
+            $this->formatAndSend($sender, 'error.player-offline', ['player' => $target_name]);
             return false;
         }
 
@@ -50,12 +43,7 @@ class RawtellCommand extends CucumberCommand
         if ($command->getTag('t'))
             $target->addSubTitle($message); // title is too big
 
-        $sender->sendMessage(
-            MessageFactory::format(
-                $this->getPlugin()->getMessage('success.rawtell'),
-                ['player' => $target_name, 'message' => $message]
-            )
-        );
+        $this->formatAndSend($sender, 'success.rawtell', ['player' => $target_name, 'message' => $message]);
 
         return true;
     }

@@ -23,16 +23,9 @@ class BanlistCommand extends CucumberCommand
         $display_bans = function(SqlSelectResult $result) use ($sender) {
             $message = '';
             foreach ($result->getRows() as $row)
-                $message .= MessageFactory::format(
-                    $this->getPlugin()->getMessage('success.banlist.list'),
-                    $row
-                );
-            $sender->sendMessage(
-                MessageFactory::format(
-                    $this->getPlugin()->getMessage('success.banlist.intro'),
-                    [count($result->getRows())]
-                )
-            );
+                $message .= $this->formatMessage('success.banlist.list', $row);
+
+            $this->formatAndSend($sender, 'success.banlist.intro', ['count' => count($result->getRows())]);
             $sender->sendMessage(trim($message));
         };
 

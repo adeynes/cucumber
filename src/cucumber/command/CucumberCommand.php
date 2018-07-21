@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace cucumber\command;
 
 use cucumber\Cucumber;
+use cucumber\utils\MessageFactory;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
@@ -79,6 +80,22 @@ abstract class CucumberCommand extends Command implements PluginIdentifiableComm
     public function getTag(string $tag): ?int
     {
         return $this->getTags()[$tag] ?? null;
+    }
+
+    public function formatMessage(string $template_path, array $data): string
+    {
+        return MessageFactory::format($this->getPlugin()->getMessage($template_path), $data);
+    }
+
+    /**
+     * This is equivalent to $sender->sendMessage(MessageFactory::format($plugin->getMessage($template_path), $data))
+     * @param CommandSender $sender
+     * @param string $template_path The path to the message in messages.yml, ie error.player-offline
+     * @param array $data The data that will populate the template
+     */
+    public function formatAndSend(CommandSender $sender, string $template_path, array $data): void
+    {
+        $sender->sendMessage($this->formatMessage($template_path, $data));
     }
 
 }

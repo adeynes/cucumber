@@ -22,8 +22,7 @@ class AlertCommand extends CucumberCommand
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$message] = $command->get([0, -1]);
-        $message = MessageFactory::colorize($message);
+        [$message] = $command->get([[0, -1]]); // no need to colorize, MessageFactory will do that
         $server = $this->getPlugin()->getServer();
 
         if (!$command->getTag('nom'))
@@ -35,12 +34,7 @@ class AlertCommand extends CucumberCommand
         if ($command->getTag('t'))
             $server->broadcastTitle('', $message); // broadcast a subtitle
 
-        $sender->sendMessage(
-            MessageFactory::format(
-                $this->getPlugin()->getMessage('success.alert'),
-                ['message' => $message]
-            )
-        );
+        $this->formatAndSend($sender, 'success.alert', ['message' => $message]);
 
         return true;
     }

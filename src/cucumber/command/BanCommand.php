@@ -27,20 +27,15 @@ class BanCommand extends CucumberCommand
         $expiration = $duration ? CommandParser::parseDuration($duration) : null;
 
         try {
-            $ban_data= $this->getPlugin()->getPunishmentManager()
+            $ban_data = $this->getPlugin()->getPunishmentManager()
                 ->ban($target_name, $reason, $expiration, $sender->getName())
                 ->getDataFormatted($this->getPlugin()->getMessage('ban.ban.reason.default-reason'));
-            $ban_data = $ban_data + ['player' => $target_name];
+            $ban_data = $ban_data + ['player' => $target_name, 'moderator' => $sender->getName()];
 
             if ($target = CucumberPlayer::getOnlinePlayer($target_name))
-                $target->kick(
-                    MessageFactory::format($this->getPlugin()->getMessage('moderation.ban.reason'),
-                        $ban_data + ['moderator' => $sender->getName()])
-                );
+                $target->kick($this->formatMessage('moderation.ban.reason.message', $ban_data));
 
-            $sender->sendMessage(
-                MessageFactory::format($this->getPlugin()->getMessage('success.ban'), $ban_data)
-            );
+            $this->formatAndSend($sender, 'success.ban', $ban_data);
             return true;
         } catch(CucumberException $exception) {
             $sender->sendMessage($exception->getMessage());

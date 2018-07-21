@@ -23,10 +23,7 @@ class PardonCommand extends CucumberCommand
 
         try {
             $this->getPlugin()->getPunishmentManager()->unban($target_name);
-            $sender->sendMessage(
-                MessageFactory::format($this->getPlugin()->getMessage('success.pardon'), [$target_name])
-            );
-
+            $this->formatAndSend($sender, 'success.pardon', ['player' => $target_name]);
             return true;
         } catch (CucumberException $exception) {
             $sender->sendMessage($exception->getMessage());
