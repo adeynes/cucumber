@@ -19,7 +19,18 @@ success:
     # %player% %reason% %expiration% %moderator%
     list: "&b%player% &fwas banned by &9%moderator% &funtil &d%expiration% &ffor &7%reason%\n"
   # %player%
-  unban: "&aYou have successfully unbanned &b%player%&a!"
+  pardon: "&aYou have successfully unbanned &b%player%&a!"
+  # %ip% %reason% %expiration%
+  ipban: "&aYou have successfully banned IP &b%ip% &auntil &d%expiration%&a!"
+  ipbanlist:
+    # %count%
+    intro: "&e&lIP Bans (&r&b%count%&e&l):"
+    # %ip% %reason% %expiration% %moderator%
+    list: "&b%ip% &fwas banned by &9%moderator% &funtil &d%expiration% &ffor &7%reason%\n"
+  # %ip%
+  ippardon: "&aYou have successfully unbanned IP &b%ip%&a!"
+
+
 
 moderation:
   ban:

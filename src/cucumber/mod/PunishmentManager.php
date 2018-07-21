@@ -250,14 +250,14 @@ final class PunishmentManager
     }
 
     /**
-     * @param int $ip
+     * @param string $ip
      * @param string|null $reason
      * @param int|null $expiration
      * @param string $moderator
      * @return SimplePunishment
      * @throws CucumberException If the IP is already banned
      */
-    public function ipBan(int $ip, string $reason = null, int $expiration = null, string $moderator): SimplePunishment
+    public function ipBan(string $ip, string $reason = null, int $expiration = null, string $moderator): SimplePunishment
     {
         $punishment = new SimplePunishment($reason, $expiration, $moderator);
         $this->punish($ip, $punishment, 'ip-ban', $this->ip_bans,

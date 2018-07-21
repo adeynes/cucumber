@@ -8,23 +8,23 @@ use cucumber\utils\CucumberException;
 use cucumber\utils\MessageFactory;
 use pocketmine\command\CommandSender;
 
-class PardonCommand extends CucumberCommand
+class IppardonCommand extends CucumberCommand
 {
 
     public function __construct(Cucumber $plugin)
     {
-        parent::__construct($plugin, 'pardon', 'cucumber.command.pardon', 'Pardon a player (undo a /ban)',
-            1, '/pardon <player>');
+        parent::__construct($plugin, 'ippardon', 'cucumber.command.ippardon', 'Pardon an IP (undo a /ipban)',
+            1, '/ippardon <ip>');
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$target_name] = $command->get([0]);
+        [$ip] = $command->get([0]);
 
         try {
-            $this->getPlugin()->getPunishmentManager()->unban($target_name);
+            $this->getPlugin()->getPunishmentManager()->ipUnban($ip);
             $sender->sendMessage(
-                MessageFactory::format($this->getPlugin()->getMessage('success.pardon'), [$target_name])
+                MessageFactory::format($this->getPlugin()->getMessage('success.ippardon'), ['ip' => $ip])
             );
 
             return true;
