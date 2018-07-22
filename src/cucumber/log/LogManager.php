@@ -73,7 +73,7 @@ final class LogManager
      */
     public function formatEventMessage(CucumberEvent $ev): string
     {
-        return MessageFactory::formatNoColor(
+        return MessageFactory::format(
             $this->global_template,
             $this->generateGlobalTemplateData($ev->getTemplate(), $ev->getType(), $ev->getData())
         );
@@ -91,7 +91,7 @@ final class LogManager
         return [
             'time' => date($this->time_format),
             'type' => $type,
-            '...' => MessageFactory::formatNoColor(
+            '...' => MessageFactory::format(
                 $template,
                 $data
             )

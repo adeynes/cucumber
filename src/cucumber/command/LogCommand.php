@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace cucumber\command;
 
 use cucumber\Cucumber;
-use cucumber\utils\MessageFactory;
 use pocketmine\command\CommandSender;
 
 class LogCommand extends CucumberCommand
@@ -21,7 +20,7 @@ class LogCommand extends CucumberCommand
         [$message] = $command->get([[0, -1]]);
         $this->getPlugin()->getLogManager()->log($message);
 
-        $this->formatAndSend($sender, 'success.log', ['message' => $message]);
+        $this->getPlugin()->formatAndSend($sender, 'success.log', ['message' => $message]);
 
         return true;
     }

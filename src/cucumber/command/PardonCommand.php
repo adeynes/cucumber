@@ -5,7 +5,6 @@ namespace cucumber\command;
 
 use cucumber\Cucumber;
 use cucumber\utils\CucumberException;
-use cucumber\utils\MessageFactory;
 use pocketmine\command\CommandSender;
 
 class PardonCommand extends CucumberCommand
@@ -23,7 +22,7 @@ class PardonCommand extends CucumberCommand
 
         try {
             $this->getPlugin()->getPunishmentManager()->unban($target_name);
-            $this->formatAndSend($sender, 'success.pardon', ['player' => $target_name]);
+            $this->getPlugin()->formatAndSend($sender, 'success.pardon', ['player' => $target_name]);
             return true;
         } catch (CucumberException $exception) {
             $sender->sendMessage($exception->getMessage());

@@ -22,9 +22,9 @@ class MutelistCommand extends CucumberCommand
         $display_mutes = function(SqlSelectResult $result) use ($sender) {
             $message = '';
             foreach ($result->getRows() as $row)
-                $message .= $this->formatMessage('success.mutelist.list', $row);
+                $message .= $this->getPlugin()->formatMessageFromConfig('success.mutelist.list', $row);
 
-            $this->formatAndSend($sender, 'success.mutelist.intro', ['count' => count($result->getRows())]);
+            $this->getPlugin()->formatAndSend($sender, 'success.mutelist.intro', ['count' => count($result->getRows())]);
             $sender->sendMessage(trim($message));
         };
 

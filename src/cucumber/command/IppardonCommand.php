@@ -5,7 +5,6 @@ namespace cucumber\command;
 
 use cucumber\Cucumber;
 use cucumber\utils\CucumberException;
-use cucumber\utils\MessageFactory;
 use pocketmine\command\CommandSender;
 
 class IppardonCommand extends CucumberCommand
@@ -23,7 +22,7 @@ class IppardonCommand extends CucumberCommand
 
         try {
             $this->getPlugin()->getPunishmentManager()->ipUnban($ip);
-            $this->formatAndSend($sender, 'success.ippardon', ['ip' => $ip]);
+            $this->getPlugin()->formatAndSend($sender, 'success.ippardon', ['ip' => $ip]);
             return true;
         } catch (CucumberException $exception) {
             $sender->sendMessage($exception->getMessage());

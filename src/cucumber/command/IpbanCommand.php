@@ -37,10 +37,10 @@ class IpbanCommand extends CucumberCommand
 
                 foreach ($this->getPlugin()->getServer()->getOnlinePlayers() as $player) {
                     if ($player->getAddress() === $ip)
-                        $player->kick($this->formatMessage('moderation.ban.message', $ban_data));
+                        $player->kick($this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban_data));
                 }
 
-                $this->formatAndSend($sender, 'success.ipban', $ban_data);
+                $this->getPlugin()->formatAndSend($sender, 'success.ipban', $ban_data);
 
                 return true;
             } catch (CucumberException $exception) {
@@ -53,7 +53,7 @@ class IpbanCommand extends CucumberCommand
             if ($target = CucumberPlayer::getOnlinePlayer($target_name))
                 $ip_ban($target->getAddress());
             else
-                $this->formatAndSend($sender, 'error.player-offline', ['player' => $target_name]);
+                $this->getPlugin()->formatAndSend($sender, 'error.player-offline', ['player' => $target_name]);
                 // don't return in case ip flag is set
         }
 

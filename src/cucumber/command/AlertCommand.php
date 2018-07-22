@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace cucumber\command;
 
 use cucumber\Cucumber;
-use cucumber\utils\MessageFactory;
 use pocketmine\command\CommandSender;
 
 class AlertCommand extends CucumberCommand
@@ -34,7 +33,7 @@ class AlertCommand extends CucumberCommand
         if ($command->getTag('t'))
             $server->broadcastTitle('', $message); // broadcast a subtitle
 
-        $this->formatAndSend($sender, 'success.alert', ['message' => $message]);
+        $this->getPlugin()->formatAndSend($sender, 'success.alert', ['message' => $message]);
 
         return true;
     }

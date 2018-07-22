@@ -6,7 +6,9 @@ namespace cucumber;
 use cucumber\log\LogManager;
 use cucumber\mod\PunishmentManager;
 use cucumber\task\PunishmentSaveTask;
+use cucumber\utils\MessageFactory;
 use cucumber\utils\Queries;
+use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use poggit\libasynql\DataConnector;
@@ -186,6 +188,16 @@ final class Cucumber extends PluginBase
     public function getPunishmentManager(): PunishmentManager
     {
         return $this->punishment_manager;
+    }
+
+    public function formatMessageFromConfig(string $path, array $data): string
+    {
+        return MessageFactory::fullFormat($this->getMessage($path), $data);
+    }
+
+    public function formatAndSend(CommandSender $sender, string $path, array $data = []): void
+    {
+        $sender->sendMessage($this->formatMessageFromConfig($path, $data));
     }
 
     /**

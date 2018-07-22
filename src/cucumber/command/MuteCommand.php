@@ -32,9 +32,9 @@ class MuteCommand extends CucumberCommand
             $mute_data = $mute_data + ['player' => $target_name];
 
             if ($target = CucumberPlayer::getOnlinePlayer($target_name))
-                $this->formatAndSend($target, 'moderation.mute.mute.message', $mute_data);
+                $this->getPlugin()->formatAndSend($target, 'moderation.mute.mute.message', $mute_data);
 
-            $this->formatAndSend($sender, 'success.mute', $mute_data);
+            $this->getPlugin()->formatAndSend($sender, 'success.mute', $mute_data);
             return true;
         } catch(CucumberException $exception) {
             $sender->sendMessage($exception->getMessage());

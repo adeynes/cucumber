@@ -21,7 +21,7 @@ class CucumberException extends \Exception
         };
         array_walk($data, $apply_colors);
         parent::__construct(
-            MessageFactory::format($message, $data),
+            MessageFactory::fullFormat($message, $data),
             $code
         );
     }
