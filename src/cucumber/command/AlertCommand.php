@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace cucumber\command;
 
 use cucumber\Cucumber;
+use cucumber\utils\MessageFactory;
 use pocketmine\command\CommandSender;
 
 class AlertCommand extends CucumberCommand
@@ -21,7 +22,8 @@ class AlertCommand extends CucumberCommand
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$message] = $command->get([[0, -1]]); // no need to colorize, MessageFactory will do that
+        [$message] = $command->get([[0, -1]]);
+        $message = MessageFactory::colorize($message);
         $server = $this->getPlugin()->getServer();
 
         if (!$command->getTag('nom'))

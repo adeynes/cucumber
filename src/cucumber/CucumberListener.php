@@ -11,7 +11,6 @@ use cucumber\event\JoinAttemptEvent;
 use cucumber\event\JoinEvent;
 use cucumber\event\QuitEvent;
 use cucumber\utils\CucumberPlayer;
-use cucumber\utils\MessageFactory;
 use pocketmine\event\Event;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
@@ -59,14 +58,14 @@ final class CucumberListener implements Listener
             );
     }
 
-    // Detect if player is banned
+    // Check if player is banned
     public function onPreLogin(PlayerPreLoginEvent $ev)
     {
         $player = $ev->getPlayer();
 
         if ($ban = $this->getPlugin()->getPunishmentManager()->isBanned(new CucumberPlayer($player))) {
             $ev->setKickMessage(
-                MessageFactory::fullFormat($this->getPlugin()->getMessage('moderation.ban.reason'), $ban->getData())
+                $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban->getData())
             );
             $ev->setCancelled();
             $this->callEvent(
