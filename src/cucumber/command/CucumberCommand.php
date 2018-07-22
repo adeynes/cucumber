@@ -93,7 +93,7 @@ abstract class CucumberCommand extends Command implements PluginIdentifiableComm
      * @param string $template_path The path to the message in messages.yml, ie error.player-offline
      * @param array $data The data that will populate the template
      */
-    public function formatAndSend(CommandSender $sender, string $template_path, array $data): void
+    public function formatAndSend(CommandSender $sender, string $template_path, array $data = []): void
     {
         $sender->sendMessage($this->formatMessage($template_path, $data));
     }

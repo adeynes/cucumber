@@ -6,16 +6,15 @@ namespace cucumber\command;
 use cucumber\Cucumber;
 use cucumber\utils\CucumberException;
 use cucumber\utils\CucumberPlayer;
-use cucumber\utils\MessageFactory;
 use pocketmine\command\CommandSender;
 
-class BanCommand extends CucumberCommand
+class MuteCommand extends CucumberCommand
 {
 
     public function __construct(Cucumber $plugin)
     {
-        parent::__construct($plugin, 'ban', 'cucumber.command.ban', 'Ban a player by name',
-            1, '/ban <player> [reason] [-d <duration>]', [
+        parent::__construct($plugin, 'mute', 'cucumber.command.mute', 'Mute a player',
+            1, '/mute <player> [reason] [-d <duration>]', [
                 'd' => 1
             ]);
     }
@@ -27,15 +26,15 @@ class BanCommand extends CucumberCommand
         $expiration = $duration ? CommandParser::parseDuration($duration) : null;
 
         try {
-            $ban_data = $this->getPlugin()->getPunishmentManager()
-                ->ban($target_name, $reason, $expiration, $sender->getName())
-                ->getDataFormatted($this->getPlugin()->getMessage('moderation.ban.default-reason'));
-            $ban_data = $ban_data + ['player' => $target_name];
+            $mute_data = $this->getPlugin()->getPunishmentManager()
+                ->mute($target_name, $reason, $expiration, $sender->getName())
+                ->getDataFormatted($this->getPlugin()->getMessage('moderation.mute.mute.default-reason'));
+            $mute_data = $mute_data + ['player' => $target_name];
 
             if ($target = CucumberPlayer::getOnlinePlayer($target_name))
-                $target->kick($this->formatMessage('moderation.ban.message', $ban_data));
+                $this->formatAndSend($target, 'moderation.mute.mute.message', $mute_data);
 
-            $this->formatAndSend($sender, 'success.ban', $ban_data);
+            $this->formatAndSend($sender, 'success.mute', $mute_data);
             return true;
         } catch(CucumberException $exception) {
             $sender->sendMessage($exception->getMessage());

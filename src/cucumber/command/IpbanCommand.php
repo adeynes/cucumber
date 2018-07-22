@@ -32,7 +32,7 @@ class IpbanCommand extends CucumberCommand
             try {
                 $ban_data = $this->getPlugin()->getPunishmentManager()
                         ->ipBan($ip, $reason, $expiration, $sender->getName())
-                        ->getDataFormatted($this->getPlugin()->getMessage('moderation.ban.reason.default-reason'));
+                        ->getDataFormatted($this->getPlugin()->getMessage('moderation.ban.default-reason'));
                 $ban_data = $ban_data + ['ip' => $ip];
 
                 foreach ($this->getPlugin()->getServer()->getOnlinePlayers() as $player) {

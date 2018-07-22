@@ -12,7 +12,7 @@ success:
   # %message%
   alert: '' # the sender will get the alert message
   # %player% %reason% %expiration%
-  ban: "&aYou have successfully banned &b%player% &auntil &d%expiration%!"
+  ban: "&aYou have successfully banned &b%player% &auntil &d%expiration%&a!"
   banlist:
     # %count%
     intro: "&e&lBans (&r&b%count%&e&l):"
@@ -29,25 +29,35 @@ success:
     list: "&b%ip% &fwas banned by &9%moderator% &funtil &d%expiration% &ffor &7%reason%\n"
   # %ip%
   ippardon: "&aYou have successfully unbanned IP &b%ip%&a!"
-
-
+  # %player% %reason% %expiration%
+  mute: "&aYou have successully banned &b%player% &auntil &d%expiration%&a!"
+  # %player%
+  unmute: "&aYou have successfully unmuted &b%player%&a!"
+  mutelist:
+    # %count%
+    intro: "&e&lMutes (&r&b%count%&e&l):"
+    # %player% %reason% %expiration% %moderator%
+    list: "&b%player% &fwas muted by &9%moderator% &funtil &d%expiration% &ffor &7%reason%\n"
 
 moderation:
   ban:
-    reason:
-      # The message that will be displayed on the ban screen
-      # %moderator% %reason% %expiration%
-      message: "&cYou have been banned!\n&9&lModerator &r&7%moderator%\n&d&lExpiration &r&7%expiration%\n&f&lReason &r&7%reason%"
-      # The reason that will be displayed if none is provided by the moderator
-      default-reason: "You have broken the rules of this server"
+    # The message that will be displayed on the ban screen
+    # %moderator% %reason% %expiration%
+    message: "&cYou have been banned!\n&9&lModerator &r&7%moderator%\n&d&lExpiration &r&7%expiration%\n&f&lReason &r&7%reason%"
+    # The reason that will be displayed if none is provided by the moderator
+    default-reason: "You have broken the rules of this server"
 
   mute:
-    message:
-      type: message
+    mute:
       # %moderator% %reason% %expiration%
-      message: "&eYou have been muted by &b%moderator% &euntil &b%expiration%&e. &7Reason: &f%reason%"
+      message: "&eYou have been muted by &b%moderator% &euntil &b%expiration%&e.\n&7Reason: &f%reason%"
       # The reason that will be displayed if none is provided by the moderator
       default-reason: "You have broken a rule"
+    unmute:
+      # The message that will be sent to the player (if they are online) when they are manually unmuted
+      manual: "&eYou have been unmuted!"
+      # The message that will be sent to the player (if they are online) when they are automatically unmuted
+      auto: "&eYou have automatically been unmuted; your mute period has expired!"
 
 log:
   # Symbols: https://secure.php.net/manual/en/function.date.php

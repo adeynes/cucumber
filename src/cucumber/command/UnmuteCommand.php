@@ -5,16 +5,16 @@ namespace cucumber\command;
 
 use cucumber\Cucumber;
 use cucumber\utils\CucumberException;
-use cucumber\utils\MessageFactory;
+use cucumber\utils\CucumberPlayer;
 use pocketmine\command\CommandSender;
 
-class PardonCommand extends CucumberCommand
+class UnmuteCommand extends CucumberCommand
 {
 
     public function __construct(Cucumber $plugin)
     {
-        parent::__construct($plugin, 'pardon', 'cucumber.command.pardon', 'Pardon a player',
-            1, '/pardon <player>');
+        parent::__construct($plugin, 'unmute', 'cucumber.command.unmute', 'Unmute a player',
+            1, '/unmute <player>');
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
@@ -22,8 +22,12 @@ class PardonCommand extends CucumberCommand
         [$target_name] = $command->get([0]);
 
         try {
-            $this->getPlugin()->getPunishmentManager()->unban($target_name);
-            $this->formatAndSend($sender, 'success.pardon', ['player' => $target_name]);
+            $this->getPlugin()->getPunishmentManager()->unmute($target_name);
+
+            if ($target = CucumberPlayer::getOnlinePlayer($target_name))
+                $this->formatAndSend($target, 'moderation.mute.unmute.manual');
+
+            $this->formatAndSend($sender, 'success.unmute', ['player' => $target_name]);
             return true;
         } catch (CucumberException $exception) {
             $sender->sendMessage($exception->getMessage());

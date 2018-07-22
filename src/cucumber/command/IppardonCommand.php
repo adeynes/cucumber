@@ -13,7 +13,7 @@ class IppardonCommand extends CucumberCommand
 
     public function __construct(Cucumber $plugin)
     {
-        parent::__construct($plugin, 'ippardon', 'cucumber.command.ippardon', 'Pardon an IP (undo a /ipban)',
+        parent::__construct($plugin, 'ippardon', 'cucumber.command.ippardon', 'Pardon an IP',
             1, '/ippardon <ip>');
     }
 
