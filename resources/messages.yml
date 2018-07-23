@@ -77,4 +77,3 @@ log:
     chat-attempt: '[MUTED] %player%: %message'
     # %player% %command%
     command: '%player%: %command%'
-    moderation: [] # TODO

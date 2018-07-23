@@ -25,21 +25,26 @@ class BanCommand extends CucumberCommand
         $duration = $command->getTag('d');
         $expiration = $duration ? CommandParser::parseDuration($duration) : null;
 
-        try {
-            $ban_data = $this->getPlugin()->getPunishmentManager()
-                ->ban($target_name, $reason, $expiration, $sender->getName())
-                ->getDataFormatted($this->getPlugin()->getMessage('moderation.ban.default-reason'));
-            $ban_data = $ban_data + ['player' => $target_name];
+        $ban = function() use ($sender, $target_name, $reason, $expiration) {
+            try {
+                $ban_data = $this->getPlugin()->getPunishmentManager()
+                    ->ban($target_name, $reason, $expiration, $sender->getName())
+                    ->getDataFormatted($this->getPlugin()->getMessage('moderation.ban.default-reason'));
+                $ban_data = $ban_data + ['player' => $target_name];
 
-            if ($target = CucumberPlayer::getOnlinePlayer($target_name))
-                $target->kick($this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban_data));
+                if ($target = CucumberPlayer::getOnlinePlayer($target_name))
+                    $target->kick($this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban_data));
 
-            $this->getPlugin()->formatAndSend($sender, 'success.ban', $ban_data);
-            return true;
-        } catch(CucumberException $exception) {
-            $sender->sendMessage($exception->getMessage());
-            return false;
-        }
+                $this->getPlugin()->formatAndSend($sender, 'success.ban', $ban_data);
+                return true;
+            } catch(CucumberException $exception) {
+                $sender->sendMessage($exception->getMessage());
+                return false;
+            }
+        };
+
+        $this->doIfTargetExists($ban, $sender, $target_name);
+        return true;
     }
 
 }

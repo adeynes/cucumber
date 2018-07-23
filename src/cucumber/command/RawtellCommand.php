@@ -8,9 +8,6 @@ use cucumber\utils\CucumberPlayer;
 use cucumber\utils\MessageFactory;
 use pocketmine\command\CommandSender;
 
-/**
- * Sends a raw private message to a player
- */
 class RawtellCommand extends CucumberCommand
 {
 

@@ -4,11 +4,13 @@ declare(strict_types=1);
 namespace cucumber\command;
 
 use cucumber\Cucumber;
+use cucumber\utils\Queries;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\plugin\Plugin;
+use poggit\libasynql\result\SqlSelectResult;
 
 abstract class CucumberCommand extends Command implements PluginIdentifiableCommand
 {
@@ -51,6 +53,19 @@ abstract class CucumberCommand extends Command implements PluginIdentifiableComm
     }
 
     /**
+     * @return int[]
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
+    public function getTag(string $tag): ?int
+    {
+        return $this->getTags()[$tag] ?? null;
+    }
+
+    /**
      * This contains boilerplate code e.g. permission
      * checking, and executes CucumberCommand::_execute()
      * @param CommandSender $sender
@@ -69,16 +84,27 @@ abstract class CucumberCommand extends Command implements PluginIdentifiableComm
     abstract public function _execute(CommandSender $sender, ParsedCommand $command): bool;
 
     /**
-     * @return int[]
+     * Checks if a player exists in the database. If so,
+     * run the given callable. If not, send an error message
+     * @param callable $function
+     * @param CommandSender $sender
+     * @param string $target_name
      */
-    public function getTags(): array
+    public function doIfTargetExists(callable $function, CommandSender $sender, string $target_name): void
     {
-        return $this->tags;
-    }
+        $this->getPlugin()->getConnector()->executeSelect(Queries::CUCUMBER_GET_FIND_PLAYER_BY_NAME,
+            ['name' => $target_name],
+            function(SqlSelectResult $result) use ($function, $sender, $target_name) {
+                if (count($result->getRows()) === 0) {
+                    $this->getPlugin()->formatAndSend($sender, 'error.player-does-not-exist',
+                        ['player' => $target_name]
+                    );
+                    return false;
+                }
 
-    public function getTag(string $tag): ?int
-    {
-        return $this->getTags()[$tag] ?? null;
+                $function();
+            }
+        );
     }
 
 }
