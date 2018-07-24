@@ -11,6 +11,7 @@ use cucumber\event\JoinAttemptEvent;
 use cucumber\event\JoinEvent;
 use cucumber\event\QuitEvent;
 use cucumber\utils\CucumberPlayer;
+use cucumber\utils\Queries;
 use pocketmine\event\Event;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
@@ -77,8 +78,10 @@ final class CucumberListener implements Listener
     public function onJoin(PlayerJoinEvent $ev)
     {
         $this->callEvent(
-            new JoinEvent($ev->getPlayer())
+            new JoinEvent($player = $ev->getPlayer())
         );
+        $this->getPlugin()->getConnector()->executeInsert(Queries::CUCUMBER_ADD_PLAYER,
+            ['name' => $player->getName(), 'ip' => $player->getAddress()]);
     }
 
     public function onQuit(PlayerQuitEvent $ev)

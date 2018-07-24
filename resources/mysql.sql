@@ -46,13 +46,20 @@ CREATE TABLE IF NOT EXISTS mutes (
 -- #      }
 -- #    }
 -- #  }
+-- #  {add
+-- #    {player
+-- #      :name string
+-- #      :ip string
+INSERT INTO players (name, ip, first_join, last_join)
+VALUES (:name, :ip, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
+ON DUPLICATE KEY UPDATE ip = :ip, last_join = UNIX_TIMESTAMP();
+-- #    }
+-- #  }
 -- #  {get
--- #    {find
--- #      {player
--- #        {by-name
--- #          :name string
+-- #    {player
+-- #      {by-name
+-- #        :name string
 SELECT * FROM players WHERE name = :name;
--- #        }
 -- #      }
 -- #    }
 -- #    {punishments
@@ -77,13 +84,13 @@ INNER JOIN players ON mutes.player = players.id;
 -- #      :reason string
 -- #      :expiration int
 -- #      :moderator int
-INSERT INTO bans (id, reason, expiration, moderator)
+INSERT INTO bans (player, reason, expiration, moderator)
 SELECT id, :reason, :expiration, :moderator FROM players WHERE name = :name;
 -- #    }
 -- #    {unban
 -- #      :name string
 DELETE FROM bans
-WHERE id IN (
+WHERE player IN (
   SELECT * FROM (
     SELECT id FROM players WHERE name = :name
   ) AS a
@@ -106,13 +113,13 @@ DELETE FROM ip_bans WHERE ip = :ip;
 -- #      :reason string
 -- #      :expiration int
 -- #      :moderator int
-INSERT INTO mutes (id, reason, expiration, moderator)
+INSERT INTO mutes (player, reason, expiration, moderator)
 SELECT id, :reason, :expiration, :moderator FROM players WHERE name = :name;
 -- #    }
 -- #    {unmute
 -- #      :name string
 DELETE FROM mutes
-WHERE id IN (
+WHERE player IN (
   SELECT * FROM (
     SELECT id FROM players WHERE name = :name
   ) AS a
