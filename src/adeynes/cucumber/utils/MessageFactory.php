@@ -21,7 +21,7 @@ final class MessageFactory
         // Find everything between two %
         preg_match_all('/%(.*?)%/', $template,$tags);
         // Make sure we only have unique values; str_replace replaces everything anyways
-        $tags = array_unique($tags);
+        $tags = array_unique($tags, SORT_REGULAR);
         // Given %tag%, $tags[1] will be "tag" while $tags[0] will be "%tag%"
         foreach ($tags[1] as $key => $tag)
             $template = str_replace($tags[0][$key], $data[$tag], $template);

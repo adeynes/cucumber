@@ -21,13 +21,13 @@ final class PunishmentManager
     private $messages;
 
     /** @var SimplePunishment[] */
-    private $bans;
+    private $bans = [];
 
     /** @var SimplePunishment[] */
-    private $ip_bans;
+    private $ip_bans = [];
 
     /** @var SimplePunishment[] */
-    private $mutes;
+    private $mutes = [];
 
     /**
      * New punishments that have not yet been saved to permanent storage
@@ -111,6 +111,10 @@ final class PunishmentManager
 
         $this->not_saved = ['ban' => [], 'ip-ban' => [], 'mute' => []];
         $this->not_deleted = ['ban' => [], 'ip-ban' => [], 'mute' => []];
+
+        var_dump($this->bans);
+        var_dump($this->ip_bans);
+        var_dump($this->mutes);
     }
 
     public function save(): void
@@ -183,7 +187,7 @@ final class PunishmentManager
     /**
      * @param string $name
      * @param string|null $reason
-     * @param string|null $expiration
+     * @param int|null $expiration
      * @param string $moderator
      * @param string $type
      * @param array $storage
@@ -191,7 +195,7 @@ final class PunishmentManager
      * @return SimplePunishment The new punishment
      * @throws CucumberException If the player is already punished
      */
-    private function playerPunish(string $name, ?string $reason, ?string $expiration, string $moderator,
+    private function playerPunish(string $name, ?string $reason, ?int $expiration, string $moderator,
                                   string $type, array &$storage, string $error_message): SimplePunishment
     {
         $punishment = new SimplePunishment($reason, $expiration, $moderator);

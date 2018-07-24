@@ -14,7 +14,7 @@ class CommandParser
             if (!$length = $command->getTag($tag = substr($arg, 1)))
                 continue;
 
-            $tags[$tag] = array_slice($args, $key + 1, $length);
+            $tags[$tag] = implode(' ', array_slice($args, $key + 1, $length));
 
             // Remove tag & tag parameters
             // array_diff_key() doesn't reorder the keys

@@ -65,6 +65,7 @@ final class Cucumber extends PluginBase
     {
         @mkdir($this->getDataFolder());
         $this->saveDefaultConfig();
+        $this->saveResource('messages.yml');
         $this->messages = new Config($this->getDataFolder() . 'messages.yml');
     }
 
@@ -124,8 +125,7 @@ final class Cucumber extends PluginBase
             'quit' => ['quit', 'QuitEvent'],
             'chat' => ['chat', 'ChatEvent'],
             'chat-attempt' => ['chat attempt', 'ChatAttemptEvent'],
-            'command' => ['command', 'CommandEvent'],
-            'moderation' => ['moderation', 'ModerationEvent']
+            'command' => ['command', 'CommandEvent']
         ];
 
         foreach ($events as $type => $class)
@@ -150,8 +150,6 @@ final class Cucumber extends PluginBase
             'ipban' => 'IpbanCommand',
             'ipbanlist' => 'IpbanlistCommand',
             'ippardon' => 'IppardonCommand',
-            'uban' => 'UbanCommand',
-            'ubanlist' => 'UbanlistCommand',
             'mute' => 'MuteCommand',
             'mutelist' => 'MutelistCommand',
             'unmute' => 'UnmuteCommand'

@@ -5,8 +5,17 @@ namespace adeynes\cucumber\event;
 
 use pocketmine\Player;
 
+/**
+ * For future use
+ */
 class ModerationEvent extends CucumberPlayerEvent
 {
+
+    /** @var string */
+    protected static $type;
+
+    /** @var string */
+    protected static $template;
 
     public function __construct(Player $player, array $data)
     {
@@ -16,6 +25,16 @@ class ModerationEvent extends CucumberPlayerEvent
     public function getData(): array
     {
         return parent::getData();
+    }
+
+    public function getType(): string
+    {
+        return self::$type;
+    }
+
+    public function getTemplate(): string
+    {
+        return self::$template;
     }
 
 }
