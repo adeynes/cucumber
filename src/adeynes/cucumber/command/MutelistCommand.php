@@ -6,7 +6,6 @@ namespace adeynes\cucumber\command;
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\Queries;
 use pocketmine\command\CommandSender;
-use poggit\libasynql\result\SqlSelectResult;
 
 class MutelistCommand extends CucumberCommand
 {
@@ -19,12 +18,12 @@ class MutelistCommand extends CucumberCommand
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        $display_mutes = function(SqlSelectResult $result) use ($sender) {
+        $display_mutes = function(array $rows) use ($sender) {
             $message = '';
-            foreach ($result->getRows() as $row)
+            foreach ($rows as $row)
                 $message .= $this->getPlugin()->formatMessageFromConfig('success.mutelist.list', $row);
 
-            $this->getPlugin()->formatAndSend($sender, 'success.mutelist.intro', ['count' => count($result->getRows())]);
+            $this->getPlugin()->formatAndSend($sender, 'success.mutelist.intro', ['count' => count($rows)]);
             $sender->sendMessage(trim($message));
         };
 

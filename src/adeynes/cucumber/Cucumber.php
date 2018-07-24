@@ -73,13 +73,16 @@ final class Cucumber extends PluginBase
         $this->connector = libasynql::create($this, $this->getConfig()->get('database'),
             ['mysql' => 'mysql.sql']);
         $connector = $this->getConnector();
-        $queries = [Queries::CUCUMBER_INIT_PLAYERS, Queries::CUCUMBER_INIT_PUNISHMENTS_BANS,
-            Queries::CUCUMBER_INIT_PUNISHMENTS_IP_BANS, Queries::CUCUMBER_GET_PUNISHMENTS_MUTES];
 
+        // other tables have a foreign key constraint on players
+        $connector->executeGeneric(Queries::CUCUMBER_INIT_PLAYERS);
+        $connector->waitAll();
+
+        $queries = [Queries::CUCUMBER_INIT_PUNISHMENTS_BANS, Queries::CUCUMBER_INIT_PUNISHMENTS_IP_BANS,
+            Queries::CUCUMBER_INIT_PUNISHMENTS_MUTES];
         foreach ($queries as $query)
             $connector->executeGeneric($query);
 
-        // stop execution until init is completed
         $connector->waitAll();
     }
 
@@ -97,7 +100,7 @@ final class Cucumber extends PluginBase
         // user-supplied ones are passed starting with the second arg
         foreach ($this->getConfig()->getNested('log.loggers') as $logger => $args)
         {
-            $args = [$this] + $args;
+            $args = [$this->getLogManager()] + $args;
             $this->getLogManager()->addLogger(new $logger(...$args));
         }
     }
@@ -127,7 +130,7 @@ final class Cucumber extends PluginBase
 
         foreach ($events as $type => $class)
             call_user_func(
-                ["\\cucumber\\event\\$class[1]", 'init'],
+                ["\\adeynes\\cucumber\\event\\$class[1]", 'init'],
                 $class[0],
                 $this->getMessage("log.templates.$type")
             );
@@ -160,7 +163,7 @@ final class Cucumber extends PluginBase
                 $old->setLabel($command . '_disabled');
                 $old->unregister($map);
             }
-            $class = "\\cucumber\\command\\$class";
+            $class = "\\adeynes\\cucumber\\command\\$class";
             $map->register('cucumber', new $class($this));
         }
     }

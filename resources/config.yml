@@ -22,4 +22,4 @@ log:
   # Loggers are in the form [fully-classified class name => constructor args]
   # Constructor args must be constant, and will be passed after the plugin instance
   loggers:
-    \\cucumber\\log\\BaseLogger: []
+    \adeynes\cucumber\log\BaseLogger: []

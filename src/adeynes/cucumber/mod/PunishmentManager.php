@@ -8,7 +8,6 @@ use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\cucumber\utils\ErrorCodes;
 use adeynes\cucumber\utils\Queries;
-use poggit\libasynql\result\SqlSelectResult;
 
 // TODO: Check if the player doesn't exist
 // TODO: Punishment dates
@@ -97,18 +96,21 @@ final class PunishmentManager
 
         foreach ($queries as $key => $query)
             $connector->executeSelect($query, [],
-                function (SqlSelectResult $result) use ($key, $storage) {
-                    foreach ($result->getRows() as $row)
+                function (array $rows) use ($key, $storage) {
+                    foreach ($rows as $row)
                         $storage[$key][$row['name']] = SimplePunishment::from($row);
                 });
 
         $connector->executeSelect(Queries::CUCUMBER_GET_PUNISHMENTS_IP_BANS, [],
-            function (SqlSelectResult $result) {
-                foreach ($result->getRows() as $row)
+            function (array $rows) {
+                foreach ($rows as $row)
                     $this->ip_bans[$row['ip']] = SimplePunishment::from($row);
             });
         
         $connector->waitAll(); // don't go on until everything is loaded
+
+        $this->not_saved = ['ban' => [], 'ip-ban' => [], 'mute' => []];
+        $this->not_deleted = ['ban' => [], 'ip-ban' => [], 'mute' => []];
     }
 
     public function save(): void

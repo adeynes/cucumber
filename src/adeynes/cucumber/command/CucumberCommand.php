@@ -10,7 +10,6 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\plugin\Plugin;
-use poggit\libasynql\result\SqlSelectResult;
 
 abstract class CucumberCommand extends Command implements PluginIdentifiableCommand
 {
@@ -92,14 +91,14 @@ abstract class CucumberCommand extends Command implements PluginIdentifiableComm
      */
     public function doIfTargetExists(callable $function, CommandSender $sender, string $target_name): void
     {
-        $this->getPlugin()->getConnector()->executeSelect(Queries::CUCUMBER_GET_FIND_PLAYER_BY_NAME,
+        $this->getPlugin()->getConnector()->executeSelect(Queries::CUCUMBER_GET_PLAYER_BY_NAME,
             ['name' => $target_name],
-            function(SqlSelectResult $result) use ($function, $sender, $target_name) {
-                if (count($result->getRows()) === 0) {
+            function(array $rows) use ($function, $sender, $target_name) {
+                if (count($rows) === 0) {
                     $this->getPlugin()->formatAndSend($sender, 'error.player-does-not-exist',
                         ['player' => $target_name]
                     );
-                    return false;
+                    return;
                 }
 
                 $function();

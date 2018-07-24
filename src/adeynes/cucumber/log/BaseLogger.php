@@ -31,7 +31,7 @@ class BaseLogger implements Logger
     protected function init(): void
     {
         if (!file_exists($this->file))
-            file_put_contents($this->file, '');
+            fclose(fopen($this->file, 'w'));
     }
 
 }

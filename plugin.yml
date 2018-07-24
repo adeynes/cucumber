@@ -1,5 +1,5 @@
 name: cucumber
-main: cucumber\adeynes\Cucumber
+main: adeynes\cucumber\Cucumber
 version: 0.2.0
 api: 3.0.0
 load: POSTWORLD

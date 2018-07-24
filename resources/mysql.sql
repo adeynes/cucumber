@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS players (
 -- #      {bans
 CREATE TABLE IF NOT EXISTS bans (
   id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  player INT(7) UNIQUE NOT NULL,
+  player INT(7) UNSIGNED UNIQUE NOT NULL,
   reason VARCHAR(500) DEFAULT NULL,
   expiration INT(11) NOT NULL,
   moderator VARCHAR(30) NOT NULL,
@@ -29,14 +29,13 @@ CREATE TABLE IF NOT EXISTS ip_bans (
   reason VARCHAR(511) DEFAULT NULL,
   expiration INT(11) NOT NULL,
   moderator VARCHAR(30) NOT NULL,
-  FOREIGN KEY (ip) REFERENCES players(ip),
   FOREIGN KEY (moderator) REFERENCES players(name)
 );
 -- #      }
 -- #      {mutes
 CREATE TABLE IF NOT EXISTS mutes (
   id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  player INT(7) UNIQUE NOT NULL,
+  player INT(7) UNSIGNED UNIQUE NOT NULL,
   reason VARCHAR(500) DEFAULT NULL,
   expiration INT(11) NOT NULL,
   moderator VARCHAR(30) NOT NULL,
