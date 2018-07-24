@@ -1,11 +1,11 @@
 name: cucumber
-main: cucumber\Cucumber
-version: 0.1.0
+main: cucumber\adeynes\Cucumber
+version: 0.2.0
 api: 3.0.0
 load: POSTWORLD
-author: alexisdeynes
+author: adeynes
 description: Advanced, flexible moderation plugin
-website: https://github.com/adeynes
+website: https://github.com/adeynes/cucumber
 
 commands:
   rawtell:
