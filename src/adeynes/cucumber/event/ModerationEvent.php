@@ -27,14 +27,4 @@ class ModerationEvent extends CucumberPlayerEvent
         return parent::getData();
     }
 
-    public function getType(): string
-    {
-        return self::$type;
-    }
-
-    public function getTemplate(): string
-    {
-        return self::$template;
-    }
-
 }

@@ -111,10 +111,6 @@ final class PunishmentManager
 
         $this->not_saved = ['ban' => [], 'ip-ban' => [], 'mute' => []];
         $this->not_deleted = ['ban' => [], 'ip-ban' => [], 'mute' => []];
-
-        var_dump($this->bans);
-        var_dump($this->ip_bans);
-        var_dump($this->mutes);
     }
 
     public function save(): void

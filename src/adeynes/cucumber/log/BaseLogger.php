@@ -22,16 +22,16 @@ class BaseLogger implements Logger
         $this->init();
     }
 
-    // TODO: async I/O
-    public function log(string $message): void
-    {
-        file_put_contents($this->file, $message . PHP_EOL, FILE_APPEND);
-    }
-
     protected function init(): void
     {
         if (!file_exists($this->file))
             fclose(fopen($this->file, 'w'));
+    }
+
+    // TODO: async I/O
+    public function log(string $message): void
+    {
+        file_put_contents($this->file, $message . PHP_EOL, FILE_APPEND);
     }
 
 }

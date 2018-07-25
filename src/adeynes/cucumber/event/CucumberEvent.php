@@ -14,4 +14,26 @@ use pocketmine\event\Event;
 abstract class CucumberEvent extends Event implements HasData
 {
 
+    /** @var string */
+    protected static $type;
+
+    /** @var string */
+    protected static $template;
+
+    public static function init(string $type, string $template): void
+    {
+        static::$type = $type;
+        static::$template = $template;
+    }
+
+    public function getType(): string
+    {
+        return static::$type;
+    }
+
+    public function getTemplate(): string
+    {
+        return static::$template;
+    }
+
 }
