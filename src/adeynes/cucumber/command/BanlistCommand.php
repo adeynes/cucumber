@@ -18,17 +18,16 @@ class BanlistCommand extends CucumberCommand
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        $display_bans = function(array $rows) use ($sender) {
-            $message = '';
-            foreach ($rows as $row)
-                $message .= $this->getPlugin()->formatMessageFromConfig('success.banlist.list', $row);
+        $message = '';
+        $bans = $this->getPlugin()->getPunishmentManager()->getBans();
+        foreach ($bans as $player => $ban) {
+            $data = ['player' => $player] +
+                $ban->getDataFormatted($this->getPlugin()->getMessage('moderation.ban.default-reason'));
+            $message .= $this->getPlugin()->formatMessageFromConfig('success.banlist.list', $data);
+        }
 
-            $this->getPlugin()->formatAndSend($sender, 'success.banlist.intro', ['count' => count($rows)]);
-            $sender->sendMessage(trim($message));
-        };
-
-        $this->getPlugin()->getConnector()->executeSelect(Queries::CUCUMBER_GET_PUNISHMENTS_BANS, [],
-            $display_bans);
+        $this->getPlugin()->formatAndSend($sender, 'success.banlist.intro', ['count' => count($bans)]);
+        $sender->sendMessage(trim($message));
 
         return true;
     }

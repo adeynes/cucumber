@@ -18,17 +18,16 @@ class IpbanlistCommand extends CucumberCommand
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        $display_bans = function(array $rows) use ($sender) {
-            $message = '';
-            foreach ($rows as $row)
-                $message .= $this->getPlugin()->formatMessageFromConfig('success.ipbanlist.list', $row);
+        $message = '';
+        $ip_bans = $this->getPlugin()->getPunishmentManager()->getIpBans();
+        foreach ($ip_bans as $ip => $ip_ban) {
+            $data = ['ip'=> $ip] +
+                $ip_ban->getDataFormatted('moderation.ban.default-reason');
+            $message .= $this->getPlugin()->formatMessageFromConfig('success.ipbanlist.list', $data);
+        }
 
-            $this->getPlugin()->formatAndSend($sender, 'success.ipbanlist.intro', ['count' => count($rows)]);
-            $sender->sendMessage(trim($message));
-        };
-
-        $this->getPlugin()->getConnector()->executeSelect(Queries::CUCUMBER_GET_PUNISHMENTS_IP_BANS, [],
-            $display_bans);
+        $this->getPlugin()->formatAndSend($sender, 'success.ipbanlist.intro', ['count' => count($ip_bans)]);
+        $sender->sendMessage(trim($message));
 
         return true;
     }

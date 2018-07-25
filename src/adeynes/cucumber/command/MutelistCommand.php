@@ -18,17 +18,16 @@ class MutelistCommand extends CucumberCommand
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        $display_mutes = function(array $rows) use ($sender) {
-            $message = '';
-            foreach ($rows as $row)
-                $message .= $this->getPlugin()->formatMessageFromConfig('success.mutelist.list', $row);
+        $message = '';
+        $mutes = $this->getPlugin()->getPunishmentManager()->getMutes();
+        foreach ($mutes as $player => $mute) {
+            $data = ['player' => $player] +
+                $mute->getDataFormatted($this->getPlugin()->getMessage('moderation.mute.mute.default-reason'));
+            $message .= $this->getPlugin()->formatMessageFromConfig('success.mutelist.list', $data);
+        }
 
-            $this->getPlugin()->formatAndSend($sender, 'success.mutelist.intro', ['count' => count($rows)]);
-            $sender->sendMessage(trim($message));
-        };
-
-        $this->getPlugin()->getConnector()->executeSelect(Queries::CUCUMBER_GET_PUNISHMENTS_MUTES, [],
-            $display_mutes);
+        $this->getPlugin()->formatAndSend($sender, 'success.mutelist.intro', ['count' => count($mutes)]);
+        $sender->sendMessage(trim($message));
 
         return true;
     }

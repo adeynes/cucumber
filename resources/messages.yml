@@ -68,7 +68,7 @@ log:
     # %player%
     join: '%player% joined'
     # %player%
-    join-attempt: '%player tried joining while banned'
+    join-attempt: '%player% tried joining while banned'
     # %player%
     quit: '%player% quit'
     # %player% %message%

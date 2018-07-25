@@ -218,9 +218,18 @@ final class PunishmentManager
             ));
     }
 
+
+    /**
+     * @return SimplePunishment[]
+     */
+    public function getBans(): array
+    {
+        return $this->bans;
+    }
+
     public function getBan(string $name): ?SimplePunishment
     {
-        return $this->bans[$name] ?? null;
+        return $this->getBans()[$name] ?? null;
     }
 
     /**
@@ -246,9 +255,17 @@ final class PunishmentManager
         $this->playerPardon($name, 'ban', $this->bans, $this->getMessages()['ban']['not-banned']);
     }
 
+    /**
+     * @return SimplePunishment[]
+     */
+    public function getIpBans(): array
+    {
+        return $this->ip_bans;
+    }
+
     public function getIpBan(string $ip): ?SimplePunishment
     {
-        return $this->ip_bans[$ip] ?? null;
+        return $this->getIpBans()[$ip] ?? null;
     }
 
     /**
@@ -287,9 +304,17 @@ final class PunishmentManager
         );
     }
 
+    /**
+     * @return SimplePunishment[]
+     */
+    public function getMutes(): array
+    {
+        return $this->mutes;
+    }
+
     public function getMute(string $name): ?SimplePunishment
     {
-        return $this->mutes[$name] ?? null;
+        return $this->getMutes()[$name] ?? null;
     }
 
     /**
