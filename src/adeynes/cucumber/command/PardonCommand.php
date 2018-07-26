@@ -19,6 +19,7 @@ class PardonCommand extends CucumberCommand
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
         [$target_name] = $command->get([0]);
+        $target_name = strtolower($target_name);
 
         try {
             $this->getPlugin()->getPunishmentManager()->unban($target_name);

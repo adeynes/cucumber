@@ -26,9 +26,9 @@ class CucumberPlayer
     public function __construct($player, ?string $ip = null)
     {
         if ($player instanceof Player)
-            $properties = [$player->getName(), $player->getAddress()];
+            $properties = [$player->getLowerCaseName(), $player->getAddress()];
         else
-            $properties = [$player, $ip];
+            $properties = [strtolower($player), $ip];
 
         [$this->name, $this->ip] = $properties;
     }

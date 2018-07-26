@@ -30,7 +30,7 @@ success:
   # %ip%
   ippardon: "&aYou have successfully unbanned IP &b%ip%&a!"
   # %player% %reason% %expiration%
-  mute: "&aYou have successully muted &b%player% &auntil &d%expiration%&a!"
+  mute: "&aYou have successully banned &b%player% &auntil &d%expiration%&a!"
   # %player%
   unmute: "&aYou have successfully unmuted &b%player%&a!"
   mutelist:

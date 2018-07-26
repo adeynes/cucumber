@@ -22,6 +22,7 @@ class BanCommand extends CucumberCommand
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
         [$target_name, $reason] = $command->get([0, [1, -1]]);
+        $target_name = strtolower($target_name);
         $duration = $command->getTag('d');
         $expiration = $duration ? CommandParser::parseDuration($duration) : null;
 

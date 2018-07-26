@@ -84,7 +84,7 @@ final class CucumberListener implements Listener
             new JoinEvent($player = $ev->getPlayer())
         );
         $this->getPlugin()->getConnector()->executeInsert(Queries::CUCUMBER_ADD_PLAYER,
-            ['name' => $player->getName(), 'ip' => $player->getAddress()]);
+            ['name' => $player->getLowerCaseName(), 'ip' => $player->getAddress()]);
     }
 
     public function onQuit(PlayerQuitEvent $ev)

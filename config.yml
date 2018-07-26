@@ -1,0 +1,25 @@
+database:
+  type: mysql # only mysql is supported as of now
+
+  # Only edit these settings if you selected mysql for type
+  mysql:
+    host: 127.0.0.1
+    username: cucumber
+    password: mypassword123
+    schema: cucumber # aka database
+
+  # The maximum number of simultaneous SQL queries
+  # Recommended: 1 for sqlite, 2 for MySQL. You may want to further increase this value if your MySQL connection is very slow.
+  worker-limit: 2
+
+log:
+  # Where log files will be located;
+  # this directory will be inside the resources directory
+  path: log/
+  chat: true # log all messages sent to chat
+  command: true # log all commands
+  moderation: true # log all moderation actions
+  # Loggers are in the form [fully-classified class name => constructor args]
+  # Constructor args must be constant, and will be passed after the plugin instance
+  loggers:
+    - [\adeynes\cucumber\log\BaseLogger, []]

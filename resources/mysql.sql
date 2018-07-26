@@ -82,7 +82,7 @@ INNER JOIN players ON mutes.player = players.id;
 -- #      :name string
 -- #      :reason string
 -- #      :expiration int
--- #      :moderator int
+-- #      :moderator string
 INSERT INTO bans (player, reason, expiration, moderator)
 SELECT id, :reason, :expiration, :moderator FROM players WHERE name = :name;
 -- #    }
@@ -99,7 +99,7 @@ WHERE player IN (
 -- #      :ip string
 -- #      :reason string
 -- #      :expiration int
--- #      :moderator int
+-- #      :moderator string
 INSERT INTO ip_bans (ip, reason, expiration, moderator)
 VALUES (:ip, :reason, :expiration, :moderator);
 -- #    }
@@ -111,7 +111,7 @@ DELETE FROM ip_bans WHERE ip = :ip;
 -- #      :name string
 -- #      :reason string
 -- #      :expiration int
--- #      :moderator int
+-- #      :moderator string
 INSERT INTO mutes (player, reason, expiration, moderator)
 SELECT id, :reason, :expiration, :moderator FROM players WHERE name = :name;
 -- #    }
