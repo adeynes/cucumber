@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
-use adeynes\cucumber\utils\Queries;
 use pocketmine\command\CommandSender;
 
 class BanlistCommand extends CucumberCommand
@@ -22,7 +21,7 @@ class BanlistCommand extends CucumberCommand
         $bans = $this->getPlugin()->getPunishmentManager()->getBans();
         foreach ($bans as $player => $ban) {
             $data = ['player' => $player] +
-                $ban->getDataFormatted($this->getPlugin()->getMessage('moderation.ban.default-reason'));
+                $ban->getDataFormatted();
             $message .= $this->getPlugin()->formatMessageFromConfig('success.banlist.list', $data);
         }
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
-use adeynes\cucumber\utils\Queries;
 use pocketmine\command\CommandSender;
 
 class IpbanlistCommand extends CucumberCommand
@@ -22,7 +21,7 @@ class IpbanlistCommand extends CucumberCommand
         $ip_bans = $this->getPlugin()->getPunishmentManager()->getIpBans();
         foreach ($ip_bans as $ip => $ip_ban) {
             $data = ['ip'=> $ip] +
-                $ip_ban->getDataFormatted('moderation.ban.default-reason');
+                $ip_ban->getDataFormatted();
             $message .= $this->getPlugin()->formatMessageFromConfig('success.ipbanlist.list', $data);
         }
 

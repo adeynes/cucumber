@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
-use adeynes\cucumber\utils\Queries;
 use pocketmine\command\CommandSender;
 
 class MutelistCommand extends CucumberCommand
@@ -22,7 +21,7 @@ class MutelistCommand extends CucumberCommand
         $mutes = $this->getPlugin()->getPunishmentManager()->getMutes();
         foreach ($mutes as $player => $mute) {
             $data = ['player' => $player] +
-                $mute->getDataFormatted($this->getPlugin()->getMessage('moderation.mute.mute.default-reason'));
+                $mute->getDataFormatted();
             $message .= $this->getPlugin()->formatMessageFromConfig('success.mutelist.list', $data);
         }
 

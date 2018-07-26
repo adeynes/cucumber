@@ -94,11 +94,11 @@ final class PunishmentManager
         $queries = [Queries::CUCUMBER_GET_PUNISHMENTS_BANS, Queries::CUCUMBER_GET_PUNISHMENTS_MUTES];
         $storage = [&$this->bans, &$this->mutes];
 
-        foreach ($queries as $key => $query)
+        foreach ($queries as $i => $query)
             $connector->executeSelect($query, [],
-                function (array $rows) use ($key, $storage) {
+                function (array $rows) use ($i, $storage) {
                     foreach ($rows as $row)
-                        $storage[$key][$row['name']] = SimplePunishment::from($row);
+                        $storage[$i][$row['name']] = SimplePunishment::from($row);
                 });
 
         $connector->executeSelect(Queries::CUCUMBER_GET_PUNISHMENTS_IP_BANS, [],
@@ -135,15 +135,15 @@ final class PunishmentManager
         $queries = ['ban' => Queries::CUCUMBER_PUNISH_UNBAN, 'mute' => Queries::CUCUMBER_PUNISH_UNMUTE];
 
         foreach ($queries as $type => $query) {
-            foreach ($this->not_deleted[$type] as $key => $name) {
+            foreach ($this->not_deleted[$type] as $i => $name) {
                 $connector->executeChange($query, ['name' => $name]);
-                unset($this->not_deleted[$type][$key]);
+                unset($this->not_deleted[$type][$i]);
             }
         }
 
-        foreach ($this->not_deleted['ip-ban'] as $key => $ip) {
+        foreach ($this->not_deleted['ip-ban'] as $i => $ip) {
             $connector->executeChange(Queries::CUCUMBER_PUNISH_IP_UNBAN, ['ip' => $ip]);
-            unset($this->not_deleted['ip-ban'][$key]);
+            unset($this->not_deleted['ip-ban'][$i]);
         }
     }
 
@@ -153,15 +153,18 @@ final class PunishmentManager
      * @param string $type
      * @param array $storage
      * @param CucumberException $exception
+     * @return SimplePunishment
      * @throws CucumberException If the ID is already punished
      */
-    private function punish($id, Punishment $punishment, string $type, array &$storage, CucumberException $exception): void
+    private function punish($id, Punishment $punishment, string $type, array &$storage, CucumberException $exception): Punishment
     {
         if (isset($storage[$id]))
             throw $exception;
 
         $storage[$id] = $punishment;
         $this->not_saved[$type][$id] = $punishment;
+
+        return $punishment;
     }
 
     /**
@@ -182,8 +185,8 @@ final class PunishmentManager
 
     /**
      * @param string $name
-     * @param string|null $reason
-     * @param int|null $expiration
+     * @param string $reason
+     * @param int $expiration
      * @param string $moderator
      * @param string $type
      * @param array $storage
@@ -191,14 +194,12 @@ final class PunishmentManager
      * @return SimplePunishment The new punishment
      * @throws CucumberException If the player is already punished
      */
-    private function playerPunish(string $name, ?string $reason, ?int $expiration, string $moderator,
+    private function playerPunish(string $name, string $reason, int $expiration, string $moderator,
                                   string $type, array &$storage, string $error_message): SimplePunishment
     {
         $punishment = new SimplePunishment($reason, $expiration, $moderator);
-        $this->punish($name, $punishment, $type, $storage,
-                new CucumberException($error_message, ['player' => $name],
-                    ErrorCodes::ATTEMPT_PUNISH_PUNISHED));
-        return $punishment;
+        return $this->punish($name, $punishment, $type, $storage,
+            new CucumberException($error_message, ['player' => $name], ErrorCodes::ATTEMPT_PUNISH_PUNISHED));
     }
 
     /**
@@ -208,7 +209,7 @@ final class PunishmentManager
      * @param string $error_message
      * @throws CucumberException If the player is not punished
      */
-    private function playerPardon(string $name, string $type, array &$storage, string $error_message)
+    private function playerPardon(string $name, string $type, array &$storage, string $error_message): void
     {
         $this->pardon($name, $type, $storage,
             new CucumberException(
@@ -242,6 +243,11 @@ final class PunishmentManager
      */
     public function ban(string $name, ?string $reason, ?int $expiration, string $moderator): SimplePunishment
     {
+        if (is_null($reason))
+            $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
+        if (is_null($expiration))
+            $expiration = strtotime('+10 year');
+
         return $this->playerPunish($name, $reason, $expiration, $moderator, 'ban', $this->bans,
             $this->getMessages()['ban']['already-banned']);
     }
@@ -276,17 +282,22 @@ final class PunishmentManager
      * @return SimplePunishment
      * @throws CucumberException If the IP is already banned
      */
-    public function ipBan(string $ip, string $reason = null, int $expiration = null, string $moderator): SimplePunishment
+    public function ipBan(string $ip, ?string $reason, ?int $expiration, string $moderator): SimplePunishment
     {
+        if (is_null($reason))
+            $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
+        if (is_null($expiration))
+            $expiration = strtotime('+10 year');
+
         $punishment = new SimplePunishment($reason, $expiration, $moderator);
-        $this->punish($ip, $punishment, 'ip-ban', $this->ip_bans,
+
+        return $this->punish($ip, $punishment, 'ip-ban', $this->ip_bans,
             new CucumberException(
                 $this->getMessages()['ip-ban']['already-banned'],
                 ['ip' => $ip],
                 ErrorCodes::ATTEMPT_PUNISH_PUNISHED
             )
         );
-        return $punishment;
     }
 
     /**
@@ -327,6 +338,11 @@ final class PunishmentManager
      */
     public function mute(string $name, ?string $reason, ?int $expiration, string $moderator): SimplePunishment
     {
+        if (is_null($reason))
+            $reason = $this->getPlugin()->getMessage('moderation.mute.mute.default-reason');
+        if (is_null($expiration))
+            $expiration = strtotime('+10 year');
+
         return $this->playerPunish($name, $reason, $expiration, $moderator, 'mute', $this->mutes,
             $this->getMessages()['mute']['already-muted']);
     }

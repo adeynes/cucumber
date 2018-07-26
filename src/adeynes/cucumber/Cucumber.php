@@ -5,6 +5,7 @@ namespace adeynes\cucumber;
 
 use adeynes\cucumber\log\LogManager;
 use adeynes\cucumber\mod\PunishmentManager;
+use adeynes\cucumber\task\ExpirationCheckTask;
 use adeynes\cucumber\task\PunishmentSaveTask;
 use adeynes\cucumber\utils\MessageFactory;
 use adeynes\cucumber\utils\Queries;
@@ -112,6 +113,8 @@ final class Cucumber extends PluginBase
     private function initMod(): void
     {
         $this->punishment_manager = new PunishmentManager($this);
+        // Check for expired punishments every 5 mins
+        $this->getScheduler()->scheduleRepeatingTask(new ExpirationCheckTask($this), 300 * 20);
         // Save punishments every hour
         $this->getScheduler()->scheduleRepeatingTask(new PunishmentSaveTask($this), 3600 * 20);
     }

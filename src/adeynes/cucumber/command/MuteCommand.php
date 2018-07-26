@@ -23,14 +23,14 @@ class MuteCommand extends CucumberCommand
     {
         [$target_name, $reason] = $command->get([0, [1, -1]]);
         $target_name = strtolower($target_name);
+        if ($reason === '') $reason = null;
         $duration = $command->getTag('d');
         $expiration = $duration ? CommandParser::parseDuration($duration) : null;
 
         $mute = function() use ($sender, $target_name, $reason, $expiration) {
             try {
                 $mute_data = $this->getPlugin()->getPunishmentManager()
-                    ->mute($target_name, $reason, $expiration, $sender->getName())
-                    ->getDataFormatted($this->getPlugin()->getMessage('moderation.mute.mute.default-reason'));
+                    ->mute($target_name, $reason, $expiration, $sender->getName())->getDataFormatted();
                 $mute_data = $mute_data + ['player' => $target_name];
 
                 if ($target = CucumberPlayer::getOnlinePlayer($target_name))

@@ -23,14 +23,14 @@ class BanCommand extends CucumberCommand
     {
         [$target_name, $reason] = $command->get([0, [1, -1]]);
         $target_name = strtolower($target_name);
+        if ($reason === '') $reason = null;
         $duration = $command->getTag('d');
         $expiration = $duration ? CommandParser::parseDuration($duration) : null;
 
         $ban = function() use ($sender, $target_name, $reason, $expiration) {
             try {
                 $ban_data = $this->getPlugin()->getPunishmentManager()
-                    ->ban($target_name, $reason, $expiration, $sender->getName())
-                    ->getDataFormatted($this->getPlugin()->getMessage('moderation.ban.default-reason'));
+                    ->ban($target_name, $reason, $expiration, $sender->getName())->getDataFormatted();
                 $ban_data = $ban_data + ['player' => $target_name];
 
                 if ($target = CucumberPlayer::getOnlinePlayer($target_name))

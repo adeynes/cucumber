@@ -23,11 +23,13 @@ final class MessageFactory
         // Make sure we only have unique values; str_replace replaces everything anyways
         $tags = array_unique($tags, SORT_REGULAR);
 
-        if ($tags === [[], []]) return $template;
+        // No tags found
+        if ($tags === [[], []])
+            return $template;
 
         // Given %tag%, $tags[1] will be "tag" while $tags[0] will be "%tag%"
-        foreach ($tags[1] as $key => $tag)
-            $template = str_replace($tags[0][$key], $data[$tag], $template);
+        foreach ($tags[1] as $i => $tag)
+            $template = str_replace($tags[0][$i], $data[$tag], $template);
 
         return $template;
     }

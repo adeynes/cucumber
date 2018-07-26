@@ -8,7 +8,7 @@ use adeynes\cucumber\utils\HasData;
 class SimplePunishment implements Punishment, Expirable, HasData
 {
 
-    /** @var string|null */
+    /** @var string */
     protected $reason;
 
     /** @var int */
@@ -17,10 +17,10 @@ class SimplePunishment implements Punishment, Expirable, HasData
     /** @var string */
     protected $moderator;
 
-    public function __construct(?string $reason, ?int $expiration, string $moderator)
+    public function __construct(string $reason, int $expiration, string $moderator)
     {
         $this->reason = $reason;
-        $this->expiration = $expiration ?? strtotime('+10 year');
+        $this->expiration = $expiration;
         $this->moderator = $moderator;
     }
 
@@ -29,7 +29,7 @@ class SimplePunishment implements Punishment, Expirable, HasData
         return new self($row['reason'], $row['expiration'], $row['moderator']);
     }
 
-    public function getReason(): ?string
+    public function getReason(): string
     {
         return $this->reason;
     }
@@ -63,10 +63,10 @@ class SimplePunishment implements Punishment, Expirable, HasData
         ];
     }
 
-    public function getDataFormatted(string $default_reason): array
+    public function getDataFormatted(): array
     {
         return [
-            'reason' => $this->getReason() ?? $default_reason,
+            'reason' => $this->getReason(),
             'expiration' => $this->getExpirationFormatted(),
             'moderator' => $this->getModerator()
         ];

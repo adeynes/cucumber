@@ -10,15 +10,15 @@ class CommandParser
     {
         $tags = [];
 
-        foreach ($args as $key => $arg) {
+        foreach ($args as $i => $arg) {
             if (!$length = $command->getTag($tag = substr($arg, 1)))
                 continue;
 
-            $tags[$tag] = implode(' ', array_slice($args, $key + 1, $length));
+            $tags[$tag] = implode(' ', array_slice($args, $i + 1, $length));
 
             // Remove tag & tag parameters
             // array_diff_key() doesn't reorder the keys
-            $args = array_diff_key($args, self::makeKeys(range($key, $key + $length)));
+            $args = array_diff_key($args, self::makeKeys(range($i, $i + $length)));
         }
 
         return new ParsedCommand($command->getName(), $args, $tags);
