@@ -23,11 +23,25 @@ use pocketmine\event\player\PlayerQuitEvent;
 final class CucumberListener implements Listener
 {
 
+    /** @var Cucumber */
     private $plugin;
+
+    /** @var bool */
+    private $log_traffic;
+
+    /** @var bool */
+    private $log_chat;
+
+    /** @var bool */
+    private $log_command;
 
     public function __construct(Cucumber $plugin)
     {
         $this->plugin = $plugin;
+        $config = $this->getPlugin()->getConfig();
+        $this->log_traffic = $config->getNested('log.traffic');
+        $this->log_chat = $config->getNested('log.chat');
+        $this->log_command = $config->getNested('log.command');
     }
 
     public function getPlugin(): Cucumber
@@ -42,18 +56,15 @@ final class CucumberListener implements Listener
 
         if ($this->getPlugin()->getPunishmentManager()->isMuted(new CucumberPlayer($player))) {
             $ev->setCancelled();
-            $this->callEvent(
-                new ChatAttemptEvent($player, $message)
-            );
-        } else
-            $this->callEvent(
-                new ChatEvent($player, $message)
-            );
+            if ($this->log_chat)
+                $this->callEvent(new ChatAttemptEvent($player, $message));
+        } else if ($this->log_chat)
+            $this->callEvent(new ChatEvent($player, $message));
     }
 
     public function onCommandPreprocess(PlayerCommandPreprocessEvent $ev)
     {
-        if (strpos(($command = $ev->getMessage()), '/') === 0)
+        if (strpos(($command = $ev->getMessage()), '/') === 0 && $this->log_command)
             $this->callEvent(
                 new CommandEvent($ev->getPlayer(), $command)
             );
@@ -69,26 +80,26 @@ final class CucumberListener implements Listener
                 $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban->getDataFormatted())
             );
             $ev->setCancelled();
-            $this->callEvent(
-                new JoinAttemptEvent($player)
-            );
+
+            if ($this->log_traffic)
+                $this->callEvent(new JoinAttemptEvent($player));
         }
     }
 
     public function onJoin(PlayerJoinEvent $ev)
     {
-        $this->callEvent(
-            new JoinEvent($player = $ev->getPlayer())
-        );
+        $player = $ev->getPlayer();
+        if ($this->log_traffic)
+            $this->callEvent(new JoinEvent($player));
+
         $this->getPlugin()->getConnector()->executeInsert(Queries::CUCUMBER_ADD_PLAYER,
             ['name' => $player->getLowerCaseName(), 'ip' => $player->getAddress()]);
     }
 
     public function onQuit(PlayerQuitEvent $ev)
     {
-        $this->callEvent(
-            new QuitEvent($ev->getPlayer())
-        );
+        if ($this->log_traffic)
+            $this->callEvent(new QuitEvent($ev->getPlayer()));
     }
 
     /**

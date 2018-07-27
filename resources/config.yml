@@ -16,9 +16,9 @@ log:
   # Where log files will be located;
   # this directory will be inside the resources directory
   path: log/
+  traffic: true # log join/quit events
   chat: true # log all messages sent to chat
   command: true # log all commands
-  moderation: true # log all moderation actions
   # Loggers are in the form [fully-classified class name => constructor args]
   # Constructor args must be constant, and will be passed after the plugin instance
   loggers:
