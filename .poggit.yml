@@ -1,0 +1,9 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/adeynes/cucumber
+branches:
+- master
+projects:
+  cucumber:
+    libs:
+      - src: poggit/libasynql/libasynql
+      version: ^3.1.1
+...
