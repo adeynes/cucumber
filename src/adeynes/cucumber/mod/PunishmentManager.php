@@ -9,7 +9,6 @@ use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\cucumber\utils\ErrorCodes;
 use adeynes\cucumber\utils\Queries;
 
-// TODO: Check if the player doesn't exist
 // TODO: Punishment dates
 final class PunishmentManager
 {

@@ -9,6 +9,7 @@ use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\cucumber\utils\MessageFactory;
 use pocketmine\command\CommandSender;
 
+// TODO: ban offline player by getting IP from db
 class IpbanCommand extends CucumberCommand
 {
 
@@ -37,7 +38,10 @@ class IpbanCommand extends CucumberCommand
 
                 foreach ($this->getPlugin()->getServer()->getOnlinePlayers() as $player) {
                     if ($player->getAddress() === $ip)
-                        $player->kick($this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban_data));
+                        $player->kick(
+                            $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban_data),
+                            false // don't say Kicked by admin
+                        );
                 }
 
                 $this->getPlugin()->formatAndSend($sender, 'success.ipban', $ban_data);

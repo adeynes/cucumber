@@ -18,7 +18,8 @@ class CommandParser
             if (isset($tags[$tag = substr($arg, 1)]))
                 continue;
 
-            if (!$length = $command->getTag($tag))
+            // Use is_null because $length can be 0 so !0 would be true
+            if (is_null($length = $command->getTag($tag)))
                 continue;
 
             $tags[$tag] = implode(' ', array_slice($args, $i + 1, $length));

@@ -26,13 +26,14 @@ class AlertCommand extends CucumberCommand
         $message = MessageFactory::colorize($message);
         $server = $this->getPlugin()->getServer();
 
-        if (!$command->getTag('nom'))
+        // Can't use ! because empty string evals to false
+        if (is_null($command->getTag('nom')))
             $server->broadcastMessage($message);
 
-        if ($command->getTag('p'))
+        if (!is_null($command->getTag('p')))
             $server->broadcastPopup($message);
 
-        if ($command->getTag('t'))
+        if (!is_null($command->getTag('t')))
             $server->broadcastTitle('', $message); // broadcast a subtitle
 
         $this->getPlugin()->formatAndSend($sender, 'success.alert', ['message' => $message]);
