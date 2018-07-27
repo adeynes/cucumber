@@ -26,7 +26,7 @@ class RawtellCommand extends CucumberCommand
         [$target_name, $message] = $command->get([0, [1, -1]]);
         $message = MessageFactory::colorize($message);
 
-        if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
+        if (!$target = CucumberPlayer::getOnlinePlayer($target_name)) {
             $this->getPlugin()->formatAndSend($sender, 'error.player-offline', ['player' => $target_name]);
             return false;
         }
