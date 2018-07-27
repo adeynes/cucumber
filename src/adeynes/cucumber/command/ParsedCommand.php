@@ -33,8 +33,11 @@ class ParsedCommand
     }
 
     /**
-     *
-     * @param int[]|int[][] $requests
+     * Retrieve the specified arguments
+     * @param int[]|int[][] $requests An integer will retrieve the element at that index,
+     * an $array will implode the elements from $array[0] with length $array[1]
+     * i.e. to get ['hello world', 'argument', 'cucumber is cool'] from the arguments
+     * 'cucumber is cool hello world argument', you would request [[3, 2], -1, [0, 3]]
      * @return string[]
      */
     public function get(array $requests): array
@@ -43,8 +46,8 @@ class ParsedCommand
 
         foreach ($requests as $request) {
             if (is_array($request)) {
-                // $requested[0] is offset, $request[1] is length. Negative length means start from back
-                if ($request[1] < 0) $request[1] += count($this->getArgs());
+                // $request[0] is offset, $request[1] is length. Negative length means start from back
+                if ($request[1] < 0) $request[1] = count($this->getArgs()) - $request[0];
                 $args[] = trim(implode(' ', array_slice($this->getArgs(), ...$request)));
             } else
                 $args[] = array_slice($this->getArgs(), $request, 1)[0]; // allow negative offsets
