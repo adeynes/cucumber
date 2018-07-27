@@ -24,7 +24,7 @@ final class MessageFactory
         $tags = array_unique($tags, SORT_REGULAR);
 
         // No tags found
-        if ($tags === [[], []])
+        if ($tags === [[]])
             return $template;
 
         // Given %tag%, $tags[1] will be "tag" while $tags[0] will be "%tag%"

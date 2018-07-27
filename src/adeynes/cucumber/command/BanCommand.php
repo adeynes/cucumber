@@ -34,7 +34,10 @@ class BanCommand extends CucumberCommand
                 $ban_data = $ban_data + ['player' => $target_name];
 
                 if ($target = CucumberPlayer::getOnlinePlayer($target_name))
-                    $target->kick($this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban_data));
+                    $target->kick(
+                        $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban_data),
+                        false // don't say Kicked by admin
+                    );
 
                 $this->getPlugin()->formatAndSend($sender, 'success.ban', $ban_data);
                 return true;

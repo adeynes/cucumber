@@ -33,7 +33,7 @@ final class LogManager
         @mkdir($this->getDirectory());
         $this->loggers = new Stack;
         [$this->global_template, $this->time_format] = [$this->getPlugin()->getMessage('log.templates.global'),
-                                                        $this->getPlugin()->getMessage('log.time-format') ?? 'Y-m-d\TH:i:s'];
+                                                        $this->getPlugin()->getMessage('time-format') ?? 'Y-m-d\TH:i:s'];
     }
 
     public function getPlugin(): Cucumber

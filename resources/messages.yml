@@ -42,8 +42,9 @@ success:
 moderation:
   ban:
     # The message that will be displayed on the ban screen
+    # If there are more than 3 lines any subsequent lines will not be displayed
     # %moderator% %reason% %expiration%
-    message: "&cYou have been banned!\n&9&lModerator &r&7%moderator%\n&d&lExpiration &r&7%expiration%\n&f&lReason &r&7%reason%"
+    message: "&cYou have been banned until &7%expiration%&c!\n&9&lModerator &r&7%moderator%\n&f&lReason &r&7%reason%"
     # The reason that will be displayed if none is provided by the moderator
     default-reason: "You have broken the rules of this server"
 
@@ -60,8 +61,6 @@ moderation:
       auto: "&eYou have automatically been unmuted; your mute period has expired!"
 
 log:
-  # Symbols: https://secure.php.net/manual/en/function.date.php
-  time-format: Y-m-d\TH:i:s
   templates:
     # %type% %time% %...%
     global: '%time% %type% | %...%'
@@ -77,3 +76,6 @@ log:
     chat-attempt: '[MUTED] %player%: %message'
     # %player% %command%
     command: '%player%: %command%'
+
+# Symbols: https://secure.php.net/manual/en/function.date.php
+time-format: Y-m-d\TH:i:s

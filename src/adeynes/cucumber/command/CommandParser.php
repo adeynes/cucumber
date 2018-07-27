@@ -11,7 +11,14 @@ class CommandParser
         $tags = [];
 
         foreach ($args as $i => $arg) {
-            if (!$length = $command->getTag($tag = substr($arg, 1)))
+            if (strpos($arg, '-') !== 0)
+                continue;
+
+            // Avoid getting finding the tag twice; only first time counts
+            if (isset($tags[$tag = substr($arg, 1)]))
+                continue;
+
+            if (!$length = $command->getTag($tag))
                 continue;
 
             $tags[$tag] = implode(' ', array_slice($args, $i + 1, $length));

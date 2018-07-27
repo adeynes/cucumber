@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\mod;
 
+use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\HasData;
 
 class SimplePunishment implements Punishment, Expirable, HasData
@@ -41,7 +42,7 @@ class SimplePunishment implements Punishment, Expirable, HasData
 
     public function getExpirationFormatted(): string
     {
-        return date('Y-m-d\TH:i:s', $this->getExpiration());
+        return date(Cucumber::getInstance()->getMessage('time-format'), $this->getExpiration());
     }
 
     public function getModerator(): string
