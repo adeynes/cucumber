@@ -34,7 +34,7 @@ commands:
     permission: cucumber.command.banlist
 
   pardon:
-    description: 'Pardon a player (undo a /ban)'
+    description: 'Pardon a player'
     usage: '/pardon <player>'
     permission: cucumber.command.pardon
     aliases: [unban]
@@ -50,7 +50,7 @@ commands:
     permission: 'cucumber.command.ipbanlist'
 
   ippardon:
-    description: 'Pardon an IP (undo a /ipban)'
+    description: 'Pardon an IP'
     usage: '/ippardon <ip>'
     permission: cucumber.command.uban
     aliases: [ipunban]
