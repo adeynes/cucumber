@@ -31,13 +31,13 @@ class RawtellCommand extends CucumberCommand
             return false;
         }
 
-        if (!$command->getTag('nom'))
+        if (is_null($command->getTag('nom')))
             $target->sendMessage($message);
 
-        if ($command->getTag('p'))
+        if (!is_null($command->getTag('p')))
             $target->sendPopup($message);
 
-        if ($command->getTag('t'))
+        if (!is_null($command->getTag('t')))
             $target->addSubTitle($message); // title is too big
 
         $this->getPlugin()->formatAndSend($sender, 'success.rawtell', ['player' => $target_name, 'message' => $message]);

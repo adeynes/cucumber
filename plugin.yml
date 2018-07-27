@@ -1,6 +1,6 @@
 name: cucumber
 main: adeynes\cucumber\Cucumber
-version: 1.0.0
+version: 1.0.1
 api: 3.0.0
 load: POSTWORLD
 author: adeynes
@@ -37,6 +37,7 @@ commands:
     description: 'Pardon a player (undo a /ban)'
     usage: '/pardon <player>'
     permission: cucumber.command.pardon
+    aliases: [unban]
 
   ipban:
     description: 'Ban an IP'
@@ -52,6 +53,7 @@ commands:
     description: 'Pardon an IP (undo a /ipban)'
     usage: '/ippardon <ip>'
     permission: cucumber.command.uban
+    aliases: [ipunban]
 
   mute:
     description: 'Mute a player'
