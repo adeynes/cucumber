@@ -52,7 +52,7 @@ commands:
   ippardon:
     description: "Pardon an IP (undo a /ipban)"
     usage: "/ippardon <ip>"
-    permission: cucumber.command.uban
+    permission: cucumber.command.ippardon
     aliases: [ipunban]
 
   mute:
