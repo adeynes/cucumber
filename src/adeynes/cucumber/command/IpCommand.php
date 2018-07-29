@@ -23,10 +23,12 @@ class IpCommand extends CucumberCommand
         $this->getPlugin()->getConnector()->executeSelect(Queries::CUCUMBER_GET_PLAYER_BY_NAME,
             ['name' => $target_name],
             function(array $rows) use ($sender, $target_name) {
-                if (count($rows) < 0)
+                if (count($rows) < 1) {
                     $this->getPlugin()->formatAndSend($sender, 'error.player-does-not-exist', ['player' => $target_name]);
+                    return;
+                }
 
-                $this->getPlugin()->formatAndSend($sender, 'success.ip', ['ip' => $rows[0]['ip']]);
+                $this->getPlugin()->formatAndSend($sender, 'success.ip', ['player' => $target_name, 'ip' => $rows[0]['ip']]);
             }
         );
 

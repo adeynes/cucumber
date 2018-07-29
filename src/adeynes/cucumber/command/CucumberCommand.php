@@ -77,6 +77,7 @@ abstract class CucumberCommand extends Command implements PluginIdentifiableComm
         if (!$this->testPermission($sender)) return false;
 
         $command = CommandParser::parse($this, $args);
+        var_dump($command);
         if (count($command->getArgs()) < $this->min_args)
             throw new InvalidCommandSyntaxException;
 
