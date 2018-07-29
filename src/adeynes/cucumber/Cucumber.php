@@ -154,7 +154,8 @@ final class Cucumber extends PluginBase
             'ippardon' => 'IppardonCommand',
             'mute' => 'MuteCommand',
             'mutelist' => 'MutelistCommand',
-            'unmute' => 'UnmuteCommand'
+            'unmute' => 'UnmuteCommand',
+            'ip' => 'IpCommand'
         ];
 
         foreach ($commands as $command => $class){

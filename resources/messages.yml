@@ -38,6 +38,8 @@ success:
     intro: "&e&lMutes (&r&b%count%&e&l):"
     # %player% %reason% %expiration% %moderator%
     list: "&b%player% &fwas muted by &9%moderator% &funtil &d%expiration% &ffor &7%reason%\n"
+  # %player% %ip%
+  ip: "&b%player%'s &eIP is &b%ip%"
 
 moderation:
   ban:
@@ -63,19 +65,19 @@ moderation:
 log:
   templates:
     # %type% %time% %...%
-    global: '%time% %type% | %...%'
+    global: "%time% %type% | %...%"
     # %player%
-    join: '%player% joined'
+    join: "%player% joined"
     # %player%
-    join-attempt: '%player% tried joining while banned'
+    join-attempt: "%player% tried joining while banned"
     # %player%
-    quit: '%player% quit'
+    quit: "%player% quit"
     # %player% %message%
-    chat: '%player%: %message%'
+    chat: "%player%: %message%"
     # %player% %message%
-    chat-attempt: '[MUTED] %player%: %message'
+    chat-attempt: "[MUTED] %player%: %message"
     # %player% %command%
-    command: '%player%: %command%'
+    command: "%player%: %command%"
 
 # Symbols: https://secure.php.net/manual/en/function.date.php
 time-format: Y-m-d\TH:i:s

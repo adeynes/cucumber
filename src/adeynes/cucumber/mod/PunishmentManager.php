@@ -95,13 +95,13 @@ final class PunishmentManager
 
         foreach ($queries as $i => $query)
             $connector->executeSelect($query, [],
-                function (array $rows) use ($i, $storage) {
+                function(array $rows) use ($i, $storage) {
                     foreach ($rows as $row)
                         $storage[$i][$row['name']] = SimplePunishment::from($row);
                 });
 
         $connector->executeSelect(Queries::CUCUMBER_GET_PUNISHMENTS_IP_BANS, [],
-            function (array $rows) {
+            function(array $rows) {
                 foreach ($rows as $row)
                     $this->ip_bans[$row['ip']] = SimplePunishment::from($row);
             });
