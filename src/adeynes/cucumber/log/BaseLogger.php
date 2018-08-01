@@ -29,9 +29,10 @@ class BaseLogger implements Logger
     }
 
     // TODO: async I/O
-    public function log(string $message): void
+    public function log(string $message)
     {
         file_put_contents($this->file, $message . PHP_EOL, FILE_APPEND);
+        return false;
     }
 
 }

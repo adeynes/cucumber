@@ -49,7 +49,7 @@ final class LogManager
     public function log(string $message): void
     {
         foreach ($this->loggers as $logger) {
-            $logger->log($message);
+            if ($logger->log($message) === false) break;
         }
     }
 
