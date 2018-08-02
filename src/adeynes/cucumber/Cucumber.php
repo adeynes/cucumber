@@ -18,6 +18,10 @@ use poggit\libasynql\libasynql;
 final class Cucumber extends PluginBase
 {
 
+    private const CONFIG_VERSION = '2.0';
+
+    private const MESSAGES_VERSION = '1.1';
+
     /** @var Cucumber */
     private static $instance;
 
@@ -66,8 +70,19 @@ final class Cucumber extends PluginBase
     {
         @mkdir($this->getDataFolder());
         $this->saveDefaultConfig();
+
+        /** @var string $config_version */
+        $config_version = $this->getConfig()->get('version');
+        if (!$this->checkVersion($config_version, self::CONFIG_VERSION))
+            $this->fail('Outdated config.yml version');
+
         $this->saveResource('messages.yml');
         $this->messages = new Config($this->getDataFolder() . 'messages.yml');
+
+        /** @var string $messages_version */
+        $messages_version = $this->getMessage('version');
+        if (!$this->checkVersion($messages_version, self::MESSAGES_VERSION))
+            $this->fail('Outdated messages.yml version');
     }
 
     private function initDatabase(): void
@@ -199,6 +214,13 @@ final class Cucumber extends PluginBase
         return $this->punishment_manager;
     }
 
+    public function checkVersion(string $actual, string $minimum): bool
+    {
+        $actual = explode('.', $actual);
+        $minimum = explode('.', $minimum);
+        return $actual[0] === $minimum[0] && $actual[1] >= $minimum[1];
+    }
+
     public function formatMessageFromConfig(string $path, array $data): string
     {
         return MessageFactory::fullFormat($this->getMessage($path), $data);
@@ -210,15 +232,27 @@ final class Cucumber extends PluginBase
     }
 
     /**
-     * Logs the supplied message at the supplied
-     * severity level in the server's logger
+     * Logs the supplied message at the supplied severity level in the server's logger
      * @param string $message
-     * @param string $level The severity of the message (defined in SPL/LogLevel), default info
+     * @param string $severity The severity of the message (defined in SPL/LogLevel), default info
      * @return void
      */
-    public function log(string $message, string $level = 'info'): void
+    public function log(string $message, string $severity = 'info'): void
     {
-        $this->getServer()->getLogger()->{$level}($message);
+        $this->getServer()->getLogger()->{$severity}($message);
+    }
+
+    /**
+     * Logs the supplied message and disables the plugin
+     * @param string $message
+     * @param string $severity The severity of the message (defined in SPL/LogLevel), default alert
+     * @return void
+     * @throws \Exception To disable the plugin
+     */
+    public function fail(string $message, string $severity = 'alert'): void
+    {
+        $this->log($message, $severity);
+        throw new \Exception($message);
     }
 
     public function cancelTask(int $id)

@@ -1,4 +1,4 @@
-version: 2
+version: '2.0'
 
 database:
   type: mysql # only mysql is supported as of now
@@ -28,7 +28,6 @@ log:
       - [\adeynes\cucumber\log\BaseLogger, []]
     notice:
       []
-    boo:
     important:
       []
     alert:
