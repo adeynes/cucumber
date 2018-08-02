@@ -61,9 +61,9 @@ final class Cucumber extends PluginBase
 
     public function onDisable(): void
     {
-        $this->getPunishmentManager()->close();
+        if ($this->punishment_manager) $this->getPunishmentManager()->close();
 
-        $this->getConnector()->close(); // last
+        if ($this->connector) $this->getConnector()->close(); // last
     }
 
     private function initConfigs(): void
