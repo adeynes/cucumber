@@ -43,5 +43,13 @@ cucumber also has miscellaneous moderation commands that are not related to puni
 | **Command** | **Description**                   | **Usage**                                      | **Tags**                                                                        |
 |-------------|-----------------------------------|------------------------------------------------|---------------------------------------------------------------------------------|
 | `/rawtell`  | Send a raw message to a player    | `/rawtell <player> <message> [-nom] [-p] [-t]` | `-nom` does not send a chat message<br>`-p` sends a popup<br>`-t`sends a title  |
-| `/log`      | Log a message                     | `/log <message>`                               |                                                                                 |
+| `/log`      | Log a message                     | `/log <message> [-s <severity>]`               | `-s` specifies the severity at which to log the message                         |
 | `/alert`    | Broadcast a message to the server | `/alert <message> [-nom] [-p] [-t]`            | `-nom` does not send a chat message<br>`-p` sends a popup<br>`-t` sends a title |
+| `/ip`       | Get a player's IP                 | `/ip <player>`                                 |                                                                                 |
+
+#### Severity
+In a severity tag:
+* `log`: Normal, ordinary events
+* `notice`: Normal but noticeable events
+* `important`: Significant events
+* `alert`: Exceptional events that likely require monitoring
