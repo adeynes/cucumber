@@ -14,9 +14,7 @@ class MuteCommand extends CucumberCommand
     public function __construct(Cucumber $plugin)
     {
         parent::__construct($plugin, 'mute', 'cucumber.command.mute', 'Mute a player',
-            1, '/mute <player> [reason] [-d <duration>]', [
-                'd' => 1
-            ]);
+            1, '/mute <player> [reason] [-d <duration>]', ['d' => 1]);
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool

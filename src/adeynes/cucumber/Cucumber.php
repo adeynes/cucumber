@@ -99,11 +99,16 @@ final class Cucumber extends PluginBase
     {
         $this->log_manager = new LogManager($this);
         // Loggers are defined in the config as
-        // [fully-qualified class name, [constructor args]]
+        // [severity => [fqn, [constructor args]]]
         // Cucumber instance is always the first arg,
         // user-supplied ones are passed starting with the second arg
-        foreach ($this->getConfig()->getNested('log.loggers') as $logger)
-            $this->getLogManager()->addLogger(new $logger[0]($this->getLogManager(), ...$logger[1]));
+        foreach ($this->getConfig()->getNested('log.loggers') as $severity => $loggers) {
+            foreach ($loggers as $logger)
+                $this->getLogManager()->addLogger(
+                    new $logger[0]($this->getLogManager(), ...($logger[1] ?? [])),
+                    $severity
+                );
+        }
     }
 
     /**

@@ -1,8 +1,12 @@
+version: 2
+
 error:
   # %player%
   player-offline: "&b%player% &cis not online!"
   # %player%
   player-does-not-exist: "&b%player% &chas never joined this server!"
+  # %severity%
+  unknown-log-severity: "&cUnknown severity &b%severity%&c!"
 
 success:
   # %player% %message%

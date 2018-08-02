@@ -14,9 +14,7 @@ class BanCommand extends CucumberCommand
     public function __construct(Cucumber $plugin)
     {
         parent::__construct($plugin, 'ban', 'cucumber.command.ban', 'Ban a player by name',
-            1, '/ban <player> [reason] [-d <duration>]', [
-                'd' => 1
-            ]);
+            1, '/ban <player> [reason] [-d <duration>]', ['d' => 1]);
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool

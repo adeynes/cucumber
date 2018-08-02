@@ -32,7 +32,6 @@ class BaseLogger implements Logger
     public function log(string $message)
     {
         file_put_contents($this->file, $message . PHP_EOL, FILE_APPEND);
-        return false;
     }
 
 }

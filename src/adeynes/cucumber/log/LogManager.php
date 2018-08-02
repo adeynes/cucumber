@@ -17,7 +17,7 @@ final class LogManager
     /** @var string */
     private $dir;
 
-    /** @var Stack<Logger> */
+    /** @var Stack<Logger>[] */
     private $loggers;
 
     /** @var string */
@@ -31,7 +31,14 @@ final class LogManager
         $this->plugin = $plugin;
         $this->dir = $this->getPlugin()->getConfig()->getNested('log.path') ?? 'log/';
         @mkdir($this->getDirectory());
-        $this->loggers = new Stack;
+
+        $this->loggers = [];
+        foreach (LogSeverities::SEVERITIES as $severity) {
+            $this->loggers[$severity] = new Stack;
+        }
+        // highest severities first, but can't use Stack bc need associative
+        $this->loggers = array_reverse($this->loggers, true);
+
         [$this->global_template, $this->time_format] = [$this->getPlugin()->getMessage('log.templates.global'),
                                                         $this->getPlugin()->getMessage('time-format') ?? 'Y-m-d\TH:i:s'];
     }
@@ -46,21 +53,36 @@ final class LogManager
         return $this->getPlugin()->getDataFolder() . $this->dir;
     }
 
-    public function log(string $message): void
+    public function log(string $message, int $severity = LogSeverities::LOG): void
     {
-        foreach ($this->loggers as $logger) {
-            if ($logger->log($message) === false) break;
+        foreach ($this->loggers as $current_severity => $loggers) {
+            if ($severity < $current_severity) continue;
+
+            /** @var Logger $logger */
+            foreach ($loggers as $logger) {
+                if ($logger->log($message) === false) break 2;
+            }
         }
     }
 
     /**
      * Pushes a logger to the top of the logger stack
      * @param Logger $logger
+     * @param string $severity The log level that the logger
+     * handles, must be one of the constant names in LogSeverities
      * @return LogManager For chaining
      */
-    public function addLogger(Logger $logger): self
+    public function addLogger(Logger $logger, string $severity): self
     {
-        $this->loggers->push($logger);
+        if (!isset(LogSeverities::SEVERITIES[$severity])) {
+            $this->getPlugin()->log(
+                MessageFactory::colorize("&eUnknown logger severity &b$severity&e, defaulting to &blog")
+            );
+            $severity = 'log';
+        }
+
+        $this->loggers[LogSeverities::SEVERITIES[$severity]]->push($logger);
+
         return $this;
     }
 

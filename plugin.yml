@@ -15,7 +15,7 @@ commands:
 
   log:
     description: "Log a message"
-    usage: "/log <message>"
+    usage: "/log <message> [-s <severity>]"
     permission: cucumber.command.log
 
   alert:
