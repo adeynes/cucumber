@@ -26,6 +26,9 @@ final class PunishmentManager
     private $ip_bans = [];
 
     /** @var SimplePunishment[] */
+    private $ubans = [];
+
+    /** @var SimplePunishment[] */
     private $mutes = [];
 
     /**
@@ -73,6 +76,9 @@ final class PunishmentManager
                 'already-banned' => 'IP %ip% is already banned!',
                 'not-banned' => 'IP %ip% is not banned!',
             ],
+            'uban' => [
+                'already-banned' => 'IP %ip% is already banned!'
+            ],
             'mute' => [
                 'already-muted' => '%player% is already muted!',
                 'not-muted' => '%player% is not muted!'
@@ -98,17 +104,29 @@ final class PunishmentManager
                 function(array $rows) use ($i, $storage) {
                     foreach ($rows as $row)
                         $storage[$i][$row['name']] = SimplePunishment::from($row);
-                });
+                }
+            );
 
         $connector->executeSelect(Queries::CUCUMBER_GET_PUNISHMENTS_IP_BANS, [],
             function(array $rows) {
                 foreach ($rows as $row)
                     $this->ip_bans[$row['ip']] = SimplePunishment::from($row);
-            });
+            }
+        );
+
+        $connector->executeSelect(Queries::CUCUMBER_GET_PUNISHMENTS_UBANS, [],
+            function(array $rows) {
+                $expiration = strtotime('+10 year');
+                foreach ($rows as $row) {
+                    $row = $row + ['expiration' => $expiration];
+                    $this->ubans[$row['ip']] = SimplePunishment::from($row);
+                }
+            }
+        );
         
         $connector->waitAll(); // don't go on until everything is loaded
 
-        $this->not_saved = ['ban' => [], 'ip-ban' => [], 'mute' => []];
+        $this->not_saved = ['ban' => [], 'ip-ban' => [], 'uban' => [], 'mute' => []];
         $this->not_deleted = ['ban' => [], 'ip-ban' => [], 'mute' => []];
     }
 
@@ -129,6 +147,13 @@ final class PunishmentManager
         foreach ($this->not_saved['ip-ban'] as $ip => $ip_ban) {
             $connector->executeInsert(Queries::CUCUMBER_PUNISH_IP_BAN, ['ip' => $ip] + $ip_ban->getData());
             unset($this->not_saved['ip-ban'][$ip]);
+        }
+
+        foreach ($this->not_saved['uban'] as $ip => $uban) {
+            $data = $uban->getData();
+            unset($data['expiration']);
+            $connector->executeInsert(Queries::CUCUMBER_PUNISH_UBAN, ['ip' => $ip] + $data);
+            unset($this->not_saved['uban'][$ip]);
         }
 
         $queries = ['ban' => Queries::CUCUMBER_PUNISH_UNBAN, 'mute' => Queries::CUCUMBER_PUNISH_UNMUTE];
@@ -312,6 +337,44 @@ final class PunishmentManager
                 ErrorCodes::ATTEMPT_PARDON_NOT_PUNISHED
             )
         );
+    }
+
+    /**
+     * @return SimplePunishment[]
+     */
+    public function getUbans(): array
+    {
+        return $this->ubans;
+    }
+
+    public function getUban(string $ip): ?SimplePunishment
+    {
+        return $this->getUbans()[$ip] ?? null;
+    }
+
+    public function addUban(string $ip, ?string $reason, string $moderator): SimplePunishment
+    {
+        if (is_null($reason))
+            $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
+
+        $punishment = new SimplePunishment($reason, strtotime('+10 year'), $moderator);
+
+        return $this->punish($ip, $punishment, 'uban', $this->ubans,
+            new CucumberException(
+                $this->getMessages()['uban']['already-banned'],
+                ['ip' => $ip],
+                ErrorCodes::ATTEMPT_PUNISH_PUNISHED
+            )
+        );
+    }
+
+    public function checkUban(CucumberPlayer $player): bool
+    {
+        $uban = $this->getUban($player->getIp());
+        if ($uban)
+            $this->ban($player->getName(), $uban->getReason(), $uban->getExpiration(), $uban->getModerator());
+
+        return (bool) $uban;
     }
 
     /**
