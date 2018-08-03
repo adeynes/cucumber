@@ -10,16 +10,15 @@ use adeynes\cucumber\utils\MessageFactory;
 use pocketmine\command\CommandSender;
 
 // TODO: ban offline player by getting IP from db
-class IpbanCommand extends CucumberCommand
+class UbanCommand extends CucumberCommand
 {
 
     public function __construct(Cucumber $plugin)
     {
-        parent::__construct($plugin, 'ipban', 'cucumber.command.ipban', 'Ban an IP', 0,
-            '/ipban <-p <player>|-ip <ip>> [reason] [-d <duration>]', [
+        parent::__construct($plugin, 'uban', 'cucumber.command.uban', 'Ban any player that joins using an IP. Irreversible',
+            0, '/uban <-p <player>|-ip <ip>> [reason]', [
                 'p' => 1,
-                'ip' => 1,
-                'd' => 1
+                'ip' => 1
             ]);
     }
 
@@ -28,24 +27,22 @@ class IpbanCommand extends CucumberCommand
         [$reason] = $command->get([[0, -1]]);
         [$target_name, $ip] = [$command->getTag('p'), $command->getTag('ip')];
         if ($reason === '') $reason = null;
-        $duration = $command->getTag('d');
-        $expiration = $duration ? CommandParser::parseDuration($duration) : null;
 
-        $ip_ban = function(string $ip) use ($sender, $reason, $expiration) {
+        $ip_ban = function(string $ip) use ($sender, $reason) {
             try {
                 $ban_data = $this->getPlugin()->getPunishmentManager()
-                        ->ipBan($ip, $reason, $expiration, $sender->getName())->getDataFormatted();
+                    ->addUban($ip, $reason, $sender->getName())->getDataFormatted();
                 $ban_data = $ban_data + ['ip' => $ip];
 
                 foreach ($this->getPlugin()->getServer()->getOnlinePlayers() as $player) {
-                    if ($player->getAddress() === $ip)
+                    if ($this->getPlugin()->getPunishmentManager()->checkUban(new CucumberPlayer($player)))
                         $player->kick(
                             $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban_data),
                             false // don't say Kicked by admin
                         );
                 }
 
-                $this->getPlugin()->formatAndSend($sender, 'success.ipban', $ban_data);
+                $this->getPlugin()->formatAndSend($sender, 'success.uban', $ban_data);
 
                 return true;
             } catch (CucumberException $exception) {
@@ -59,7 +56,7 @@ class IpbanCommand extends CucumberCommand
                 $ip_ban($target->getAddress());
             else
                 $this->getPlugin()->formatAndSend($sender, 'error.player-offline', ['player' => $target_name]);
-                // don't return in case ip flag is set
+            // don't return in case ip flag is set
         }
 
         if ($ip)

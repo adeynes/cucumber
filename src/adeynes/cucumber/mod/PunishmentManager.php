@@ -352,6 +352,13 @@ final class PunishmentManager
         return $this->getUbans()[$ip] ?? null;
     }
 
+    /**
+     * @param string $ip
+     * @param null|string $reason
+     * @param string $moderator
+     * @return SimplePunishment
+     * @throws CucumberException If the IP is already ubanned
+     */
     public function addUban(string $ip, ?string $reason, string $moderator): SimplePunishment
     {
         if (is_null($reason))
@@ -368,6 +375,12 @@ final class PunishmentManager
         );
     }
 
+    /**
+     * Checks if a player is affected by a uban. If so, bans them
+     * @param CucumberPlayer $player
+     * @return bool
+     * @throws CucumberException
+     */
     public function checkUban(CucumberPlayer $player): bool
     {
         $uban = $this->getUban($player->getIp());

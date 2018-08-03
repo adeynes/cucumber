@@ -172,6 +172,7 @@ final class Cucumber extends PluginBase
             'ipban' => 'IpbanCommand',
             'ipbanlist' => 'IpbanlistCommand',
             'ippardon' => 'IppardonCommand',
+            'uban' => 'UbanCommand',
             'mute' => 'MuteCommand',
             'mutelist' => 'MutelistCommand',
             'unmute' => 'UnmuteCommand',
