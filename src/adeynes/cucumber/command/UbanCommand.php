@@ -28,7 +28,7 @@ class UbanCommand extends CucumberCommand
         [$target_name, $ip] = [$command->getTag('p'), $command->getTag('ip')];
         if ($reason === '') $reason = null;
 
-        $ip_ban = function(string $ip) use ($sender, $reason) {
+        $uban = function(string $ip) use ($sender, $reason) {
             try {
                 $ban_data = $this->getPlugin()->getPunishmentManager()
                     ->addUban($ip, $reason, $sender->getName())->getDataFormatted();
@@ -53,14 +53,14 @@ class UbanCommand extends CucumberCommand
 
         if ($target_name) {
             if ($target = CucumberPlayer::getOnlinePlayer($target_name))
-                $ip_ban($target->getAddress());
+                $uban($target->getAddress());
             else
                 $this->getPlugin()->formatAndSend($sender, 'error.player-offline', ['player' => $target_name]);
             // don't return in case ip flag is set
         }
 
         if ($ip)
-            $ip_ban($ip);
+            $uban($ip);
 
         if (!$target_name && !$ip)
             $sender->sendMessage(
