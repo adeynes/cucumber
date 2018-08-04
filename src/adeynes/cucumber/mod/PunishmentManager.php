@@ -177,12 +177,14 @@ final class PunishmentManager
      * @param string $type
      * @param array $storage
      * @param CucumberException $exception
+     * @param bool $override When set to true, replaces an old punishment with a new one and doesn't throw
      * @return SimplePunishment
      * @throws CucumberException If the ID is already punished
      */
-    private function punish($id, Punishment $punishment, string $type, array &$storage, CucumberException $exception): Punishment
+    private function punish($id, Punishment $punishment, string $type, array &$storage, CucumberException $exception,
+                            bool $override = false): Punishment
     {
-        if (isset($storage[$id]))
+        if (isset($storage[$id]) && !$override)
             throw $exception;
 
         $storage[$id] = $punishment;
@@ -215,15 +217,16 @@ final class PunishmentManager
      * @param string $type
      * @param array $storage
      * @param string $error_message
+     * @param bool $override When set to true, replaces an old punishment with a new one and doesn't throw
      * @return SimplePunishment The new punishment
      * @throws CucumberException If the player is already punished
      */
-    private function playerPunish(string $name, string $reason, int $expiration, string $moderator,
-                                  string $type, array &$storage, string $error_message): SimplePunishment
+    private function playerPunish(string $name, string $reason, int $expiration, string $moderator, string $type,
+                                  array &$storage, string $error_message, bool $override = false): SimplePunishment
     {
         $punishment = new SimplePunishment($reason, $expiration, $moderator);
         return $this->punish($name, $punishment, $type, $storage,
-            new CucumberException($error_message, ['player' => $name], ErrorCodes::ATTEMPT_PUNISH_PUNISHED));
+            new CucumberException($error_message, ['player' => $name], ErrorCodes::ATTEMPT_PUNISH_PUNISHED), $override);
     }
 
     /**
@@ -262,10 +265,11 @@ final class PunishmentManager
      * @param string|null $reason
      * @param int|null $expiration
      * @param string $moderator
+     * @param bool $override When set to true, replaces an old ban with a new one and doesn't throw
      * @return SimplePunishment
      * @throws CucumberException If the player is already banned
      */
-    public function ban(string $name, ?string $reason, ?int $expiration, string $moderator): SimplePunishment
+    public function ban(string $name, ?string $reason, ?int $expiration, string $moderator, bool $override = false): SimplePunishment
     {
         if (is_null($reason))
             $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
@@ -385,7 +389,7 @@ final class PunishmentManager
     {
         $uban = $this->getUban($player->getIp());
         if ($uban)
-            $this->ban($player->getName(), $uban->getReason(), $uban->getExpiration(), $uban->getModerator());
+            $this->ban($player->getName(), $uban->getReason(), $uban->getExpiration(), $uban->getModerator(), true);
 
         return (bool) $uban;
     }
