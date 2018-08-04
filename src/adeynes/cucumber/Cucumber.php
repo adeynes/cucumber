@@ -98,7 +98,7 @@ final class Cucumber extends PluginBase
         $connector->executeGeneric(Queries::CUCUMBER_ADD_PLAYER, ['name' => 'CONSOLE', 'ip' => '127.0.0.1']);
 
         $queries = [Queries::CUCUMBER_INIT_PUNISHMENTS_BANS, Queries::CUCUMBER_INIT_PUNISHMENTS_IP_BANS,
-            Queries::CUCUMBER_INIT_PUNISHMENTS_MUTES];
+            Queries::CUCUMBER_INIT_PUNISHMENTS_UBANS, Queries::CUCUMBER_INIT_PUNISHMENTS_MUTES];
         foreach ($queries as $query)
             $connector->executeGeneric($query);
 
