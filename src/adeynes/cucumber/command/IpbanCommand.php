@@ -58,8 +58,12 @@ class IpbanCommand extends CucumberCommand
             if ($target = CucumberPlayer::getOnlinePlayer($target_name))
                 $ip_ban($target->getAddress());
             else
-                $this->getPlugin()->formatAndSend($sender, 'error.player-offline', ['player' => $target_name]);
-                // don't return in case ip flag is set
+                $this->doIfTargetExists(
+                    function(array $rows) use ($ip_ban) { $ip_ban($rows[0]['ip']); },
+                    $sender,
+                    $target_name
+                );
+            // don't return in case ip flag is set
         }
 
         if ($ip)

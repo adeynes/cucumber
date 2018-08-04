@@ -104,7 +104,7 @@ abstract class CucumberCommand extends Command implements PluginIdentifiableComm
                     return;
                 }
 
-                $function();
+                $function($rows);
             }
         );
     }
