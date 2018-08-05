@@ -277,7 +277,7 @@ final class PunishmentManager
             $expiration = strtotime('+10 year');
 
         return $this->playerPunish($name, $reason, $expiration, $moderator, 'ban', $this->bans,
-            $this->getMessages()['ban']['already-banned']);
+            $this->getMessages()['ban']['already-banned'], $override);
     }
 
     /**
@@ -412,10 +412,11 @@ final class PunishmentManager
      * @param string|null $reason
      * @param int|null $expiration
      * @param string $moderator
+     * @param bool $override When set to true, replaces an old mute with a new one and doesn't throw
      * @return SimplePunishment
      * @throws CucumberException If the player is already muted
      */
-    public function mute(string $name, ?string $reason, ?int $expiration, string $moderator): SimplePunishment
+    public function mute(string $name, ?string $reason, ?int $expiration, string $moderator, bool $override = false): SimplePunishment
     {
         if (is_null($reason))
             $reason = $this->getPlugin()->getMessage('moderation.mute.mute.default-reason');
@@ -423,7 +424,7 @@ final class PunishmentManager
             $expiration = strtotime('+10 year');
 
         return $this->playerPunish($name, $reason, $expiration, $moderator, 'mute', $this->mutes,
-            $this->getMessages()['mute']['already-muted']);
+            $this->getMessages()['mute']['already-muted'], $override);
     }
 
     /**

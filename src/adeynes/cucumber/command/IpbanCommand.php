@@ -67,7 +67,7 @@ class IpbanCommand extends CucumberCommand
 
         if (!$target_name && !$ip)
             $sender->sendMessage(
-                MessageFactory::colorize("&cAt least one of flag &b-p &cand flag &b-ip must be set!")
+                MessageFactory::colorize("&cAt least one of flag &b-p &cand flag &b-ip&c must be set!")
             );
 
         return true;
