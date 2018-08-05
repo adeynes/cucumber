@@ -1,4 +1,4 @@
-version: '1.1'
+version: '1.2'
 
 error:
   # %player%
@@ -64,7 +64,8 @@ moderation:
       default-reason: "You have broken a rule"
     unmute:
       # The message that will be sent to the player (if they are online) when they are manually unmuted
-      manual: "&eYou have been unmuted!"
+      # %moderator%
+      manual: "&eYou have been unmuted by &b%moderator%&e!"
       # The message that will be sent to the player (if they are online) when they are automatically unmuted
       auto: "&eYou have automatically been unmuted; your mute period has expired!"
 

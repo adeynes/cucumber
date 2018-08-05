@@ -32,7 +32,11 @@ class UnmuteCommand extends CucumberCommand
             $this->getPlugin()->getPunishmentManager()->unmute($target_name);
 
             if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
-                $this->getPlugin()->formatAndSend($target, 'moderation.mute.unmute.manual');
+                $this->getPlugin()->formatAndSend(
+                    $target,
+                    'moderation.mute.unmute.manual',
+                    ['moderator' => $sender->getName()]
+                );
             }
 
             $this->getPlugin()->formatAndSend($sender, 'success.unmute', ['player' => $target_name]);
