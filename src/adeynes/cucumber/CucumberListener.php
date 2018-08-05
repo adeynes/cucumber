@@ -56,18 +56,19 @@ final class CucumberListener implements Listener
 
         if ($this->getPlugin()->getPunishmentManager()->isMuted(new CucumberPlayer($player))) {
             $ev->setCancelled();
-            if ($this->log_chat)
+            if ($this->log_chat) {
                 $this->callEvent(new ChatAttemptEvent($player, $message));
-        } else if ($this->log_chat)
+            }
+        } elseif ($this->log_chat) {
             $this->callEvent(new ChatEvent($player, $message));
+        }
     }
 
     public function onCommandPreprocess(PlayerCommandPreprocessEvent $ev)
     {
-        if (strpos(($command = $ev->getMessage()), '/') === 0 && $this->log_command)
-            $this->callEvent(
-                new CommandEvent($ev->getPlayer(), $command)
-            );
+        if (strpos(($command = $ev->getMessage()), '/') === 0 && $this->log_command) {
+            $this->callEvent(new CommandEvent($ev->getPlayer(), $command));
+        }
     }
 
     // Check if player is banned
@@ -81,37 +82,36 @@ final class CucumberListener implements Listener
             );
             $ev->setCancelled();
 
-            if ($this->log_traffic)
+            if ($this->log_traffic) {
                 $this->callEvent(new JoinAttemptEvent($player));
+            }
         }
     }
 
     public function onJoin(PlayerJoinEvent $ev)
     {
         $player = $ev->getPlayer();
-        if ($this->log_traffic)
+        if ($this->log_traffic) {
             $this->callEvent(new JoinEvent($player));
+        }
 
-        $this->getPlugin()->getConnector()->executeInsert(Queries::CUCUMBER_ADD_PLAYER,
-            ['name' => $player->getLowerCaseName(), 'ip' => $player->getAddress()]);
+        $this->getPlugin()->getConnector()->executeInsert(
+            Queries::CUCUMBER_ADD_PLAYER,
+            ['name' => $player->getLowerCaseName(), 'ip' => $player->getAddress()]
+        );
     }
 
     public function onQuit(PlayerQuitEvent $ev)
     {
-        if ($this->log_traffic)
+        if ($this->log_traffic) {
             $this->callEvent(new QuitEvent($ev->getPlayer()));
+        }
     }
 
-    /**
-     * Logs all CucumberEvent
-     * @param CucumberEvent $ev
-     */
     public function onCucumberEvent(CucumberEvent $ev)
     {
         $log_manager = $this->getPlugin()->getLogManager();
-        $log_manager->log(
-            $log_manager->formatEventMessage($ev)
-        );
+        $log_manager->log($log_manager->formatEventMessage($ev));
     }
 
     private function callEvent(Event $ev): void

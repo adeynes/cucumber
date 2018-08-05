@@ -24,12 +24,12 @@ final class MessageFactory
         $tags = array_unique($tags, SORT_REGULAR);
 
         // No tags found
-        if ($tags === [[]])
-            return $template;
+        if ($tags === [[]]) return $template;
 
         // Given %tag%, $tags[1] will be "tag" while $tags[0] will be "%tag%"
-        foreach ($tags[1] as $i => $tag)
+        foreach ($tags[1] as $i => $tag) {
             $template = str_replace($tags[0][$i], $data[$tag], $template);
+        }
 
         return $template;
     }

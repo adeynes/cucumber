@@ -73,16 +73,18 @@ final class Cucumber extends PluginBase
 
         /** @var string $config_version */
         $config_version = $this->getConfig()->get('version');
-        if (!$this->checkVersion($config_version, self::CONFIG_VERSION))
+        if (!$this->checkVersion($config_version, self::CONFIG_VERSION)) {
             $this->fail('Outdated config.yml version');
+        }
 
         $this->saveResource('messages.yml');
         $this->messages = new Config($this->getDataFolder() . 'messages.yml');
 
         /** @var string $messages_version */
         $messages_version = $this->getMessage('version');
-        if (!$this->checkVersion($messages_version, self::MESSAGES_VERSION))
+        if (!$this->checkVersion($messages_version, self::MESSAGES_VERSION)) {
             $this->fail('Outdated messages.yml version');
+        }
     }
 
     private function initDatabase(): void
@@ -91,16 +93,15 @@ final class Cucumber extends PluginBase
             ['mysql' => 'mysql.sql']);
         $connector = $this->getConnector();
 
-        // other tables have a foreign key constraint on players
+        // other tables have a foreign key constraint on players so it must be first
         $connector->executeGeneric(Queries::CUCUMBER_INIT_PLAYERS);
         $connector->waitAll();
 
         $connector->executeGeneric(Queries::CUCUMBER_ADD_PLAYER, ['name' => 'CONSOLE', 'ip' => '127.0.0.1']);
 
-        $queries = [Queries::CUCUMBER_INIT_PUNISHMENTS_BANS, Queries::CUCUMBER_INIT_PUNISHMENTS_IP_BANS,
+        $create_queries = [Queries::CUCUMBER_INIT_PUNISHMENTS_BANS, Queries::CUCUMBER_INIT_PUNISHMENTS_IP_BANS,
             Queries::CUCUMBER_INIT_PUNISHMENTS_MUTES];
-        foreach ($queries as $query)
-            $connector->executeGeneric($query);
+        foreach ($create_queries as $query) $connector->executeGeneric($query);
 
         $connector->waitAll();
     }
@@ -118,11 +119,12 @@ final class Cucumber extends PluginBase
         // Cucumber instance is always the first arg,
         // user-supplied ones are passed starting with the second arg
         foreach ($this->getConfig()->getNested('log.loggers') as $severity => $loggers) {
-            foreach ($loggers as $logger)
+            foreach ($loggers as $logger) {
                 $this->getLogManager()->addLogger(
                     new $logger[0]($this->getLogManager(), ...($logger[1] ?? [])),
                     $severity
                 );
+            }
         }
     }
 
@@ -150,12 +152,13 @@ final class Cucumber extends PluginBase
             'command' => ['command', 'CommandEvent']
         ];
 
-        foreach ($events as $type => $class)
+        foreach ($events as $type => $class) {
             call_user_func(
                 ["\\adeynes\\cucumber\\event\\$class[1]", 'init'],
                 $class[0],
                 $this->getMessage("log.templates.$type")
             );
+        }
     }
 
     private function registerCommands(): void
@@ -184,6 +187,7 @@ final class Cucumber extends PluginBase
                 $old->setLabel($command . '_disabled');
                 $old->unregister($map);
             }
+
             $class = "\\adeynes\\cucumber\\command\\$class";
             $map->register('cucumber', new $class($this));
         }

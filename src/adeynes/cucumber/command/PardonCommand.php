@@ -12,8 +12,14 @@ class PardonCommand extends CucumberCommand
 
     public function __construct(Cucumber $plugin)
     {
-        parent::__construct($plugin, 'pardon', 'cucumber.command.pardon', 'Pardon a player',
-            1, '/pardon <player>');
+        parent::__construct(
+            $plugin,
+            'pardon',
+            'cucumber.command.pardon',
+            'Pardon a player',
+            1,
+            '/pardon <player>'
+        );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
@@ -23,6 +29,7 @@ class PardonCommand extends CucumberCommand
 
         try {
             $this->getPlugin()->getPunishmentManager()->unban($target_name);
+
             $this->getPlugin()->formatAndSend($sender, 'success.pardon', ['player' => $target_name]);
             return true;
         } catch (CucumberException $exception) {

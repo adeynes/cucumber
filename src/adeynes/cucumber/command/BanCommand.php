@@ -13,8 +13,15 @@ class BanCommand extends CucumberCommand
 
     public function __construct(Cucumber $plugin)
     {
-        parent::__construct($plugin, 'ban', 'cucumber.command.ban', 'Ban a player by name',
-            1, '/ban <player> [reason] [-d <duration>]', ['d' => 1]);
+        parent::__construct(
+            $plugin,
+            'ban',
+            'cucumber.command.ban',
+            'Ban a player by name',
+            1,
+            '/ban <player> [reason] [-d <duration>]',
+            ['d' => 1]
+        );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
@@ -25,17 +32,19 @@ class BanCommand extends CucumberCommand
         $duration = $command->getTag('d');
         $expiration = $duration ? CommandParser::parseDuration($duration) : null;
 
-        $ban = function() use ($sender, $target_name, $reason, $expiration) {
+        $ban = function () use ($sender, $target_name, $reason, $expiration) {
             try {
                 $ban_data = $this->getPlugin()->getPunishmentManager()
-                    ->ban($target_name, $reason, $expiration, $sender->getName())->getDataFormatted();
+                    ->ban($target_name, $reason, $expiration, $sender->getName())
+                    ->getDataFormatted();
                 $ban_data = $ban_data + ['player' => $target_name];
 
-                if ($target = CucumberPlayer::getOnlinePlayer($target_name))
+                if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
                     $target->kick(
                         $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban_data),
                         false // don't say Kicked by admin
                     );
+                }
 
                 $this->getPlugin()->formatAndSend($sender, 'success.ban', $ban_data);
                 return true;

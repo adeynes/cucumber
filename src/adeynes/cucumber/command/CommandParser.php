@@ -11,16 +11,13 @@ class CommandParser
         $tags = [];
 
         foreach ($args as $i => $arg) {
-            if (strpos($arg, '-') !== 0)
-                continue;
+            if (strpos($arg, '-') !== 0) continue;
 
             // Avoid getting finding the tag twice; only first time counts
-            if (isset($tags[$tag = substr($arg, 1)]))
-                continue;
+            if (isset($tags[$tag = substr($arg, 1)])) continue;
 
             // Use is_null because $length can be 0 so !0 would be true
-            if (is_null($length = $command->getTag($tag)))
-                continue;
+            if (is_null($length = $command->getTag($tag))) continue;
 
             $tags[$tag] = implode(' ', array_slice($args, $i + 1, $length));
 
@@ -40,33 +37,32 @@ class CommandParser
         $time = '';
 
         foreach ($time_units as $symbol => $unit) {
-            if (($length = array_search($symbol, $parts)) === false)
-                continue;
+            if (($length = array_search($symbol, $parts)) === false) continue;
 
-            $n = implode('', array_slice($parts, $current, $length)); // not $length-1 bc it's a length not an offset
+            $n = implode('', array_slice($parts, $current, $length));
             $time .= "$n $unit ";
             array_splice($parts, $current, $length + 1);
         }
 
         $time = trim($time);
+
         return $time === '' ? time() : strtotime($time);
     }
 
     /**
-     * Turns the values of an array into the keys of the
-     * return array. Populates values with an empty string
+     * Turns the values of an array into the keys of the return array. Populates values with an empty string
      * @param array $array
      * @return array
      */
     private static function makeKeys(array $array): array
     {
-        $return = [];
+        $values_as_keys = [];
 
         foreach ($array as $value) {
-            $return[$value] = '';
+            $values_as_keys[$value] = '';
         }
 
-        return $return;
+        return $values_as_keys;
     }
 
 }

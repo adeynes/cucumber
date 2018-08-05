@@ -11,8 +11,14 @@ class BanlistCommand extends CucumberCommand
 
     public function __construct(Cucumber $plugin)
     {
-        parent::__construct($plugin, 'banlist', 'cucumber.command.banlist', 'See the list of bans',
-            0, '/banlist');
+        parent::__construct(
+            $plugin,
+            'banlist',
+            'cucumber.command.banlist',
+            'See the list of bans',
+            0,
+            '/banlist'
+        );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
@@ -20,8 +26,7 @@ class BanlistCommand extends CucumberCommand
         $message = '';
         $bans = $this->getPlugin()->getPunishmentManager()->getBans();
         foreach ($bans as $player => $ban) {
-            $data = ['player' => $player] +
-                $ban->getDataFormatted();
+            $data = $ban->getDataFormatted() + ['player' => $player];
             $message .= $this->getPlugin()->formatMessageFromConfig('success.banlist.list', $data);
         }
 

@@ -24,8 +24,9 @@ class BaseLogger implements Logger
 
     protected function init(): void
     {
-        if (!file_exists($this->file))
+        if (!file_exists($this->file)) {
             fclose(fopen($this->file, 'w'));
+        }
     }
 
     // TODO: async I/O

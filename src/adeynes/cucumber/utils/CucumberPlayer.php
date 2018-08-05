@@ -25,10 +25,11 @@ class CucumberPlayer
      */
     public function __construct($player, ?string $ip = null)
     {
-        if ($player instanceof Player)
+        if ($player instanceof Player) {
             $properties = [$player->getLowerCaseName(), $player->getAddress()];
-        else
+        } else {
             $properties = [strtolower($player), $ip];
+        }
 
         [$this->name, $this->ip] = $properties;
     }
@@ -51,10 +52,8 @@ class CucumberPlayer
     public static function getOnlinePlayer(string $name): ?Player
     {
         $player = Server::getInstance()->getPlayer($name);
-        if ($player && $player instanceof Player && $player->isOnline())
-            return $player;
-        else
-            return null;
+        if ($player && $player instanceof Player && $player->isOnline()) return $player;
+        else return null;
     }
 
 }

@@ -18,9 +18,8 @@ abstract class CucumberCommand extends Command implements PluginIdentifiableComm
     protected $plugin;
 
     /**
-     * The minimum amount of arguments the command
-     * must have. Anything less than this will
-     * throw an InvalidCommandSyntaxException
+     * The minimum amount of arguments the command must have
+     * Anything less than this will throw an InvalidCommandSyntaxException
      * @var int
      */
     protected $min_args;
@@ -65,8 +64,7 @@ abstract class CucumberCommand extends Command implements PluginIdentifiableComm
     }
 
     /**
-     * This contains boilerplate code e.g. permission
-     * checking, and executes CucumberCommand::_execute()
+     * This contains boilerplate code e.g. permission checking, and executes CucumberCommand::_execute()
      * @param CommandSender $sender
      * @param string $label
      * @param array $args
@@ -77,8 +75,7 @@ abstract class CucumberCommand extends Command implements PluginIdentifiableComm
         if (!$this->testPermission($sender)) return false;
 
         $command = CommandParser::parse($this, $args);
-        if (count($command->getArgs()) < $this->min_args)
-            throw new InvalidCommandSyntaxException;
+        if (count($command->getArgs()) < $this->min_args) throw new InvalidCommandSyntaxException;
 
         return $this->_execute($sender, $command);
     }
@@ -94,11 +91,14 @@ abstract class CucumberCommand extends Command implements PluginIdentifiableComm
      */
     public function doIfTargetExists(callable $function, CommandSender $sender, string $target_name): void
     {
-        $this->getPlugin()->getConnector()->executeSelect(Queries::CUCUMBER_GET_PLAYER_BY_NAME,
+        $this->getPlugin()->getConnector()->executeSelect(
+            Queries::CUCUMBER_GET_PLAYER_BY_NAME,
             ['name' => $target_name],
-            function(array $rows) use ($function, $sender, $target_name) {
+            function (array $rows) use ($function, $sender, $target_name) {
                 if (count($rows) === 0) {
-                    $this->getPlugin()->formatAndSend($sender, 'error.player-does-not-exist',
+                    $this->getPlugin()->formatAndSend(
+                        $sender,
+                        'error.player-does-not-exist',
                         ['player' => $target_name]
                     );
                     return;

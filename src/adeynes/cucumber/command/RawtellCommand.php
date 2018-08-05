@@ -13,12 +13,15 @@ class RawtellCommand extends CucumberCommand
 
     public function __construct(Cucumber $plugin)
     {
-        parent::__construct($plugin, 'rawtell', 'cucumber.command.rawtell', 'Send a raw message to a player',
-            1, '/rawtell <player> <message> [-nom] [-p] [-t]', [
-                'nom' => 0,
-                'p' => 0,
-                't' => 0
-            ]);
+        parent::__construct(
+            $plugin,
+            'rawtell',
+            'cucumber.command.rawtell',
+            'Send a raw message to a player',
+            1,
+            '/rawtell <player> <message> [-nom] [-p] [-t]',
+            ['nom' => 0, 'p' => 0, 't' => 0]
+        );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
@@ -31,17 +34,23 @@ class RawtellCommand extends CucumberCommand
             return false;
         }
 
-        if (is_null($command->getTag('nom')))
+        if (is_null($command->getTag('nom'))) {
             $target->sendMessage($message);
+        }
 
-        if (!is_null($command->getTag('p')))
+        if (!is_null($command->getTag('p'))) {
             $target->sendPopup($message);
+        }
 
-        if (!is_null($command->getTag('t')))
+        if (!is_null($command->getTag('t'))) {
             $target->addSubTitle($message); // title is too big
+        }
 
-        $this->getPlugin()->formatAndSend($sender, 'success.rawtell', ['player' => $target_name, 'message' => $message]);
-
+        $this->getPlugin()->formatAndSend(
+            $sender,
+            'success.rawtell',
+            ['player' => $target_name, 'message' => $message]
+        );
         return true;
     }
 

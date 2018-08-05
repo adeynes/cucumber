@@ -13,8 +13,14 @@ class UnmuteCommand extends CucumberCommand
 
     public function __construct(Cucumber $plugin)
     {
-        parent::__construct($plugin, 'unmute', 'cucumber.command.unmute', 'Unmute a player',
-            1, '/unmute <player>');
+        parent::__construct(
+            $plugin,
+            'unmute',
+            'cucumber.command.unmute',
+            'Unmute a player',
+            1,
+            '/unmute <player>'
+        );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
@@ -25,8 +31,9 @@ class UnmuteCommand extends CucumberCommand
         try {
             $this->getPlugin()->getPunishmentManager()->unmute($target_name);
 
-            if ($target = CucumberPlayer::getOnlinePlayer($target_name))
+            if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
                 $this->getPlugin()->formatAndSend($target, 'moderation.mute.unmute.manual');
+            }
 
             $this->getPlugin()->formatAndSend($sender, 'success.unmute', ['player' => $target_name]);
             return true;

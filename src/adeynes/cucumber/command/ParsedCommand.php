@@ -47,10 +47,15 @@ class ParsedCommand
         foreach ($requests as $request) {
             if (is_array($request)) {
                 // $request[0] is offset, $request[1] is length. Negative length means start from back
-                if ($request[1] < 0) $request[1] = count($this->getArgs()) - $request[0];
+                if ($request[1] < 0) {
+                    $request[1] = count($this->getArgs()) - $request[0];
+                }
+
                 $args[] = trim(implode(' ', array_slice($this->getArgs(), ...$request)));
-            } else
-                $args[] = array_slice($this->getArgs(), $request, 1)[0]; // allow negative offsets
+            } else {
+                // array_slice instead of access to allow negative offsets
+                $args[] = array_slice($this->getArgs(), $request, 1)[0];
+            }
         }
 
         return $args;

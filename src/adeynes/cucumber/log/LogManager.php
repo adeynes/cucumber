@@ -39,8 +39,8 @@ final class LogManager
         // highest severities first, but can't use Stack bc need associative
         $this->loggers = array_reverse($this->loggers, true);
 
-        [$this->global_template, $this->time_format] = [$this->getPlugin()->getMessage('log.templates.global'),
-                                                        $this->getPlugin()->getMessage('time-format') ?? 'Y-m-d\TH:i:s'];
+        $this->global_template = $this->getPlugin()->getMessage('log.templates.global');
+        $this->time_format = $this->getPlugin()->getMessage('time-format') ?? 'Y-m-d\TH:i:s';
     }
 
     public function getPlugin(): Cucumber

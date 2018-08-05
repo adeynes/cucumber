@@ -11,8 +11,14 @@ class IpbanlistCommand extends CucumberCommand
 
     public function __construct(Cucumber $plugin)
     {
-        parent::__construct($plugin, 'ipbanlist', 'cucumber.command.ipbanlist', 'See the list of IP bans',
-            0, '/ipbanlist');
+        parent::__construct(
+            $plugin,
+            'ipbanlist',
+            'cucumber.command.ipbanlist',
+            'See the list of IP bans',
+            0,
+            '/ipbanlist'
+        );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
@@ -20,8 +26,7 @@ class IpbanlistCommand extends CucumberCommand
         $message = '';
         $ip_bans = $this->getPlugin()->getPunishmentManager()->getIpBans();
         foreach ($ip_bans as $ip => $ip_ban) {
-            $data = ['ip'=> $ip] +
-                $ip_ban->getDataFormatted();
+            $data = $ip_ban->getDataFormatted() + ['ip' => $ip];
             $message .= $this->getPlugin()->formatMessageFromConfig('success.ipbanlist.list', $data);
         }
 

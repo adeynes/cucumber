@@ -16,7 +16,7 @@ class CucumberException extends \Exception
     public function __construct(string $message, array $data = [], int $code = 800)
     {
         $message = "&c$message";
-        $apply_colors = function(&$value) {
+        $apply_colors = function (&$value) {
             $value = "&b$value&c";
         };
         array_walk($data, $apply_colors);
