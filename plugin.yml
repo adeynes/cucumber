@@ -55,6 +55,11 @@ commands:
     permission: cucumber.command.ippardon
     aliases: [ipunban]
 
+  uban:
+    description: "Ban any player that joins using an IP. Irreversible"
+    usage: "/uban <-p <player>|-ip <ip>> [reason]"
+    permission: cucumber.command.uban
+
   mute:
     description: "Mute a player"
     usage: "/mute <player> [reason] [-d <duration>]"
@@ -114,6 +119,9 @@ permissions:
             default: op
           cucumber.command.ipban:
             description: "Allows for the use of /ipban"
+            default: op
+          cucumber.command.uban:
+            description: "Allows for the use of /uban"
             default: op
 
           cucumber.command.pardon:

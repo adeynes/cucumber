@@ -33,6 +33,8 @@ success:
     list: "&b%ip% &fwas banned by &9%moderator% &funtil &d%expiration% &ffor &7%reason%\n"
   # %ip%
   ippardon: "&aYou have successfully unbanned IP &b%ip%&a!"
+  # %ip% %reason% %expiration% (expiration will always be +10yrs and the uban will never expire anyways
+  uban: "&aYou have successfully banned any player who joins with IP &b%ip%&a!"
   # %player% %reason% %expiration%
   mute: "&aYou have successully muted &b%player% &auntil &d%expiration%&a!"
   # %player%

@@ -26,8 +26,17 @@ CREATE TABLE IF NOT EXISTS bans (
 CREATE TABLE IF NOT EXISTS ip_bans (
   id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   ip VARCHAR(20) UNIQUE NOT NULL,
-  reason VARCHAR(511) DEFAULT NULL,
+  reason VARCHAR(500) DEFAULT NULL,
   expiration INT(11) NOT NULL,
+  moderator VARCHAR(30) NOT NULL,
+  FOREIGN KEY (moderator) REFERENCES players(name)
+);
+-- #      }
+-- #      {ubans
+CREATE TABLE IF NOT EXISTS ubans (
+  id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  ip VARCHAR(20) UNIQUE NOT NULL,
+  reason VARCHAR(500) DEFAULT NULL,
   moderator VARCHAR(30) NOT NULL,
   FOREIGN KEY (moderator) REFERENCES players(name)
 );
@@ -70,6 +79,9 @@ INNER JOIN players ON bans.player = players.id;
 -- #      {ip-bans
 SELECT * FROM ip_bans;
 -- #      }
+-- #      {ubans
+SELECT * FROM ubans;
+-- #      }
 -- #      {mutes
 SELECT mutes.*, players.*
 FROM mutes
@@ -106,6 +118,13 @@ VALUES (:ip, :reason, :expiration, :moderator);
 -- #    {ip-unban
 -- #      :ip string
 DELETE FROM ip_bans WHERE ip = :ip;
+-- #    }
+-- #    {uban
+-- #      :ip string
+-- #      :reason string
+-- #      :moderator string
+REPLACE INTO ubans (ip, reason, moderator)
+VALUES (:ip, :reason, :moderator);
 -- #    }
 -- #    {mute
 -- #      :name string

@@ -26,6 +26,9 @@ final class PunishmentManager
     private $ip_bans = [];
 
     /** @var SimplePunishment[] */
+    private $ubans = [];
+
+    /** @var SimplePunishment[] */
     private $mutes = [];
 
     /**
@@ -73,6 +76,9 @@ final class PunishmentManager
                 'already-banned' => 'IP %ip% is already banned!',
                 'not-banned' => 'IP %ip% is not banned!',
             ],
+            'uban' => [
+                'already-banned' => 'IP %ip% is already banned!'
+            ],
             'mute' => [
                 'already-muted' => '%player% is already muted!',
                 'not-muted' => '%player% is not muted!'
@@ -102,7 +108,7 @@ final class PunishmentManager
                         $storage[$i][$row['name']] = SimplePunishment::from($row);
                     }
                 }
-                );
+            );
         }
 
         $connector->executeSelect(
@@ -114,10 +120,20 @@ final class PunishmentManager
                 }
             }
         );
+
+        $connector->executeSelect(Queries::CUCUMBER_GET_PUNISHMENTS_UBANS, [],
+            function(array $rows) {
+                $expiration = strtotime('+10 year');
+                foreach ($rows as $row) {
+                    $row = $row + ['expiration' => $expiration];
+                    $this->ubans[$row['ip']] = SimplePunishment::from($row);
+                }
+            }
+        );
         
         $connector->waitAll(); // don't go on until everything is loaded
 
-        $this->not_saved = ['ban' => [], 'ip-ban' => [], 'mute' => []];
+        $this->not_saved = ['ban' => [], 'ip-ban' => [], 'uban' => [], 'mute' => []];
         $this->not_deleted = ['ban' => [], 'ip-ban' => [], 'mute' => []];
     }
 
@@ -145,6 +161,13 @@ final class PunishmentManager
             unset($this->not_saved['ip-ban'][$ip]);
         }
 
+        foreach ($this->not_saved['uban'] as $ip => $uban) {
+            $data = $uban->getData();
+            unset($data['expiration']);
+            $connector->executeInsert(Queries::CUCUMBER_PUNISH_UBAN, ['ip' => $ip] + $data);
+            unset($this->not_saved['uban'][$ip]);
+        }
+
         $queries = ['ban' => Queries::CUCUMBER_PUNISH_UNBAN, 'mute' => Queries::CUCUMBER_PUNISH_UNMUTE];
 
         foreach ($queries as $type => $query) {
@@ -166,12 +189,14 @@ final class PunishmentManager
      * @param string $type
      * @param array $storage
      * @param CucumberException $exception
+     * @param bool $override When set to true, replaces an old punishment with a new one and doesn't throw
      * @return SimplePunishment
      * @throws CucumberException If the ID is already punished
      */
-    private function punish($id, Punishment $punishment, string $type, array &$storage, CucumberException $exception): Punishment
+    private function punish($id, Punishment $punishment, string $type, array &$storage, CucumberException $exception,
+                            bool $override = false): Punishment
     {
-        if (isset($storage[$id])) throw $exception;
+        if (isset($storage[$id]) && !$override) throw $exception;
 
         $storage[$id] = $punishment;
         $this->not_saved[$type][$id] = $punishment;
@@ -202,11 +227,12 @@ final class PunishmentManager
      * @param string $type
      * @param array $storage
      * @param string $error_message
+     * @param bool $override When set to true, replaces an old punishment with a new one and doesn't throw
      * @return SimplePunishment The new punishment
      * @throws CucumberException If the player is already punished
      */
-    private function playerPunish(string $name, string $reason, int $expiration, string $moderator,
-                                  string $type, array &$storage, string $error_message): SimplePunishment
+    private function playerPunish(string $name, string $reason, int $expiration, string $moderator, string $type,
+                                  array &$storage, string $error_message, bool $override = false): SimplePunishment
     {
         return $this->punish(
             $name,
@@ -217,7 +243,8 @@ final class PunishmentManager
                 $error_message,
                 ['player' => $name],
                 ErrorCodes::ATTEMPT_PUNISH_PUNISHED
-            )
+            ),
+            $override
         );
     }
 
@@ -261,10 +288,11 @@ final class PunishmentManager
      * @param string|null $reason
      * @param int|null $expiration
      * @param string $moderator
+     * @param bool $override When set to true, replaces an old ban with a new one and doesn't throw
      * @return SimplePunishment
      * @throws CucumberException If the player is already banned
      */
-    public function ban(string $name, ?string $reason, ?int $expiration, string $moderator): SimplePunishment
+    public function ban(string $name, ?string $reason, ?int $expiration, string $moderator, bool $override = false): SimplePunishment
     {
         if (is_null($reason)) {
             $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
@@ -280,7 +308,8 @@ final class PunishmentManager
             $moderator,
             'ban',
             $this->bans,
-            $this->getMessages()['ban']['already-banned']
+            $this->getMessages()['ban']['already-banned'],
+            $override
         );
     }
 
@@ -357,6 +386,61 @@ final class PunishmentManager
     /**
      * @return SimplePunishment[]
      */
+    public function getUbans(): array
+    {
+        return $this->ubans;
+    }
+
+    public function getUban(string $ip): ?SimplePunishment
+    {
+        return $this->getUbans()[$ip] ?? null;
+    }
+
+    /**
+     * @param string $ip
+     * @param null|string $reason
+     * @param string $moderator
+     * @return SimplePunishment
+     * @throws CucumberException If the IP is already ubanned
+     */
+    public function addUban(string $ip, ?string $reason, string $moderator): SimplePunishment
+    {
+        if (is_null($reason)) {
+            $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
+        }
+
+        return $this->punish(
+            $ip,
+            new SimplePunishment($reason, strtotime('+10 year'), $moderator),
+            'uban',
+            $this->ubans,
+            new CucumberException(
+                $this->getMessages()['uban']['already-banned'],
+                ['ip' => $ip],
+                ErrorCodes::ATTEMPT_PUNISH_PUNISHED
+            )
+        );
+    }
+
+    /**
+     * Checks if a player is affected by a uban. If so, bans them
+     * @param CucumberPlayer $player
+     * @return bool
+     * @throws CucumberException
+     */
+    public function checkUban(CucumberPlayer $player): bool
+    {
+        $uban = $this->getUban($player->getIp());
+        if ($uban) {
+            $this->ban($player->getName(), $uban->getReason(), $uban->getExpiration(), $uban->getModerator(), true);
+        }
+
+        return (bool) $uban;
+    }
+
+    /**
+     * @return SimplePunishment[]
+     */
     public function getMutes(): array
     {
         return $this->mutes;
@@ -372,10 +456,11 @@ final class PunishmentManager
      * @param string|null $reason
      * @param int|null $expiration
      * @param string $moderator
+     * @param bool $override When set to true, replaces an old mute with a new one and doesn't throw
      * @return SimplePunishment
      * @throws CucumberException If the player is already muted
      */
-    public function mute(string $name, ?string $reason, ?int $expiration, string $moderator): SimplePunishment
+    public function mute(string $name, ?string $reason, ?int $expiration, string $moderator, bool $override = false): SimplePunishment
     {
         if (is_null($reason)) {
             $reason = $this->getPlugin()->getMessage('moderation.mute.mute.default-reason');
@@ -391,7 +476,9 @@ final class PunishmentManager
             $moderator,
             'mute',
             $this->mutes,
-            $this->getMessages()['mute']['already-muted']);
+            $this->getMessages()['mute']['already-muted'],
+            $override
+        );
     }
 
     /**

@@ -100,7 +100,7 @@ final class Cucumber extends PluginBase
         $connector->executeGeneric(Queries::CUCUMBER_ADD_PLAYER, ['name' => 'CONSOLE', 'ip' => '127.0.0.1']);
 
         $create_queries = [Queries::CUCUMBER_INIT_PUNISHMENTS_BANS, Queries::CUCUMBER_INIT_PUNISHMENTS_IP_BANS,
-            Queries::CUCUMBER_INIT_PUNISHMENTS_MUTES];
+            Queries::CUCUMBER_INIT_PUNISHMENTS_UBANS, Queries::CUCUMBER_INIT_PUNISHMENTS_MUTES];
         foreach ($create_queries as $query) $connector->executeGeneric($query);
 
         $connector->waitAll();
@@ -175,6 +175,7 @@ final class Cucumber extends PluginBase
             'ipban' => 'IpbanCommand',
             'ipbanlist' => 'IpbanlistCommand',
             'ippardon' => 'IppardonCommand',
+            'uban' => 'UbanCommand',
             'mute' => 'MuteCommand',
             'mutelist' => 'MutelistCommand',
             'unmute' => 'UnmuteCommand',
