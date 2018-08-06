@@ -5,6 +5,7 @@ namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberException;
+use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 
 class PardonCommand extends CucumberCommand

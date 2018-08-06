@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
+use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 
 class IpbanlistCommand extends CucumberCommand

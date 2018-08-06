@@ -5,6 +5,7 @@ namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\Queries;
+use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 
 class IpCommand extends CucumberCommand

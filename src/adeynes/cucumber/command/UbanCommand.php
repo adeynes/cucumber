@@ -7,6 +7,7 @@ use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\cucumber\utils\MessageFactory;
+use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 
 // TODO: ban offline player by getting IP from db
