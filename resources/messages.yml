@@ -1,4 +1,4 @@
-version: '1.2'
+version: '1.3'
 
 error:
   # %player%
@@ -7,6 +7,7 @@ error:
   player-does-not-exist: "&b%player% &chas never joined this server!"
   # %severity%
   unknown-log-severity: "&cUnknown severity &b%severity%&c!"
+  not-ingame: "&cPlease use this command in-game!"
 
 success:
   # %player% %message%
@@ -46,6 +47,7 @@ success:
     list: "&b%player% &fwas muted by &9%moderator% &funtil &d%expiration% &ffor &7%reason%\n"
   # %player% %ip%
   ip: "&b%player%'s &eIP is &b%ip%"
+  vanish: "&aYou have successfully toggled your vanish status!"
 
 moderation:
   ban:

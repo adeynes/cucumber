@@ -80,6 +80,11 @@ commands:
     usage: "/ip <player>"
     permision: cucumber.command.ip
 
+  vanish:
+    description: "Vanish from other players' sight"
+    usage: "/vanish"
+    permission: cucumber.command.vanish
+
 permissions:
   cucumber:
     default: op
@@ -140,4 +145,8 @@ permissions:
 
       cucumber.command.ip:
         description: "Allows for the use of /ip"
+        default: op
+
+      cucumber.command.vanish:
+        description: "Allows for the use of /vanish"
         default: op

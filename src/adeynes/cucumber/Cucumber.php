@@ -20,7 +20,7 @@ final class Cucumber extends PluginBase
 
     private const CONFIG_VERSION = '2.0';
 
-    private const MESSAGES_VERSION = '1.1';
+    private const MESSAGES_VERSION = '1.3';
 
     /** @var Cucumber */
     private static $instance;
@@ -179,7 +179,8 @@ final class Cucumber extends PluginBase
             'mute' => 'MuteCommand',
             'mutelist' => 'MutelistCommand',
             'unmute' => 'UnmuteCommand',
-            'ip' => 'IpCommand'
+            'ip' => 'IpCommand',
+            'vanish' => 'VanishCommand'
         ];
 
         foreach ($commands as $command => $class){
