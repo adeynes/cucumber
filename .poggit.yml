@@ -4,6 +4,7 @@ branches:
 
 projects:
   cucumber:
+    icon: icon.jpg
     libs:
       - src: poggit/libasynql/libasynql
         version: ^3.1.1
