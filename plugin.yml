@@ -1,6 +1,6 @@
 name: cucumber
 main: adeynes\cucumber\Cucumber
-version: 1.2.1
+version: 1.2.2
 api: 3.0.0
 load: POSTWORLD
 author: adeynes
@@ -10,7 +10,7 @@ website: https://github.com/adeynes/cucumber
 commands:
   rawtell:
     description: "Send a raw message to a player"
-    usage: "/rawtell <player> <message> [-nom] [-p] [-t]"
+    usage: "/rawtell <player> <message> [-nomessage|-nom] [-popup|-p] [-title|-t]"
     permission: cucumber.command.rawtell
 
   log:
@@ -20,7 +20,7 @@ commands:
 
   alert:
     description: "Broadcast a message to the server"
-    usage: "/alert <message> [-nom] [-p] [-t]"
+    usage: "/alert <message> [-nomessage|-nom] [-popup|-p] [-title|-t]"
     permission: cucumber.command.alert
 
   ban:

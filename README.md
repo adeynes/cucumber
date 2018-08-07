@@ -8,7 +8,6 @@ New features are always being developed. As of now, cucumber's main components a
 
 ### Logging
 cucumber logs various events¹ to a path specified in `config.yml`. Several loggers (including custom ones) can also be defined in `config.yml`. (By default, a BaseLogger exists that logs to `log_out.txt`.)
-*Upcoming feature: toggle different log categories (traffic, chat, command)*
 
 ¹ cucumber logs the following: join, join attempt (if a player attempts to join while banned), quit, chat, chat attempt (if a player attempts to chat while muted), command
 

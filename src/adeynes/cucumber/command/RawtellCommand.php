@@ -19,9 +19,9 @@ class RawtellCommand extends CucumberCommand
             'rawtell',
             'cucumber.command.rawtell',
             'Send a raw message to a player',
-            1,
+            2,
             '/rawtell <player> <message> [-nom] [-p] [-t]',
-            ['nom' => 0, 'p' => 0, 't' => 0]
+            ['nom' => 0, 'nomessage' => 0, 'p' => 0, 'popup' => 0, 't' => 0, 'title' => 0]
         );
     }
 
@@ -35,15 +35,15 @@ class RawtellCommand extends CucumberCommand
             return false;
         }
 
-        if (is_null($command->getTag('nom'))) {
+        if (is_null($command->getTag('nom')) && is_null($command->getTag('nomessage'))) {
             $target->sendMessage($message);
         }
 
-        if (!is_null($command->getTag('p'))) {
+        if (!is_null($command->getTag('p')) || !is_null($command->getTag('popup'))) {
             $target->sendPopup($message);
         }
 
-        if (!is_null($command->getTag('t'))) {
+        if (!is_null($command->getTag('t')) || !is_null($command->getTag('title'))) {
             $target->addSubTitle($message); // title is too big
         }
 
