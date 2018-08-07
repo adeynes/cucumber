@@ -56,7 +56,7 @@ class UbanCommand extends CucumberCommand
                 $uban($target->getAddress());
             else
                 $this->doIfTargetExists(
-                    function(array $rows) use ($uban) { $ip_ban($rows[0]['ip']); },
+                    function(array $rows) use ($uban) { $uban($rows[0]['ip']); },
                     $sender,
                     $target_name
                 );

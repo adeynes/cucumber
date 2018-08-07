@@ -9,20 +9,18 @@ class CommandParser
     public static function parse(CucumberCommand $command, array $args): ParsedCommand
     {
         $tags = [];
+        $copy = $args;
 
         foreach ($args as $i => $arg) {
-            if (strpos($arg, '-') !== 0)
-                continue;
+            if (strpos($arg, '-') !== 0) continue;
 
             // Avoid getting finding the tag twice; only first time counts
-            if (isset($tags[$tag = substr($arg, 1)]))
-                continue;
+            if (isset($tags[$tag = substr($arg, 1)])) continue;
 
             // Use is_null because $length can be 0 so !0 would be true
-            if (is_null($length = $command->getTag($tag)))
-                continue;
+            if (is_null($length = $command->getTag($tag))) continue;
 
-            $tags[$tag] = implode(' ', array_slice($args, $i + 1, $length));
+            $tags[$tag] = implode(' ', array_slice($copy, $i + 1, $length));
 
             // Remove tag & tag parameters
             // array_diff_key() doesn't reorder the keys
@@ -35,7 +33,6 @@ class CommandParser
     public static function parseDuration(string $duration): int
     {
         $parts = str_split($duration);
-        $current = 0;
         $time_units = ['y' => 'year', 'M' => 'month', 'w' => 'week', 'd' => 'day', 'h' => 'hour', 'm' => 'minute'];
         $time = '';
 
@@ -43,9 +40,9 @@ class CommandParser
             if (($length = array_search($symbol, $parts)) === false)
                 continue;
 
-            $n = implode('', array_slice($parts, $current, $length)); // not $length-1 bc it's a length not an offset
+            $n = implode('', array_slice($parts, 0, $length)); // not $length-1 bc it's a length not an offset
             $time .= "$n $unit ";
-            array_splice($parts, $current, $length + 1);
+            array_splice($parts, 0, $length + 1);
         }
 
         $time = trim($time);
