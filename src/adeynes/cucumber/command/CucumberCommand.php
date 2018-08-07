@@ -42,7 +42,7 @@ abstract class CucumberCommand extends PCMDCommand
                     return;
                 }
 
-                $function();
+                $function($rows);
             }
         );
     }

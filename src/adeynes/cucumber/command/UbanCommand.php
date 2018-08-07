@@ -58,7 +58,11 @@ class UbanCommand extends CucumberCommand
                 $uban($target->getAddress());
             }
             else {
-                $this->getPlugin()->formatAndSend($sender, 'error.player-offline', ['player' => $target_name]);
+                $this->doIfTargetExists(
+                    function(array $rows) use ($uban) { $uban($rows[0]['ip']); },
+                    $sender,
+                    $target_name
+                );
             }
             // don't return in case ip flag is set
         }
