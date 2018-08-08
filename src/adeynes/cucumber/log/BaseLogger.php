@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\log;
 
+use adeynes\cucumber\task\SubmitLogMessagesAsyncTask;
+
 class BaseLogger implements Logger
 {
-
-    /** @var LogManager */
-    protected $manager;
 
     /**
      * The file to which log messages are outputted
@@ -15,11 +14,16 @@ class BaseLogger implements Logger
      */
     protected $file;
 
+    /** @var SubmitLogMessagesAsyncTask */
+    protected $submit_log_messages_async_task;
+
     public function __construct(LogManager $manager, string $file = 'log_out.txt')
     {
-        $this->manager = $manager;
-        $this->file = $this->manager->getDirectory() . $file;
+        $this->file = $manager->getDirectory() . $file;
+        $plugin = $manager->getPlugin();
         $this->init();
+        $this->submit_log_messages_async_task = $task = new SubmitLogMessagesAsyncTask($plugin, $this->file);
+        $manager->getPlugin()->getScheduler()->scheduleRepeatingTask($task, 10 * 20);
     }
 
     protected function init(): void
@@ -29,10 +33,9 @@ class BaseLogger implements Logger
         }
     }
 
-    // TODO: async I/O
-    public function log(string $message)
+    public function log(string $message): void
     {
-        file_put_contents($this->file, $message . PHP_EOL, FILE_APPEND);
+        $this->submit_log_messages_async_task->addMessage($message);
     }
 
 }
