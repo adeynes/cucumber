@@ -55,7 +55,7 @@ final class CucumberListener implements Listener
         $player = $ev->getPlayer();
         $message = $ev->getMessage();
 
-        if ($this->getPlugin()->getPunishmentManager()->isMuted(new CucumberPlayer($player))) {
+        if ($this->getPlugin()->getPunishmentManager()->isMuted($player)) {
             $ev->setCancelled();
             if ($this->log_chat) {
                 $this->callEvent(new ChatAttemptEvent($player, $message));
@@ -77,9 +77,9 @@ final class CucumberListener implements Listener
     {
         $player = $ev->getPlayer();
         $punishment_manager = $this->getPlugin()->getPunishmentManager();
-        $punishment_manager->checkUban($cplayer = new CucumberPlayer($player));
+        $punishment_manager->checkUban($player);
 
-        if ($ban = $punishment_manager->isBanned($cplayer)) {
+        if ($ban = $punishment_manager->isBanned($player)) {
             $ev->setKickMessage(
                 $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban->getDataFormatted())
             );
@@ -100,7 +100,7 @@ final class CucumberListener implements Listener
     {
         $player = $ev->getPlayer();
 
-        if (VanishCommand::isVanished(new CucumberPlayer($player))) {
+        if (VanishCommand::isVanished($player)) {
             VanishCommand::setVanished($player, true);
         }
 

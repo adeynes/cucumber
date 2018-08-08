@@ -37,7 +37,7 @@ class UbanCommand extends CucumberCommand
                 $ban_data = $ban_data + ['ip' => $ip];
 
                 foreach ($this->getPlugin()->getServer()->getOnlinePlayers() as $player) {
-                    if ($this->getPlugin()->getPunishmentManager()->checkUban(new CucumberPlayer($player))) {
+                    if ($this->getPlugin()->getPunishmentManager()->checkUban($player)) {
                         $player->kick(
                             $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban_data),
                             false // don't say Kicked by admin

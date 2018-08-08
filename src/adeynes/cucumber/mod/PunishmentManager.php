@@ -5,9 +5,9 @@ namespace adeynes\cucumber\mod;
 
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberException;
-use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\cucumber\utils\ErrorCodes;
 use adeynes\cucumber\utils\Queries;
+use pocketmine\Player;
 
 // TODO: Punishment dates
 final class PunishmentManager
@@ -424,15 +424,15 @@ final class PunishmentManager
 
     /**
      * Checks if a player is affected by a uban. If so, bans them
-     * @param CucumberPlayer $player
+     * @param Player $player
      * @return bool
      * @throws CucumberException
      */
-    public function checkUban(CucumberPlayer $player): bool
+    public function checkUban(Player $player): bool
     {
-        $uban = $this->getUban($player->getIp());
+        $uban = $this->getUban($player->getAddress());
         if ($uban) {
-            $this->ban($player->getName(), $uban->getReason(), $uban->getExpiration(), $uban->getModerator(), true);
+            $this->ban($player->getLowerCaseName(), $uban->getReason(), $uban->getExpiration(), $uban->getModerator(), true);
         }
 
         return (bool) $uban;
@@ -490,9 +490,9 @@ final class PunishmentManager
         $this->playerPardon($name, 'mute', $this->mutes, $this->getMessages()['mute']['not-muted']);
     }
 
-    public function isBanned(CucumberPlayer $player): ?SimplePunishment
+    public function isBanned(Player $player): ?SimplePunishment
     {
-        $name = $player->getName();
+        $name = $player->getLowerCaseName();
         if ($ban = $this->getBan($name)) {
             if ($ban->isExpired()) {
                 $this->unban($name);
@@ -500,7 +500,7 @@ final class PunishmentManager
             else return $ban;
         }
 
-        $ip = $player->getIp();
+        $ip = $player->getAddress();
         if ($ip_ban = $this->getIpBan($ip)) {
             if ($ip_ban->isExpired()) {
                 $this->ipUnban($ip);
@@ -511,9 +511,9 @@ final class PunishmentManager
         return null;
     }
 
-    public function isMuted(CucumberPlayer $player): ?SimplePunishment
+    public function isMuted(Player $player): ?SimplePunishment
     {
-        $name = $player->getName();
+        $name = $player->getLowerCaseName();
         if ($mute = $this->getMute($name)) {
             if ($mute->isExpired()) {
                 $this->unmute($name);

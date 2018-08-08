@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
-use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 use pocketmine\entity\Entity;
@@ -39,7 +38,7 @@ class VanishCommand extends CucumberCommand
             return false;
         }
 
-        $old_vanished = self::isVanished(new CucumberPlayer($sender));
+        $old_vanished = self::isVanished($sender);
         $new_vanished = !$old_vanished;
         self::setVanished($sender, $new_vanished);
         self::$vanished[$sender->getLowerCaseName()] = $new_vanished;
@@ -54,9 +53,10 @@ class VanishCommand extends CucumberCommand
         $player->setNameTagVisible(!$vanish);
     }
 
-    public static function isVanished(CucumberPlayer $player): bool
+    public static function isVanished(Player $player): bool
     {
-        return isset(self::$vanished[$player->getName()]) && self::$vanished[$player->getName()];
+        $name = $player->getLowerCaseName();
+        return isset(self::$vanished[$name]) && self::$vanished[$name];
     }
 
 }
