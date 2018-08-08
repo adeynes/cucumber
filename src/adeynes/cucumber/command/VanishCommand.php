@@ -42,7 +42,7 @@ class VanishCommand extends CucumberCommand
         $old_vanished = self::isVanished(new CucumberPlayer($sender));
         $new_vanished = !$old_vanished;
         self::setVanished($sender, $new_vanished);
-        self::$vanished[$sender->getName()] = $new_vanished;
+        self::$vanished[$sender->getLowerCaseName()] = $new_vanished;
 
         $this->getPlugin()->formatAndSend($sender, 'success.vanish', ['status' => self::STATUSES[$new_vanished]]);
         return true;

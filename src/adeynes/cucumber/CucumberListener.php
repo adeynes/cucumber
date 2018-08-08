@@ -112,7 +112,7 @@ final class CucumberListener implements Listener
     public function onQuit(PlayerQuitEvent $ev)
     {
         if ($this->log_traffic) {
-            $this->callEvent(new QuitEvent($player));
+            $this->callEvent(new QuitEvent($ev->getPlayer()));
         }
     }
 
