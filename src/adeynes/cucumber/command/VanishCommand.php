@@ -13,6 +13,8 @@ use pocketmine\Player;
 class VanishCommand extends CucumberCommand
 {
 
+    protected const STATUSES = [true => 'on', false => 'off'];
+
     /**
      * @var Player[]
      */
@@ -37,19 +39,24 @@ class VanishCommand extends CucumberCommand
             return false;
         }
 
-        self::setVanished($sender, !self::isVanished(new CucumberPlayer($sender)));
-        $this->getPlugin()->formatAndSend($sender, 'success.vanish');
+        $old_vanished = self::isVanished(new CucumberPlayer($sender));
+        $new_vanished = !$old_vanished;
+        self::setVanished($sender, $new_vanished);
+        self::$vanished[$sender->getName()] = $new_vanished;
+
+        $this->getPlugin()->formatAndSend($sender, 'success.vanish', ['status' => self::STATUSES[$new_vanished]]);
+        return true;
     }
 
-    public static function setVanished(Player $player, bool $value = true): void
+    public static function setVanished(Player $player, bool $vanish = true): void
     {
-        $player->setDataFlag(Entity::DATA_FLAGS, Entity::DATA_FLAG_INVISIBLE, $value);
-        $player->setNameTagVisible(!$value);
+        $player->setDataFlag(Entity::DATA_FLAGS, Entity::DATA_FLAG_INVISIBLE, $vanish);
+        $player->setNameTagVisible(!$vanish);
     }
 
     public static function isVanished(CucumberPlayer $player): bool
     {
-        return isset(self::$vanished[$player->getName()]);
+        return isset(self::$vanished[$player->getName()]) && self::$vanished[$player->getName()];
     }
 
 }

@@ -47,7 +47,8 @@ success:
     list: "&b%player% &fwas muted by &9%moderator% &funtil &d%expiration% &ffor &7%reason%\n"
   # %player% %ip%
   ip: "&b%player%'s &eIP is &b%ip%"
-  vanish: "&aYou have successfully toggled your vanish status!"
+  # %status%
+  vanish: "&aYou have successfully toggled your vanish status to &b%status%&a!"
 
 moderation:
   ban:

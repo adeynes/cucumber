@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber;
 
+use adeynes\cucumber\command\VanishCommand;
 use adeynes\cucumber\event\CucumberEvent;
 use adeynes\cucumber\event\ChatAttemptEvent;
 use adeynes\cucumber\event\ChatEvent;
@@ -98,6 +99,11 @@ final class CucumberListener implements Listener
     public function onJoin(PlayerJoinEvent $ev)
     {
         $player = $ev->getPlayer();
+
+        if (VanishCommand::isVanished(new CucumberPlayer($player))) {
+            VanishCommand::setVanished($player, true);
+        }
+
         if ($this->log_traffic) {
             $this->callEvent(new JoinEvent($player));
         }
@@ -106,7 +112,7 @@ final class CucumberListener implements Listener
     public function onQuit(PlayerQuitEvent $ev)
     {
         if ($this->log_traffic) {
-            $this->callEvent(new QuitEvent($ev->getPlayer()));
+            $this->callEvent(new QuitEvent($player));
         }
     }
 
