@@ -7,7 +7,7 @@
 New features are always being developed. As of now, cucumber's main components are `1` logging and `2` punishment (ban/mute) management.
 
 ### Logging
-cucumber logs various events¹ to a path specified in `config.yml`. Several loggers (including custom ones) can also be defined in `config.yml`. (By default, a BaseLogger exists that logs to `log_out.txt`.)
+cucumber logs various events¹ to a path specified in `config.yml`. Several loggers (including custom ones) can also be defined in `config.yml`. (By default, a BaseLogger exists that logs to `log_out.txt`.) Messages are logger every 10 seconds asynchronously. (Timestamps are preserved, they are calculated upon scheduling the logging of the message, not when the message is written to the file.)
 
 ¹ cucumber logs the following: join, join attempt (if a player attempts to join while banned), quit, chat, chat attempt (if a player attempts to chat while muted), command
 
@@ -47,6 +47,7 @@ cucumber also has miscellaneous moderation commands that are not related to puni
 | `/log`      | Log a message                     | `/log <message> [-s <severity>]`               | `-s` specifies the severity at which to log the message                         |
 | `/alert`    | Broadcast a message to the server | `/alert <message> [-nom] [-p] [-t]`            | `-nom` does not send a chat message<br>`-p` sends a popup<br>`-t` sends a title |
 | `/ip`       | Get a player's IP                 | `/ip <player>`                                 |                                                                                 |
+| `/vanish`   | Vanish from other player's sight  | `/vanish`                                      |                                                                                 |
 
 #### Severity
 In a severity tag:
