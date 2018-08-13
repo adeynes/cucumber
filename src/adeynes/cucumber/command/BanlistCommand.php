@@ -4,20 +4,21 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
+use adeynes\parsecmd\CommandBlueprint;
 use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 
 class BanlistCommand extends CucumberCommand
 {
 
-    public function __construct(Cucumber $plugin)
+    public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
     {
         parent::__construct(
             $plugin,
+            $blueprint,
             'banlist',
             'cucumber.command.banlist',
             'See the list of bans',
-            0,
             '/banlist'
         );
     }

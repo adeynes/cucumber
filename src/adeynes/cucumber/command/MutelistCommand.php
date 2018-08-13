@@ -4,20 +4,21 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
+use adeynes\parsecmd\CommandBlueprint;
 use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 
 class MutelistCommand extends CucumberCommand
 {
 
-    public function __construct(Cucumber $plugin)
+    public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
     {
         parent::__construct(
             $plugin,
+            $blueprint,
             'mutelist',
             'cucumber.command.mutelist',
             'See the list of mutes',
-            0,
             '/mutelist'
         );
     }

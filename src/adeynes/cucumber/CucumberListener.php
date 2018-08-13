@@ -11,7 +11,6 @@ use adeynes\cucumber\event\CommandEvent;
 use adeynes\cucumber\event\JoinAttemptEvent;
 use adeynes\cucumber\event\JoinEvent;
 use adeynes\cucumber\event\QuitEvent;
-use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\cucumber\utils\Queries;
 use pocketmine\event\Event;
 use pocketmine\event\Listener;

@@ -5,29 +5,29 @@ namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\log\LogSeverities;
+use adeynes\parsecmd\CommandBlueprint;
 use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 
 class LogCommand extends CucumberCommand
 {
 
-    public function __construct(Cucumber $plugin)
+    public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
     {
         parent::__construct(
             $plugin,
+            $blueprint,
             'log',
             'cucumber.command.log',
             'Log a message',
-            1,
-            '/log <message>',
-            ['s' => 1]
+            '/log <message>'
         );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$message] = $command->get([[0, -1]]);
-        $severity = $command->getTag('s') ?? 'log';
+        [$message] = $command->get(['message']);
+        $severity = $command->getFlag('s') ?? 'log';
 
         if (!isset(LogSeverities::SEVERITIES[$severity])) {
             $this->getPlugin()->formatAndSend($sender, 'error.unknown-log-severity', ['severity' => $severity]);

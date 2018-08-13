@@ -5,11 +5,11 @@ namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\Queries;
-use adeynes\parsecmd\PCMDCommand;
+use adeynes\parsecmd\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\Plugin;
 
-abstract class CucumberCommand extends PCMDCommand
+abstract class CucumberCommand extends Command
 {
 
     /**

@@ -7,6 +7,7 @@ use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\cucumber\utils\MessageFactory;
+use adeynes\parsecmd\CommandBlueprint;
 use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 
@@ -14,19 +15,22 @@ use pocketmine\command\CommandSender;
 class UbanCommand extends CucumberCommand
 {
 
-    public function __construct(Cucumber $plugin)
+    public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
     {
-        parent::__construct($plugin, 'uban', 'cucumber.command.uban', 'Ban any player that joins using an IP. Irreversible',
-            0, '/uban <-p <player>|-ip <ip>> [reason]', [
-                'p' => 1,
-                'ip' => 1
-            ]);
+        parent::__construct(
+            $plugin,
+            $blueprint,
+            'uban',
+            'cucumber.command.uban',
+            'Ban any player that joins using an IP. Irreversible',
+            '/uban <-p <player>|-ip <ip>> [reason]'
+        );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$reason] = $command->get([[0, -1]]);
-        [$target_name, $ip] = [$command->getTag('p'), $command->getTag('ip')];
+        [$reason] = $command->get(['reason']);
+        [$target_name, $ip] = [$command->getFlag('p'), $command->getFlag('ip')];
         if ($reason === '') $reason = null;
 
         $uban = function(string $ip) use ($sender, $reason) {

@@ -6,27 +6,28 @@ namespace adeynes\cucumber\command;
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\CucumberPlayer;
+use adeynes\parsecmd\CommandBlueprint;
 use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 
 class UnmuteCommand extends CucumberCommand
 {
 
-    public function __construct(Cucumber $plugin)
+    public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
     {
         parent::__construct(
             $plugin,
+            $blueprint,
             'unmute',
             'cucumber.command.unmute',
             'Unmute a player',
-            1,
             '/unmute <player>'
         );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$target_name] = $command->get([0]);
+        [$target_name] = $command->get(['target']);
         $target_name = strtolower($target_name);
 
         try {

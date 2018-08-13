@@ -5,27 +5,28 @@ namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberException;
+use adeynes\parsecmd\CommandBlueprint;
 use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 
 class IppardonCommand extends CucumberCommand
 {
 
-    public function __construct(Cucumber $plugin)
+    public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
     {
         parent::__construct(
             $plugin,
+            $blueprint,
             'ippardon',
             'cucumber.command.ippardon',
             'Pardon an IP',
-            1,
             '/ippardon <ip>'
         );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$ip] = $command->get([0]);
+        [$ip] = $command->get(['ip']);
 
         try {
             $this->getPlugin()->getPunishmentManager()->ipUnban($ip);

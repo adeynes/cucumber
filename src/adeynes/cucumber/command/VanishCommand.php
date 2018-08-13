@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
+use adeynes\parsecmd\CommandBlueprint;
 use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 use pocketmine\entity\Entity;
@@ -19,14 +20,14 @@ class VanishCommand extends CucumberCommand
      */
     protected static $vanished = [];
 
-    public function __construct(Cucumber $plugin)
+    public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
     {
         parent::__construct(
             $plugin,
+            $blueprint,
             'vanish',
             'cucumber.command.vanish',
             'Vanish from other player\'s sight',
-            0,
             '/vanish'
         );
     }

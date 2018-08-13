@@ -5,27 +5,28 @@ namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\Queries;
+use adeynes\parsecmd\CommandBlueprint;
 use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 
 class IpCommand extends CucumberCommand
 {
     
-    public function __construct(Cucumber $plugin)
+    public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
     {
         parent::__construct(
             $plugin,
+            $blueprint,
             'ip',
             'cucumber.command.ip',
             'Get the a player\'s IP',
-            1,
             '/ip <player>'
         );
     }
     
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$target_name] = $command->get([0]);
+        [$target_name] = $command->get(['player']);
 
         $this->getPlugin()->getConnector()->executeSelect(
             Queries::CUCUMBER_GET_PLAYER_BY_NAME,

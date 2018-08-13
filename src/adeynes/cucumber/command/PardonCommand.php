@@ -5,27 +5,28 @@ namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberException;
+use adeynes\parsecmd\CommandBlueprint;
 use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 
 class PardonCommand extends CucumberCommand
 {
 
-    public function __construct(Cucumber $plugin)
+    public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
     {
         parent::__construct(
             $plugin,
+            $blueprint,
             'pardon',
             'cucumber.command.pardon',
             'Pardon a player',
-            1,
             '/pardon <player>'
         );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$target_name] = $command->get([0]);
+        [$target_name] = $command->get(['target']);
         $target_name = strtolower($target_name);
 
         try {

@@ -6,28 +6,28 @@ namespace adeynes\cucumber\command;
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\cucumber\utils\MessageFactory;
+use adeynes\parsecmd\CommandBlueprint;
 use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 
 class RawtellCommand extends CucumberCommand
 {
 
-    public function __construct(Cucumber $plugin)
+    public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
     {
         parent::__construct(
             $plugin,
+            $blueprint,
             'rawtell',
             'cucumber.command.rawtell',
             'Send a raw message to a player',
-            2,
-            '/rawtell <player> <message> [-nom] [-p] [-t]',
-            ['nom' => 0, 'nomessage' => 0, 'p' => 0, 'popup' => 0, 't' => 0, 'title' => 0]
+            '/rawtell <player> <message> [-nomessage|-nom] [-popup|-p] [-title|-t]'
         );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$target_name, $message] = $command->get([0, [1, -1]]);
+        [$target_name, $message] = $command->get(['target', 'message']);
         $message = MessageFactory::colorize($message);
 
         if (!$target = CucumberPlayer::getOnlinePlayer($target_name)) {
@@ -35,15 +35,15 @@ class RawtellCommand extends CucumberCommand
             return false;
         }
 
-        if (is_null($command->getTag('nom')) && is_null($command->getTag('nomessage'))) {
+        if (is_null($command->getFlag('nomessage')) && is_null($command->getFlag('nom'))) {
             $target->sendMessage($message);
         }
 
-        if (!is_null($command->getTag('p')) || !is_null($command->getTag('popup'))) {
+        if (!is_null($command->getFlag('popup')) || !is_null($command->getFlag('p'))) {
             $target->sendPopup($message);
         }
 
-        if (!is_null($command->getTag('t')) || !is_null($command->getTag('title'))) {
+        if (!is_null($command->getFlag('title')) || !is_null($command->getFlag('t'))) {
             $target->addSubTitle($message); // title is too big
         }
 

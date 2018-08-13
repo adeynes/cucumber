@@ -5,41 +5,41 @@ namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\MessageFactory;
+use adeynes\parsecmd\CommandBlueprint;
 use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
 
 class AlertCommand extends CucumberCommand
 {
 
-    public function __construct(Cucumber $plugin)
+    public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
     {
         parent::__construct(
             $plugin,
+            $blueprint,
             'alert',
             'cucumber.command.alert',
             'Broadcast a message to the server',
-            1,
-            '/alert <message> [-nom] [-p] [-t]',
-            ['nom' => 0, 'p' => 0, 't' => 0]
+            '/alert <message> [-nomessage|-nom] [-popup|-p] [-title|-t]'
         );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$message] = $command->get([[0, -1]]);
+        [$message] = $command->get(['message']);
         $message = MessageFactory::colorize($message);
         $server = $this->getPlugin()->getServer();
 
         // Can't use ! because empty string evals to false
-        if (is_null($command->getTag('nom'))) {
+        if (is_null($command->getFlag('nomessage')) && is_null($command->getFlag('nom'))) {
             $server->broadcastMessage($message);
         }
 
-        if (!is_null($command->getTag('p'))) {
+        if (!is_null($command->getFlag('popup')) || !is_null($command->getFlag('p'))) {
             $server->broadcastPopup($message);
         }
 
-        if (!is_null($command->getTag('t'))) {
+        if (!is_null($command->getFlag('title')) || !is_null($command->getFlag('t'))) {
             $server->broadcastTitle('', $message); // broadcast a subtitle, title is too big
         }
 

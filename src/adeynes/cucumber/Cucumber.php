@@ -197,7 +197,9 @@ final class Cucumber extends PluginBase
             'uban' => '/uban ?reason(-1) -p(1) -ip(1)',
             'mute' => '/mute target(1) ?reason(-1) -d(1)',
             'mutelist' => '/mutelist',
-            'unmute' => '/unmute target(1)'
+            'unmute' => '/unmute target(1)',
+            'ip' => '/ip player(1)',
+            'vanish' => '/vanish'
         ];
 
         foreach ($commands as $command => $class){

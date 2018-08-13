@@ -6,6 +6,7 @@ namespace adeynes\cucumber\command;
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\CucumberPlayer;
+use adeynes\parsecmd\CommandBlueprint;
 use adeynes\parsecmd\CommandParser;
 use adeynes\parsecmd\ParsedCommand;
 use pocketmine\command\CommandSender;
@@ -13,25 +14,24 @@ use pocketmine\command\CommandSender;
 class MuteCommand extends CucumberCommand
 {
 
-    public function __construct(Cucumber $plugin)
+    public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
     {
         parent::__construct(
             $plugin,
+            $blueprint,
             'mute',
             'cucumber.command.mute',
             'Mute a player',
-            1,
-            '/mute <player> [reason] [-d <duration>]',
-            ['d' => 1]
+            '/mute <player> [reason] [-d <duration>]'
         );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$target_name, $reason] = $command->get([0, [1, -1]]);
+        [$target_name, $reason] = $command->get(['target', 'reason']);
         $target_name = strtolower($target_name);
         if ($reason === '') $reason = null;
-        $duration = $command->getTag('d');
+        $duration = $command->getFlag('d');
         $expiration = $duration ? CommandParser::parseDuration($duration) : null;
 
         $mute = function () use ($sender, $target_name, $reason, $expiration) {
