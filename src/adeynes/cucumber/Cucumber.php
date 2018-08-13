@@ -9,6 +9,7 @@ use adeynes\cucumber\task\ExpirationCheckTask;
 use adeynes\cucumber\task\PunishmentSaveTask;
 use adeynes\cucumber\utils\MessageFactory;
 use adeynes\cucumber\utils\Queries;
+use adeynes\parsecmd\parsecmd;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
@@ -183,6 +184,22 @@ final class Cucumber extends PluginBase
             'vanish' => 'VanishCommand'
         ];
 
+        $usages = [
+            'rawtell' => '/rawtell target(1) message(-1) -nomessage(0) -nom(0) -popup(0) -p(0) -title(0) -t(0)',
+            'log' => '/log message(-1) -s(1)',
+            'alert' => '/alert message(-1) -nomessage(0) -nom(0) -popup(0) -p(0) -title(0) -t(0)',
+            'ban' => '/ban target(1) ?reason(-1) -d(1)',
+            'banlist' => '/banlist',
+            'pardon' => '/pardon target(1)',
+            'ipban' => '/ipban ?reason(-1) -p(1) -ip(1) -d(1)',
+            'ipbanlist' => '/ipbanlist',
+            'ippardon' => '/ippardon ip(1)',
+            'uban' => '/uban ?reason(-1) -p(1) -ip(1)',
+            'mute' => '/mute target(1) ?reason(-1) -d(1)',
+            'mutelist' => '/mutelist',
+            'unmute' => '/unmute target(1)'
+        ];
+
         foreach ($commands as $command => $class){
             // Unregisters the old command if it is a duplicate name
             if ($old = $map->getCommand($command)) {
@@ -191,7 +208,7 @@ final class Cucumber extends PluginBase
             }
 
             $class = "\\adeynes\\cucumber\\command\\$class";
-            $map->register('cucumber', new $class($this));
+            parsecmd::register($this, $class, $usages[$command]);
         }
     }
 
