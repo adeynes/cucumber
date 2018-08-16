@@ -1,0 +1,241 @@
+{
+  "blueprints": {
+    "blank": {
+      "arguments": {},
+      "flags": {}
+    },
+
+    "one-player-argument": {
+      "arguments": {
+        "player": {
+          "length": 1,
+          "display": "Player",
+          "optional": false
+        }
+      },
+      "flags": {}
+    },
+
+    "player-message": {
+      "arguments": {
+        "player": {
+          "length": 1,
+          "display": "Player",
+          "optional": false
+        },
+        "message": {
+          "length": -1,
+          "display": "Message",
+          "optional": false
+        }
+      },
+      "flags": {
+        "nomessage": {
+          "length": 0,
+          "display": "No chat message",
+          "aliases": ["nom"]
+        },
+        "popup": {
+          "length": 0,
+          "display": "Send a popup",
+          "aliases": ["p"]
+        },
+        "title": {
+          "length": 0,
+          "display": "Send a title",
+          "aliases": ["t"]
+        }
+      }
+    },
+
+    "broadcast": {
+      "arguments": {
+        "message": {
+          "length": -1,
+          "display": "Message",
+          "optional": false
+        }
+      },
+      "flags": {
+        "nomessage": {
+          "length": 0,
+          "display": "No chat message",
+          "aliases": ["nom"]
+        },
+        "popup": {
+          "length": 0,
+          "display": "Send a popup",
+          "aliases": ["p"]
+        },
+        "title": {
+          "length": 0,
+          "display": "Send a title",
+          "aliases": ["t"]
+        }
+      }
+    },
+
+    "log": {
+      "arguments": {
+        "message": {
+          "length": -1,
+          "display": "Log message",
+          "optional": false
+        }
+      },
+      "flags": {
+        "severity": {
+          "length": 1,
+          "display": "Log severity",
+          "aliases": ["s"],
+          "options": ["log", "notice", "important", "alert"]
+        }
+      }
+    },
+
+    "player-punish": {
+      "arguments": {
+        "player": {
+          "length": 1,
+          "display": "Player",
+          "optional": false
+        },
+        "reason": {
+          "length": -1,
+          "display": "Reason",
+          "optional": true
+        }
+      },
+      "flags": {
+        "duration": {
+          "length": 1,
+          "display": "Duration",
+          "aliases": ["d"]
+        }
+      }
+    },
+
+    "ip-punish": {
+      "arguments": {
+        "reason": {
+          "length": -1,
+          "display": "Reason",
+          "optional": true
+        }
+      },
+      "flags": {
+        "player": {
+          "length": 1,
+          "display": "Player",
+          "aliases": ["p"]
+        },
+        "ip": {
+          "length": 1,
+          "display": "IP"
+        },
+        "duration": {
+          "length": 1,
+          "display": "Duration",
+          "aliases": ["d"]
+        }
+      }
+    },
+
+    "ip-punish-no-duration": {
+      "arguments": {
+        "reason": {
+          "length": -1,
+          "display": "Reason",
+          "optional": true
+        }
+      },
+      "flags": {
+        "player": {
+          "length": 1,
+          "display": "Player",
+          "aliases": ["p"]
+        },
+        "ip": {
+          "length": 1,
+          "display": "IP"
+        }
+      }
+    },
+
+    "ip-pardon": {
+      "arguments": {
+        "ip": {
+          "length": 1,
+          "display": "IP",
+          "optional": false
+        }
+      },
+      "flags": {}
+    }
+  },
+
+
+  "commands": {
+    "rawtell": {
+      "blueprint": "player-message"
+    },
+
+    "log": {
+      "blueprint": "log"
+    },
+
+    "alert": {
+      "blueprint": "broadcast"
+    },
+
+    "ban": {
+      "blueprint": "player-punish"
+    },
+
+    "banlist": {
+      "blueprint": "blank"
+    },
+
+    "pardon": {
+      "blueprint": "one-player-argument",
+      "aliases": ["unban"]
+    },
+
+    "ipban": {
+      "blueprint": "ip-punish"
+    },
+
+    "ipbanlist": {
+      "blueprint": "blank"
+    },
+
+    "ippardon": {
+      "blueprint": "ip-pardon",
+      "aliases": ["ipunban"]
+    },
+
+    "uban": {
+      "blueprint": "ip-punish-no-duration"
+    },
+
+    "mute": {
+      "blueprint": "player-punish"
+    },
+
+    "mutelist": {
+      "blueprint": "blank"
+    },
+
+    "unmute": {
+      "blueprint": "one-player-argument"
+    },
+
+    "ip": {
+      "blueprint": "one-player-argument"
+    },
+
+    "vanish": {
+      "blueprint": "blank"
+    }
+  }
+}
