@@ -10,13 +10,14 @@ use adeynes\cucumber\task\PunishmentSaveTask;
 use adeynes\cucumber\utils\MessageFactory;
 use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\parsecmd;
+use adeynes\parsecmd\UsesParsecmdPlugin;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use poggit\libasynql\DataConnector;
 use poggit\libasynql\libasynql;
 
-final class Cucumber extends PluginBase
+final class Cucumber extends PluginBase implements UsesParsecmdPlugin
 {
 
     private const CONFIG_VERSION = '2.0';
@@ -31,6 +32,9 @@ final class Cucumber extends PluginBase
 
     /** @var DataConnector */
     private $connector;
+
+    /** @var parsecmd */
+    private $parsecmd;
 
     /** @var LogManager */
     private $log_manager;
@@ -90,9 +94,8 @@ final class Cucumber extends PluginBase
 
     private function initDatabase(): void
     {
-        $this->connector = libasynql::create($this, $this->getConfig()->get('database'),
+        $this->connector = $connector = libasynql::create($this, $this->getConfig()->get('database'),
             ['mysql' => 'mysql.sql']);
-        $connector = $this->getConnector();
 
         // other tables have a foreign key constraint on players so it must be first
         $connector->executeGeneric(Queries::CUCUMBER_INIT_PLAYERS);
@@ -164,6 +167,7 @@ final class Cucumber extends PluginBase
 
     private function registerCommands(): void
     {
+        $this->parsecmd = $parsecmd = parsecmd::new($this);
         $map = $this->getServer()->getCommandMap();
 
         $commands = [
@@ -210,7 +214,7 @@ final class Cucumber extends PluginBase
             }
 
             $class = "\\adeynes\\cucumber\\command\\$class";
-            parsecmd::register($this, $class, $usages[$command]);
+            $parsecmd->register($class, $usages[$command]);
         }
     }
 
@@ -227,6 +231,11 @@ final class Cucumber extends PluginBase
     public function getConnector(): DataConnector
     {
         return $this->connector;
+    }
+
+    public function getParsecmd(): parsecmd
+    {
+        return $this->parsecmd;
     }
 
     public function getLogManager(): LogManager
