@@ -16,83 +16,6 @@
       "flags": {}
     },
 
-    "player-message": {
-      "arguments": {
-        "player": {
-          "length": 1,
-          "display": "Player",
-          "optional": false
-        },
-        "message": {
-          "length": -1,
-          "display": "Message",
-          "optional": false
-        }
-      },
-      "flags": {
-        "nomessage": {
-          "length": 0,
-          "display": "No chat message",
-          "aliases": ["nom"]
-        },
-        "popup": {
-          "length": 0,
-          "display": "Send a popup",
-          "aliases": ["p"]
-        },
-        "title": {
-          "length": 0,
-          "display": "Send a title",
-          "aliases": ["t"]
-        }
-      }
-    },
-
-    "broadcast": {
-      "arguments": {
-        "message": {
-          "length": -1,
-          "display": "Message",
-          "optional": false
-        }
-      },
-      "flags": {
-        "nomessage": {
-          "length": 0,
-          "display": "No chat message",
-          "aliases": ["nom"]
-        },
-        "popup": {
-          "length": 0,
-          "display": "Send a popup",
-          "aliases": ["p"]
-        },
-        "title": {
-          "length": 0,
-          "display": "Send a title",
-          "aliases": ["t"]
-        }
-      }
-    },
-
-    "log": {
-      "arguments": {
-        "message": {
-          "length": -1,
-          "display": "Log message",
-          "optional": false
-        }
-      },
-      "flags": {
-        "severity": {
-          "length": 1,
-          "display": "Log severity",
-          "aliases": ["s"],
-          "options": ["log", "notice", "important", "alert"]
-        }
-      }
-    },
-
     "player-punish": {
       "arguments": {
         "player": {
@@ -177,15 +100,91 @@
 
   "commands": {
     "rawtell": {
-      "blueprint": "player-message"
+      "blueprint": {
+        "arguments": {
+          "player": {
+            "length": 1,
+            "display": "Player",
+            "optional": false
+          },
+          "message": {
+            "length": -1,
+            "display": "Message",
+            "optional": false
+          }
+        },
+        "flags": {
+          "nomessage": {
+            "length": 0,
+            "display": "No chat message",
+            "aliases": ["nom"]
+          },
+          "popup": {
+            "length": 0,
+            "display": "Send a popup",
+            "aliases": ["p"]
+          },
+          "title": {
+            "length": 0,
+            "display": "Send a title",
+            "aliases": ["t"]
+          }
+        }
+      }
     },
 
     "log": {
-      "blueprint": "log"
+      "blueprint": {
+        "arguments": {
+          "message": {
+            "length": -1,
+            "display": "Log message",
+            "optional": false
+          }
+        },
+        "flags": {
+          "severity": {
+            "length": 1,
+            "display": "Log severity",
+            "aliases": ["s"],
+            "options": [
+              "log",
+              "notice",
+              "important",
+              "alert"
+            ]
+          }
+        }
+      }
     },
 
     "alert": {
-      "blueprint": "broadcast"
+      "blueprint": {
+        "arguments": {
+          "message": {
+            "length": -1,
+            "display": "Message",
+            "optional": false
+          }
+        },
+        "flags": {
+          "nomessage": {
+            "length": 0,
+            "display": "No chat message",
+            "aliases": ["nom"]
+          },
+          "popup": {
+            "length": 0,
+            "display": "Send a popup",
+            "aliases": ["p"]
+          },
+          "title": {
+            "length": 0,
+            "display": "Send a title",
+            "aliases": ["t"]
+          }
+        }
+      }
     },
 
     "ban": {
