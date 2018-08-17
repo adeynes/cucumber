@@ -167,55 +167,9 @@ final class Cucumber extends PluginBase implements UsesParsecmdPlugin
 
     private function registerCommands(): void
     {
-        $this->parsecmd = $parsecmd = parsecmd::new($this);
-        $map = $this->getServer()->getCommandMap();
-
-        $commands = [
-            'rawtell' => 'RawtellCommand',
-            'log' => 'LogCommand',
-            'alert' => 'AlertCommand',
-            'ban' => 'BanCommand',
-            'banlist' => 'BanlistCommand',
-            'pardon' => 'PardonCommand',
-            'ipban' => 'IpbanCommand',
-            'ipbanlist' => 'IpbanlistCommand',
-            'ippardon' => 'IppardonCommand',
-            'uban' => 'UbanCommand',
-            'mute' => 'MuteCommand',
-            'mutelist' => 'MutelistCommand',
-            'unmute' => 'UnmuteCommand',
-            'ip' => 'IpCommand',
-            'vanish' => 'VanishCommand'
-        ];
-
-        $usages = [
-            'rawtell' => '/rawtell target(1) message(-1) -nomessage(0) -nom(0) -popup(0) -p(0) -title(0) -t(0)',
-            'log' => '/log message(-1) -s(1)',
-            'alert' => '/alert message(-1) -nomessage(0) -nom(0) -popup(0) -p(0) -title(0) -t(0)',
-            'ban' => '/ban target(1) ?reason(-1) -d(1)',
-            'banlist' => '/banlist',
-            'pardon' => '/pardon target(1)',
-            'ipban' => '/ipban ?reason(-1) -p(1) -ip(1) -d(1)',
-            'ipbanlist' => '/ipbanlist',
-            'ippardon' => '/ippardon ip(1)',
-            'uban' => '/uban ?reason(-1) -p(1) -ip(1)',
-            'mute' => '/mute target(1) ?reason(-1) -d(1)',
-            'mutelist' => '/mutelist',
-            'unmute' => '/unmute target(1)',
-            'ip' => '/ip player(1)',
-            'vanish' => '/vanish'
-        ];
-
-        foreach ($commands as $command => $class){
-            // Unregisters the old command if it is a duplicate name
-            if ($old = $map->getCommand($command)) {
-                $old->setLabel($command . '_disabled');
-                $old->unregister($map);
-            }
-
-            $class = "\\adeynes\\cucumber\\command\\$class";
-            $parsecmd->register($class, $usages[$command]);
-        }
+        $this->saveResource('commands.json');
+        $commands = new Config($this->getDataFolder() . 'commands.json', CONFIG::JSON);
+        $this->parsecmd = parsecmd::new($this, $commands->getAll(), true);
     }
 
     public function getMessageConfig(): Config

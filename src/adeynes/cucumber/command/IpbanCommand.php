@@ -31,9 +31,9 @@ class IpbanCommand extends CucumberCommand
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
         [$reason] = $command->get(['reason']);
-        [$target_name, $ip] = [$command->getFlag('p'), $command->getFlag('ip')];
+        [$target_name, $ip] = [$command->getFlag('player'), $command->getFlag('ip')];
         if ($reason === '') $reason = null;
-        $duration = $command->getFlag('d');
+        $duration = $command->getFlag('duration');
         $expiration = $duration ? CommandParser::parseDuration($duration) : null;
 
         $ip_ban = function (string $ip) use ($sender, $reason, $expiration) {

@@ -31,15 +31,15 @@ class AlertCommand extends CucumberCommand
         $server = $this->getPlugin()->getServer();
 
         // Can't use ! because empty string evals to false
-        if (is_null($command->getFlag('nomessage')) && is_null($command->getFlag('nom'))) {
+        if (is_null($command->getFlag('nomessage'))) {
             $server->broadcastMessage($message);
         }
 
-        if (!is_null($command->getFlag('popup')) || !is_null($command->getFlag('p'))) {
+        if (!is_null($command->getFlag('popup'))) {
             $server->broadcastPopup($message);
         }
 
-        if (!is_null($command->getFlag('title')) || !is_null($command->getFlag('t'))) {
+        if (!is_null($command->getFlag('title'))) {
             $server->broadcastTitle('', $message); // broadcast a subtitle, title is too big
         }
 

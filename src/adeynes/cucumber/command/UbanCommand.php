@@ -30,7 +30,7 @@ class UbanCommand extends CucumberCommand
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
         [$reason] = $command->get(['reason']);
-        [$target_name, $ip] = [$command->getFlag('p'), $command->getFlag('ip')];
+        [$target_name, $ip] = [$command->getFlag('player'), $command->getFlag('ip')];
         if ($reason === '') $reason = null;
 
         $uban = function(string $ip) use ($sender, $reason) {

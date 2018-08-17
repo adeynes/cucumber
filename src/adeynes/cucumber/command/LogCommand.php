@@ -27,7 +27,7 @@ class LogCommand extends CucumberCommand
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
         [$message] = $command->get(['message']);
-        $severity = $command->getFlag('s') ?? 'log';
+        $severity = $command->getFlag('severity') ?? 'log';
 
         if (!isset(LogSeverities::SEVERITIES[$severity])) {
             $this->getPlugin()->formatAndSend($sender, 'error.unknown-log-severity', ['severity' => $severity]);

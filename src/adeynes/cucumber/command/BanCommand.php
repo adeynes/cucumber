@@ -28,10 +28,10 @@ class BanCommand extends CucumberCommand
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$target_name, $reason] = $command->get(['target', 'reason']);
+        [$target_name, $reason] = $command->get(['player', 'reason']);
         $target_name = strtolower($target_name);
         if ($reason === '') $reason = null;
-        $duration = $command->getFlag('d');
+        $duration = $command->getFlag('duration');
         $expiration = $duration ? CommandParser::parseDuration($duration) : null;
 
         $ban = function () use ($sender, $target_name, $reason, $expiration) {

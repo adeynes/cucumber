@@ -27,7 +27,7 @@ class RawtellCommand extends CucumberCommand
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$target_name, $message] = $command->get(['target', 'message']);
+        [$target_name, $message] = $command->get(['player', 'message']);
         $message = MessageFactory::colorize($message);
 
         if (!$target = CucumberPlayer::getOnlinePlayer($target_name)) {
@@ -35,15 +35,15 @@ class RawtellCommand extends CucumberCommand
             return false;
         }
 
-        if (is_null($command->getFlag('nomessage')) && is_null($command->getFlag('nom'))) {
+        if (is_null($command->getFlag('nomessage'))) {
             $target->sendMessage($message);
         }
 
-        if (!is_null($command->getFlag('popup')) || !is_null($command->getFlag('p'))) {
+        if (!is_null($command->getFlag('popup'))) {
             $target->sendPopup($message);
         }
 
-        if (!is_null($command->getFlag('title')) || !is_null($command->getFlag('t'))) {
+        if (!is_null($command->getFlag('title'))) {
             $target->addSubTitle($message); // title is too big
         }
 
