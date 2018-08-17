@@ -130,7 +130,8 @@
             "aliases": ["t"]
           }
         }
-      }
+      },
+      "class": "\\adeynes\\cucumber\\command\\RawtellCommand"
     },
 
     "log": {
@@ -155,7 +156,8 @@
             ]
           }
         }
-      }
+      },
+      "class": "\\adeynes\\cucumber\\command\\LogCommand"
     },
 
     "alert": {
@@ -184,57 +186,70 @@
             "aliases": ["t"]
           }
         }
-      }
+      },
+      "class": "\\adeynes\\cucumber\\command\\AlertCommand"
     },
 
     "ban": {
-      "blueprint": "player-punish"
+      "blueprint": "player-punish",
+      "class": "\\adeynes\\cucumber\\command\\BanCommand"
     },
 
     "banlist": {
-      "blueprint": "blank"
+      "blueprint": "blank",
+      "class": "\\adeynes\\cucumber\\command\\BanlistCommand"
     },
 
     "pardon": {
       "blueprint": "one-player-argument",
+      "class": "\\adeynes\\cucumber\\command\\PardonCommand",
       "aliases": ["unban"]
     },
 
     "ipban": {
-      "blueprint": "ip-punish"
+      "blueprint": "ip-punish",
+      "class": "\\adeynes\\cucumber\\command\\IpbanCommand"
     },
 
     "ipbanlist": {
-      "blueprint": "blank"
+      "blueprint": "blank",
+      "class": "\\adeynes\\cucumber\\command\\IpbanlistCommand"
     },
 
     "ippardon": {
       "blueprint": "ip-pardon",
+      "class": "\\adeynes\\cucumber\\command\\IppardonCommand",
       "aliases": ["ipunban"]
     },
 
     "uban": {
-      "blueprint": "ip-punish-no-duration"
+      "blueprint": "ip-punish-no-duration",
+      "class": "\\adeynes\\cucumber\\command\\UbanCommand"
     },
 
     "mute": {
-      "blueprint": "player-punish"
+      "blueprint": "player-punish",
+      "class": "\\adeynes\\cucumber\\command\\MuteCommand"
     },
 
     "mutelist": {
-      "blueprint": "blank"
+      "blueprint": "blank",
+      "class": "\\adeynes\\cucumber\\command\\MutelistCommand"
     },
 
     "unmute": {
-      "blueprint": "one-player-argument"
+      "blueprint": "one-player-argument",
+      "class": "\\adeynes\\cucumber\\command\\UnmuteCommand"
     },
 
     "ip": {
-      "blueprint": "one-player-argument"
+      "blueprint": "one-player-argument",
+      "class": "\\adeynes\\cucumber\\command\\IpCommand"
     },
 
     "vanish": {
-      "blueprint": "blank"
+      "blueprint": "blank",
+      "class": "\\adeynes\\cucumber\\command\\VanishCommand"
     }
   }
 }
