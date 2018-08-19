@@ -44,7 +44,7 @@ class RawtellCommand extends CucumberCommand
         }
 
         if (!is_null($command->getFlag('title'))) {
-            $target->addSubTitle($message); // title is too big
+            $target->addTitle('', $message); // title is too big
         }
 
         $this->getPlugin()->formatAndSend(
