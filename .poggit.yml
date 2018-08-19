@@ -5,10 +5,9 @@ branches:
 
 projects:
   cucumber:
-    icon: icon.jpg
     libs:
       - src: poggit/libasynql/libasynql
         version: ^3.1.1
       - src: adeynes/parsecmd/parsecmd
-        version: ^3.1.0
+        version: ^3.1.1
 ...

@@ -4,6 +4,8 @@
 [![](https://poggit.pmmp.io/ci.shield/adeynes/cucumber/cucumber)](https://poggit.pmmp.io/p/cucumber)
 [![](https://poggit.pmmp.io/shield.dl.total/cucumber)](https://poggit.pmmp.io/p/cucumber)
 
+### This README is outdated for 1.4!
+
 **cucumber** is a featureful moderation plugin for PocketMine-MP.
 New features are always being developed. As of now, cucumber's main components are `1` logging and `2` punishment (ban/mute) management.
 
