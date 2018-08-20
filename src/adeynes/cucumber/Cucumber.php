@@ -22,7 +22,7 @@ final class Cucumber extends PluginBase implements UsesParsecmdPlugin
 
     private const CONFIG_VERSION = '2.0';
 
-    private const MESSAGES_VERSION = '1.3';
+    private const MESSAGES_VERSION = '1.4';
 
     /** @var Cucumber */
     private static $instance;

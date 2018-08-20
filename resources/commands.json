@@ -143,7 +143,7 @@
         }
       },
       "class": "\\adeynes\\cucumber\\command\\LogCommand",
-      "usage": "/log <message> [-s <severity>]"
+      "usage": "/log <message> [-severity|-s <severity>]"
     },
 
     "alert": {
@@ -180,7 +180,7 @@
     "ban": {
       "blueprint": "player-punish",
       "class": "\\adeynes\\cucumber\\command\\BanCommand",
-      "usage": "/ban <player> [reason] [-d <duration>]"
+      "usage": "/ban <player> [reason] [-duration|-d <duration>]"
     },
 
     "banlist": {
@@ -199,7 +199,7 @@
     "ipban": {
       "blueprint": "ip-punish",
       "class": "\\adeynes\\cucumber\\command\\IpbanCommand",
-      "usage": "/ipban <-p <player>|-ip <ip>> [reason] [-d <duration>]"
+      "usage": "/ipban <target> [reason] [-duration|-d <duration>] [-player|-p] [-ip]"
     },
 
     "ipbanlist": {
@@ -242,13 +242,13 @@
         }
       },
       "class": "\\adeynes\\cucumber\\command\\UbanCommand",
-      "usage": "/uban <-p <player>|-ip <ip>> [reason]"
+      "usage": "/uban <target> [reason] [-player|-p] [-ip]"
     },
 
     "mute": {
       "blueprint": "player-punish",
       "class": "\\adeynes\\cucumber\\command\\MuteCommand",
-      "usage": "/mute <player> [reason] [-d <duration>]"
+      "usage": "/mute <player> [reason] [-duration|-d <duration>]"
     },
 
     "mutelist": {

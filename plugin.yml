@@ -1,6 +1,6 @@
 name: cucumber
 main: adeynes\cucumber\Cucumber
-version: 1.4.2
+version: 1.5.0
 api: 3.0.0
 load: POSTWORLD
 author: adeynes
@@ -15,7 +15,7 @@ commands:
 
   log:
     description: "Log a message"
-    usage: "/log <message> [-s <severity>]"
+    usage: "/log <message> [-severity|-s <severity>]"
     permission: cucumber.command.log
 
   alert:
@@ -25,7 +25,7 @@ commands:
 
   ban:
     description: "Ban a player by name"
-    usage: "/ban <player> [reason] [-d <duration>]"
+    usage: "/ban <player> [reason] [-duration|-d <duration>]"
     permission: cucumber.command.ban
 
   banlist:
@@ -41,7 +41,7 @@ commands:
 
   ipban:
     description: "Ban an IP"
-    usage: "/ipban <-p <player>|-ip <ip>> [reason] [-d <duration>]"
+    usage: "/ipban <target> [reason] [-duration|-d <duration>] [-player|-p] [-ip]"
     permission: cucumber.command.ipban
 
   ipbanlist:
@@ -57,12 +57,12 @@ commands:
 
   uban:
     description: "Ban any player that joins using an IP. Irreversible"
-    usage: "/uban <-p <player>|-ip <ip>> [reason]"
+    usage: "/uban <target> [reason] [-player|-p] [-ip]"
     permission: cucumber.command.uban
 
   mute:
     description: "Mute a player"
-    usage: "/mute <player> [reason] [-d <duration>]"
+    usage: "/mute <player> [reason] [-duration|-d <duration>]"
     permission: cucumber.command.mute
 
   mutelist:
