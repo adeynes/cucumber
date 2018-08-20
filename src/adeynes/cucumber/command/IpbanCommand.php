@@ -59,13 +59,12 @@ class IpbanCommand extends CucumberCommand
         };
 
         // TODO: refactor this logic
-        if (!is_null($command->getFlag('ip')) ^ !is_null($command->getFlag('player'))) {
-            $ip = $command->getFlag('ip');
-            $player = $command->getFlag('player');
+        if (!is_null($ip_flag = $command->getFlag('ip')) xor
+            !is_null($player_flag = $command->getFlag('player'))) {
 
-            if (!is_null($ip)) {
-                $ip_ban($ip);
-            } elseif (!is_null($player)) {
+            if (!is_null($ip_flag)) {
+                $ip_ban($target);
+            } elseif (!is_null($player_flag)) {
                 if ($player = CucumberPlayer::getOnlinePlayer($target)) {
                     $ip_ban($player->getAddress());
                 } else {
@@ -79,7 +78,6 @@ class IpbanCommand extends CucumberCommand
                 }
             }
         } else {
-
             $ip_matches = [];
 
             preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/', $target, $ip_matches);

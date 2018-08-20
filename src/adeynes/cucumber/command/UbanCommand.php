@@ -58,13 +58,12 @@ class UbanCommand extends CucumberCommand
         };
 
         // TODO: refactor this logic
-        if (!is_null($command->getFlag('ip')) ^ !is_null($command->getFlag('player'))) {
-            $ip = $command->getFlag('ip');
-            $player = $command->getFlag('player');
+        if (!is_null($ip_flag = $command->getFlag('ip')) xor
+            !is_null($player_flag = $command->getFlag('player'))) {
 
-            if (!is_null($ip)) {
-                $uban($ip);
-            } elseif (!is_null($player)) {
+            if (!is_null($ip_flag)) {
+                $uban($target);
+            } elseif (!is_null($player_flag)) {
                 if ($player = CucumberPlayer::getOnlinePlayer($target)) {
                     $uban($player->getAddress());
                 } else {
