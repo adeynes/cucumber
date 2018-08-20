@@ -40,6 +40,11 @@
 
     "ip-punish": {
       "arguments": {
+        "target": {
+          "length": 1,
+          "display": "Player/IP",
+          "optional": false
+        },
         "reason": {
           "length": -1,
           "display": "Reason",
@@ -48,39 +53,18 @@
       },
       "flags": {
         "player": {
-          "length": 1,
+          "length": 0,
           "display": "Player",
           "aliases": ["p"]
         },
         "ip": {
-          "length": 1,
+          "length": 0,
           "display": "IP"
         },
         "duration": {
           "length": 1,
           "display": "Duration",
           "aliases": ["d"]
-        }
-      }
-    },
-
-    "ip-punish-no-duration": {
-      "arguments": {
-        "reason": {
-          "length": -1,
-          "display": "Reason",
-          "optional": true
-        }
-      },
-      "flags": {
-        "player": {
-          "length": 1,
-          "display": "Player",
-          "aliases": ["p"]
-        },
-        "ip": {
-          "length": 1,
-          "display": "IP"
         }
       }
     },
@@ -116,17 +100,17 @@
         "flags": {
           "nomessage": {
             "length": 0,
-            "display": "No chat message",
+            "display": "No chat message?",
             "aliases": ["nom"]
           },
           "popup": {
             "length": 0,
-            "display": "Send a popup",
+            "display": "Send a popup?",
             "aliases": ["p"]
           },
           "title": {
             "length": 0,
-            "display": "Send a title",
+            "display": "Send a title?",
             "aliases": ["t"]
           }
         }
@@ -174,17 +158,17 @@
         "flags": {
           "nomessage": {
             "length": 0,
-            "display": "No chat message",
+            "display": "No chat message?",
             "aliases": ["nom"]
           },
           "popup": {
             "length": 0,
-            "display": "Send a popup",
+            "display": "Send a popup?",
             "aliases": ["p"]
           },
           "title": {
             "length": 0,
-            "display": "Send a title",
+            "display": "Send a title?",
             "aliases": ["t"]
           }
         }
@@ -232,7 +216,31 @@
     },
 
     "uban": {
-      "blueprint": "ip-punish-no-duration",
+      "blueprint": {
+        "arguments": {
+          "target": {
+            "length": 1,
+            "display": "Player/IP",
+            "optional": false
+          },
+          "reason": {
+            "length": -1,
+            "display": "Reason",
+            "optional": true
+          }
+        },
+        "flags": {
+          "player": {
+            "length": 0,
+            "display": "Player",
+            "aliases": ["p"]
+          },
+          "ip": {
+            "length": 0,
+            "display": "IP"
+          }
+        }
+      },
       "class": "\\adeynes\\cucumber\\command\\UbanCommand",
       "usage": "/uban <-p <player>|-ip <ip>> [reason]"
     },

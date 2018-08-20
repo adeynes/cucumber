@@ -8,6 +8,8 @@ error:
   # %severity%
   unknown-log-severity: "&cUnknown severity &b%severity%&c!"
   not-ingame: "&cPlease use this command in-game!"
+  # %ip%
+  player-ip-ambiguity: "&b%ip% &cresembles an IP, but there is also a player by that name! Please set one of &b-player &cor &b-ip &cto resolve this ambiguity"
 
 success:
   # %player% %message%
