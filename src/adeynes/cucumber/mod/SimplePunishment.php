@@ -6,7 +6,7 @@ namespace adeynes\cucumber\mod;
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\HasData;
 
-class SimplePunishment implements Punishment, Expirable, HasData
+class SimplePunishment implements Punishment, Expirable
 {
 
     /** @var string */

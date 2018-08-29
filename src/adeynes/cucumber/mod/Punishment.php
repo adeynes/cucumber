@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\mod;
 
-interface Punishment
+use adeynes\cucumber\utils\HasData;
+
+interface Punishment extends HasData
 {
 
 }
