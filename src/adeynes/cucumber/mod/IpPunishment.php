@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\mod;
 
-class IpPunishment extends SimplePunishment
+abstract class IpPunishment extends SimplePunishment
 {
 
     /** @var string */
@@ -13,6 +13,11 @@ class IpPunishment extends SimplePunishment
     {
         $this->ip = $ip;
         parent::__construct($reason, $expiration, $moderator);
+    }
+
+    public static function from(array $row): self
+    {
+        return new static($row['ip'], $row['reason'], $row['expiration'], $row['moderator']);
     }
 
     public function getIp(): string

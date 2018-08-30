@@ -6,7 +6,7 @@ namespace adeynes\cucumber\mod;
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\HasData;
 
-class SimplePunishment implements Punishment, Expirable
+abstract class SimplePunishment implements Punishment, Expirable
 {
 
     /** @var string */
@@ -25,10 +25,7 @@ class SimplePunishment implements Punishment, Expirable
         $this->moderator = $moderator;
     }
 
-    public static function from(array $row): self
-    {
-        return new self($row['reason'], $row['expiration'], $row['moderator']);
-    }
+    abstract public static function from(array $row);
 
     public function getReason(): string
     {

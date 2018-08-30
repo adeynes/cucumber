@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\mod;
 
-class PlayerPunishment extends SimplePunishment
+abstract class PlayerPunishment extends SimplePunishment
 {
 
     /** @var string */
@@ -15,6 +15,11 @@ class PlayerPunishment extends SimplePunishment
         parent::__construct($reason, $expiration, $moderator);
     }
 
+    public static function from(array $row): self
+    {
+        return new static($row['name'], $row['reason'], $row['expiration'], $row['moderator']);
+    }
+
     public function getPlayer(): string
     {
         return $this->player;
@@ -22,12 +27,12 @@ class PlayerPunishment extends SimplePunishment
 
     public function getData(): array
     {
-        return parent::getData() + ['player' => $this->getPlayer()];
+        return parent::getData() + ['name' => $this->getPlayer()];
     }
 
     public function getDataFormatted(): array
     {
-        return parent::getDataFormatted() + ['player' => $this->getPlayer()];
+        return parent::getDataFormatted() + ['name' => $this->getPlayer()];
     }
 
 }
