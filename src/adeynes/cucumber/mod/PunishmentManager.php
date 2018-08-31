@@ -81,37 +81,45 @@ final class PunishmentManager
         // I could do all punishments with one foreach but it gets gross
 
         $connector = $this->getPlugin()->getConnector();
-        $queries = [Queries::CUCUMBER_GET_PUNISHMENTS_BANS, Queries::CUCUMBER_GET_PUNISHMENTS_MUTES];
-        $storage = [&$this->bans, &$this->mutes];
 
-        foreach ($queries as $i => $query) {
-            $connector->executeSelect(
-                $query,
-                [],
-                function (array $rows) use ($i, $storage) {
-                    foreach ($rows as $row) {
-                        $storage[$i][$row['name']] = SimplePunishment::from($row);
-                    }
+        $connector->executeSelect(
+            Queries::CUCUMBER_GET_PUNISHMENTS_BANS,
+            [],
+            function (array $rows) {
+                foreach ($rows as $row) {
+                    $this->bans[$row['name']] = Ban::from($row);
                 }
-            );
-        }
+            }
+        );
+
+        $connector->executeSelect(
+            Queries::CUCUMBER_GET_PUNISHMENTS_MUTES,
+            [],
+            function (array $rows) {
+                foreach ($rows as $row) {
+                    $this->mutes[$row['name']] = Mute::from($row);
+                }
+            }
+        );
 
         $connector->executeSelect(
             Queries::CUCUMBER_GET_PUNISHMENTS_IP_BANS,
             [],
             function (array $rows) {
                 foreach ($rows as $row) {
-                    $this->ip_bans[$row['ip']] = SimplePunishment::from($row);
+                    $this->ip_bans[$row['ip']] = IpBan::from($row);
                 }
             }
         );
 
-        $connector->executeSelect(Queries::CUCUMBER_GET_PUNISHMENTS_UBANS, [],
+        $connector->executeSelect(
+            Queries::CUCUMBER_GET_PUNISHMENTS_UBANS,
+            [],
             function(array $rows) {
                 $expiration = strtotime('+10 year');
                 foreach ($rows as $row) {
                     $row = $row + ['expiration' => $expiration];
-                    $this->ubans[$row['ip']] = SimplePunishment::from($row);
+                    $this->ubans[$row['ip']] = UBan::from($row);
                 }
             }
         );
