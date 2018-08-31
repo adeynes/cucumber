@@ -116,7 +116,7 @@ final class PunishmentManager
             Queries::CUCUMBER_GET_PUNISHMENTS_UBANS,
             [],
             function(array $rows) {
-                $expiration = strtotime('+10 year');
+                $expiration = 0x7FFFFFFF;
                 foreach ($rows as $row) {
                     $row = $row + ['expiration' => $expiration];
                     $this->ubans[$row['ip']] = UBan::from($row);
@@ -267,7 +267,7 @@ final class PunishmentManager
             $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
         }
         if (is_null($expiration)) {
-            $expiration = strtotime('+10 year');
+            $expiration = 0x7FFFFFFF;
         }
 
         if ($this->getBan($name) && !$override) {
@@ -322,7 +322,7 @@ final class PunishmentManager
             $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
         }
         if (is_null($expiration)) {
-            $expiration = strtotime('+10 year');
+            $expiration = 0x7FFFFFFF;
         }
 
         if ($this->getIpBan($ip)) {
@@ -432,7 +432,7 @@ final class PunishmentManager
             $reason = $this->getPlugin()->getMessage('moderation.mute.mute.default-reason');
         }
         if (is_null($expiration)) {
-            $expiration = strtotime('+10 year');
+            $expiration = 0x7FFFFFFF;
         }
 
         if ($this->getMute($name)) {
