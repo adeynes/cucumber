@@ -6,18 +6,17 @@ namespace adeynes\cucumber;
 use adeynes\cucumber\log\LogManager;
 use adeynes\cucumber\mod\PunishmentManager;
 use adeynes\cucumber\task\ExpirationCheckTask;
-use adeynes\cucumber\task\PunishmentSaveTask;
 use adeynes\cucumber\utils\MessageFactory;
 use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\parsecmd;
-use adeynes\parsecmd\UsesParsecmdPlugin;
 use pocketmine\command\CommandSender;
+use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use poggit\libasynql\DataConnector;
 use poggit\libasynql\libasynql;
 
-final class Cucumber extends PluginBase implements UsesParsecmdPlugin
+final class Cucumber extends PluginBase implements Plugin
 {
 
     private const CONFIG_VERSION = '2.0';
@@ -141,8 +140,6 @@ final class Cucumber extends PluginBase implements UsesParsecmdPlugin
         $this->punishment_manager = new PunishmentManager($this);
         // Check for expired punishments every 5 mins
         $this->getScheduler()->scheduleRepeatingTask(new ExpirationCheckTask($this), 300 * 20);
-        // Save punishments every hour
-        $this->getScheduler()->scheduleRepeatingTask(new PunishmentSaveTask($this), 3600 * 20);
     }
 
     private function initEvents(): void

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace adeynes\cucumber\mod;
 
 use adeynes\cucumber\Cucumber;
-use adeynes\cucumber\utils\HasData;
 
 abstract class SimplePunishment implements Punishment, Expirable
 {

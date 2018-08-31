@@ -6,8 +6,8 @@ namespace adeynes\cucumber\command;
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\CucumberPlayer;
-use adeynes\parsecmd\CommandBlueprint;
-use adeynes\parsecmd\ParsedCommand;
+use adeynes\parsecmd\command\blueprint\CommandBlueprint;
+use adeynes\parsecmd\command\ParsedCommand;
 use pocketmine\command\CommandSender;
 
 class UnmuteCommand extends CucumberCommand

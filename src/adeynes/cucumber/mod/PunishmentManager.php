@@ -5,7 +5,6 @@ namespace adeynes\cucumber\mod;
 
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberException;
-use adeynes\cucumber\utils\ErrorCodes;
 use adeynes\cucumber\utils\Queries;
 use pocketmine\Player;
 
@@ -363,7 +362,7 @@ final class PunishmentManager
      * @return UBan
      * @throws CucumberException If the IP is already ubanned
      */
-    public function addUban(string $ip, ?string $reason, string $moderator): UBan
+    public function addUBan(string $ip, ?string $reason, string $moderator): UBan
     {
         if (is_null($reason)) {
             $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
@@ -388,7 +387,7 @@ final class PunishmentManager
      * @return bool
      * @throws CucumberException
      */
-    public function checkUban(Player $player): bool
+    public function checkUBan(Player $player): bool
     {
         $uban = $this->getUban($player->getAddress());
         if ($uban) {

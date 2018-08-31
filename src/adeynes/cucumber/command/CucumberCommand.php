@@ -5,7 +5,7 @@ namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\Queries;
-use adeynes\parsecmd\Command;
+use adeynes\parsecmd\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\Plugin;
 

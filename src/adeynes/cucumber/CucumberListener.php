@@ -76,7 +76,7 @@ final class CucumberListener implements Listener
     {
         $player = $ev->getPlayer();
         $punishment_manager = $this->getPlugin()->getPunishmentManager();
-        $punishment_manager->checkUban($player);
+        $punishment_manager->checkUBan($player);
 
         if ($ban = $punishment_manager->isBanned($player)) {
             $ev->setKickMessage(
