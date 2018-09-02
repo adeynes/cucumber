@@ -23,7 +23,7 @@ final class Cucumber extends PluginBase implements Plugin
 
     private const MESSAGES_VERSION = '2.0';
 
-    private const SUPPORTED_LANGUAGES = ['en' => 'en'];
+    private const SUPPORTED_LANGUAGES = ['en' => 'en', 'fr' => 'fr'];
 
     /** @var Cucumber */
     private static $instance;
