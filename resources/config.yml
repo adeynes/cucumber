@@ -1,4 +1,7 @@
-version: '2.0'
+# DO NOT EDIT THE FOLLOWING LINE
+version: '2.1'
+
+language: en
 
 database:
   type: mysql # only mysql is supported as of now

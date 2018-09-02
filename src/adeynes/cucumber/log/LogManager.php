@@ -89,7 +89,7 @@ final class LogManager
     /**
      * Creates a log message for the given event
      * Uses the template for the event type
-     * specified in messages.yml and populates
+     * specified in the lang file and populates
      * it with the data in CucumberEvent::getData()
      * @param CucumberEvent $ev
      * @return string

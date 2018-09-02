@@ -19,9 +19,11 @@ use poggit\libasynql\libasynql;
 final class Cucumber extends PluginBase implements Plugin
 {
 
-    private const CONFIG_VERSION = '2.0';
+    private const CONFIG_VERSION = '2.1';
 
-    private const MESSAGES_VERSION = '1.4';
+    private const MESSAGES_VERSION = '2.0';
+
+    private const SUPPORTED_LANGUAGES = ['en' => 'en'];
 
     /** @var Cucumber */
     private static $instance;
@@ -81,13 +83,20 @@ final class Cucumber extends PluginBase implements Plugin
             $this->fail('Outdated config.yml version');
         }
 
-        $this->saveResource('messages.yml');
-        $this->messages = new Config($this->getDataFolder() . 'messages.yml');
+        foreach (self::SUPPORTED_LANGUAGES as $language) {
+            $this->saveResource("lang/$language.yml");
+        }
 
-        /** @var string $messages_version */
+        if (!isset(self::SUPPORTED_LANGUAGES[$language = $this->getConfig()->get('language')])) {
+            $language_list = implode(', ', self::SUPPORTED_LANGUAGES);
+            $this->fail("Unsupported language $language! Please pick one of the following: $language_list");
+        }
+
+        $this->messages = new Config("{$this->getDataFolder()}lang/$language.yml");
+
         $messages_version = $this->getMessage('version');
         if (!$this->checkVersion($messages_version, self::MESSAGES_VERSION)) {
-            $this->fail('Outdated messages.yml version');
+            $this->fail("Outdated $language.yml version");
         }
     }
 
