@@ -55,11 +55,12 @@ final class CucumberListener implements Listener
         $player = $ev->getPlayer();
         $message = $ev->getMessage();
 
-        if ($this->getPlugin()->getPunishmentManager()->isMuted($player)) {
+        if ($mute = $this->getPlugin()->getPunishmentManager()->isMuted($player)) {
             $ev->setCancelled();
             $messages = $this->getPlugin()->getMessageConfig();
-            $player->sendMessage(MessageFactory::colorize(
-                $messages->getNested('moderation.mute.chat-attempt') ?? $messages->getNested('moderation.mute.mute.message')
+            $player->sendMessage(MessageFactory::fullFormat(
+                $messages->getNested('moderation.mute.chat-attempt') ?? $messages->getNested('moderation.mute.mute.message'),
+                $mute->getDataFormatted()
             ));
             if ($this->log_chat) {
                 $this->callEvent(new ChatAttemptEvent($player, $message));
