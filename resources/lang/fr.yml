@@ -7,10 +7,10 @@ error:
   # %player%
   player-does-not-exist: "&b%player% &cn'a jamais joué sur ce serveur!"
   # %severity%
-  unknown-log-severity: "&cSeverité non-existente &b%severity%&c!"
+  unknown-log-severity: "&cSeverité inexistante &b%severity%&c!"
   not-ingame: "&cIl faut utiliser cette commande dans le jeu!"
   # %ip%
-  player-ip-ambiguity: "&b%ip% &cressemble à une IP, mais il y a aussi un jour avec ce nom! Utilisez un des drapeaux &b-player &cou &b-ip &cpour résoudre cette ambiguité"
+  player-ip-ambiguity: "&b%ip% &cressemble à une IP, mais il y a aussi un joueur avec ce nom! Utilisez un des paramètres &b-player &cou &b-ip &cpour résoudre ce problème"
 
 success:
   # %player% %message%
@@ -18,36 +18,36 @@ success:
   # %message%
   log: "&aVous avez loggé &7%message%&a!"
   # %message%
-  alert: '' # l'expéditeur recevera l'alerte
+  alert: '' # l'expéditeur recevra l'alerte
   # %player% %reason% %expiration%
-  ban: "&aVous avez banni &b%player% &ajusqu'à &d%expiration%&a!"
+  ban: "&aVous avez banni &b%player% &ajusqu'au &d%expiration%&a!"
   banlist:
     # %count%
     intro: "&e&lBans (&r&b%count%&e&l):"
     # %player% %reason% %expiration% %moderator%
-    list: "&b%player% &fa été banni par &9%moderator% &fjusqu'à &d%expiration% &fpour &7%reason%\n"
+    list: "&b%player% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
   # %player%
-  pardon: "&aVous avez révoqué le ban de &b%player%&a!"
+  pardon: "&aVous avez annulé le ban de &b%player%&a!"
   # %ip% %reason% %expiration%
-  ipban: "&aVous avez banni l'IP &b%ip% &ajusqu'à &d%expiration%&a!"
+  ipban: "&aVous avez banni l'IP &b%ip% &ajusqu'au &d%expiration%&a!"
   ipbanlist:
     # %count%
-    intro: "&e&lBans d'IP (&r&b%count%&e&l):"
+    intro: "&e&lBans IP (&r&b%count%&e&l):"
     # %ip% %reason% %expiration% %moderator%
-    list: "&b%ip% &fa été banni par &9%moderator% &fjusqu'à &d%expiration% &fpour &7%reason%\n"
+    list: "&b%ip% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
   # %ip%
-  ippardon: "&aVous avez révoqué le ban de l'IP &b%ip%&a!"
-  # %ip% %reason% %expiration% (expiration will always be +10yrs and the uban will never expire anyways
+  ippardon: "&aVous avez annulé le ban de l'IP &b%ip%&a!"
+  # %ip% %reason% %expiration% (expiration sera toujours 2038-01-18 22:14:07 et ne sert à rien)
   uban: "&aVous avez banni tout joueur qui rejoint le serveur avec l'IP &b%ip%&a!"
   # %player% %reason% %expiration%
-  mute: "&aVous avez rendu muet &b%player% &ajusqu'à &d%expiration%&a!"
+  mute: "&aVous avez désactivé le tchat de &b%player% &ajusqu'au &d%expiration%&a!"
   # %player%
-  unmute: "&b%player%&a peut maintenant parler!"
+  unmute: "&b%player% &apeut à nouveau tchatter!"
   mutelist:
     # %count%
     intro: "&e&lMuets (&r&b%count%&e&l):"
     # %player% %reason% %expiration% %moderator%
-    list: "&b%player% &fa été rendu muet par &9%moderator% &fjusqu'à &d%expiration% &fpour &7%reason%\n"
+    list: "&b%player% &fa été banni du tchat par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
   # %player% %ip%
   ip: "&eL'IP de &b%player% &eest &b%ip%"
   # %status%
@@ -58,22 +58,22 @@ moderation:
     # Le message qui sera montré sur l'écran de ban
     # S'il y a plus que 3 lignes, celles en plus ne seront pas visibles
     # %moderator% %reason% %expiration%
-    message: "&cVous avez été banni jusqu'à &7%expiration%&c!\n&9&lModerateur &r&7%moderator%\n&f&lRaison &r&7%reason%"
+    message: "&cVous avez été banni jusqu'au &7%expiration%&c!\n&9&lModerateur &r&7%moderator%\n&f&lRaison &r&7%reason%"
     # La raison qui sera utilisée si aucune n'est fournie par le moderateur
     default-reason: "Vous avez enfreint les règles de ce serveur"
 
   mute:
     mute:
       # %moderator% %reason% %expiration%
-      message: "&eVous avez été rendu muet par &b%moderator% &ejusqu'à &b%expiration%&e.\n&7Raison: &f%reason%"
+      message: "&eVous avez été banni du tchat par &b%moderator% &ejusqu'au &b%expiration%&e.\n&7Raison: &f%reason%"
       # La raison qui sera utilisée si aucune n'est fournie par le moderateur
-      default-reason: "Vous avez enfreint une règle"
+      default-reason: "Vous avez enfreint les règles de ce serveur"
     unmute:
       # The message that will be sent to the player (if they are online) when they are manually unmuted
       # %moderator%
-      manual: "&b%moderator% &eà levé votre incapacité à parler!"
+      manual: "&b%moderator% &ea réactivé votre tchat!"
       # The message that will be sent to the player (if they are online) when they are automatically unmuted
-      auto: "&eVotre incapacité à parler a été levée automatiquement; sa durée a expiré!"
+      auto: "&eVous êtes à nouveau autorisé à tchatter; le délai de suspension a expiré!"
 
 log:
   templates:
@@ -82,7 +82,7 @@ log:
     # %player%
     join: "%player% a rejoint le serveur"
     # %player%
-    join-attempt: "%player% a essayé de rejoindre le serveur alors qu'il été banni"
+    join-attempt: "%player% a tenté de rejoindre le serveur alors qu'il était banni"
     # %player%
     quit: "%player% a quitté le serveur"
     # %player% %message%
@@ -92,5 +92,5 @@ log:
     # %player% %command%
     command: "%player%: %command%"
 
-# Symboles: https://secure.php.net/manual/fr/function.date.php
+# Symbols: https://secure.php.net/manual/en/function.date.php
 time-format: Y-m-d\TH:i:s
