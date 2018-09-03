@@ -80,7 +80,7 @@ final class Cucumber extends PluginBase implements Plugin
         /** @var string $config_version */
         $config_version = $this->getConfig()->get('version');
         if (!$this->checkVersion($config_version, self::CONFIG_VERSION)) {
-            $this->fail('Outdated config.yml version');
+            $this->fail('Outdated config.yml version! Try to delete cucumber/config.yml');
         }
 
         foreach (self::SUPPORTED_LANGUAGES as $language) {
@@ -96,7 +96,7 @@ final class Cucumber extends PluginBase implements Plugin
 
         $messages_version = $this->getMessage('version');
         if (!$this->checkVersion($messages_version, self::MESSAGES_VERSION)) {
-            $this->fail("Outdated $language.yml version");
+            $this->fail("Outdated $language.yml version Try to delete cucumber/$language.yml");
         }
     }
 
