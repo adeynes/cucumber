@@ -11,6 +11,7 @@ use adeynes\cucumber\event\CommandEvent;
 use adeynes\cucumber\event\JoinAttemptEvent;
 use adeynes\cucumber\event\JoinEvent;
 use adeynes\cucumber\event\QuitEvent;
+use adeynes\cucumber\utils\MessageFactory;
 use adeynes\cucumber\utils\Queries;
 use pocketmine\event\Event;
 use pocketmine\event\Listener;
@@ -56,6 +57,10 @@ final class CucumberListener implements Listener
 
         if ($this->getPlugin()->getPunishmentManager()->isMuted($player)) {
             $ev->setCancelled();
+            $messages = $this->getPlugin()->getMessageConfig();
+            $player->sendMessage(MessageFactory::colorize(
+                $messages->getNested('moderation.mute.chat-attempt') ?? $messages->getNested('moderation.mute.mute.message')
+            ));
             if ($this->log_chat) {
                 $this->callEvent(new ChatAttemptEvent($player, $message));
             }

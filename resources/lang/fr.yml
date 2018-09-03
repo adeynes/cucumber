@@ -1,5 +1,5 @@
 # NE PAS CHANGER LA LIGNE SUIVANTE
-version: '2.0'
+version: '2.1'
 
 error:
   # %player%
@@ -74,6 +74,9 @@ moderation:
       manual: "&b%moderator% &ea réactivé votre tchat!"
       # The message that will be sent to the player (if they are online) when they are automatically unmuted
       auto: "&eVous êtes à nouveau autorisé à tchatter; le délai de suspension a expiré!"
+    # Le message envoyé aux joueurs qui essayent de tchatter alors qu'ils sont bannis du tchat
+    # %moderator% %reason% %expiration%
+    chat-attempt: "&cVous êtes banni du tchat jusqu'au &d%expiration%&c!"
 
 log:
   templates:
@@ -92,5 +95,5 @@ log:
     # %player% %command%
     command: "%player%: %command%"
 
-# Symbols: https://secure.php.net/manual/en/function.date.php
-time-format: Y-m-d\TH:i:s
+# Symboles: https://secure.php.net/manual/fr/function.date.php
+time-format: d-m-Y H:i:s

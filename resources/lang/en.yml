@@ -1,5 +1,5 @@
 # DO NOT EDIT THE FOLLOWING LINE
-version: '2.0'
+version: '2.1'
 
 error:
   # %player%
@@ -74,6 +74,9 @@ moderation:
       manual: "&eYou have been unmuted by &b%moderator%&e!"
       # The message that will be sent to the player (if they are online) when they are automatically unmuted
       auto: "&eYou have automatically been unmuted; your mute period has expired!"
+    # The message sent to players if they try to chat while muted
+    # %moderator% %reason% %expiration%
+    chat-attempt: "&cYou are muted until &d%expiration%&c!"
 
 log:
   templates:

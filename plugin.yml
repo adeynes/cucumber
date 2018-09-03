@@ -1,6 +1,6 @@
 name: cucumber
 main: adeynes\cucumber\Cucumber
-version: 1.6.1
+version: 1.6.2
 api: 3.0.0
 load: POSTWORLD
 author: adeynes
