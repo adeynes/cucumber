@@ -124,7 +124,7 @@ final class CucumberListener implements Listener
     public function onCucumberEvent(CucumberEvent $ev)
     {
         $log_manager = $this->getPlugin()->getLogManager();
-        $log_manager->log($log_manager->formatEventMessage($ev));
+        $log_manager->log($log_manager->formatEventMessage($ev), $ev->getSeverity());
     }
 
     private function callEvent(Event $ev): void
