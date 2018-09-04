@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
-use adeynes\cucumber\log\LogSeverities;
+use adeynes\cucumber\log\LogSeverity;
+use adeynes\cucumber\utils\CucumberException;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
 use adeynes\parsecmd\command\ParsedCommand;
 use pocketmine\command\CommandSender;
@@ -29,12 +30,14 @@ class LogCommand extends CucumberCommand
         [$message] = $command->get(['message']);
         $severity = $command->getFlag('severity') ?? 'log';
 
-        if (!isset(LogSeverities::SEVERITIES[$severity])) {
+        try {
+            $severity = LogSeverity::fromString($severity);
+        } catch (CucumberException $exception) {
             $this->getPlugin()->formatAndSend($sender, 'error.unknown-log-severity', ['severity' => $severity]);
             return false;
         }
 
-        $this->getPlugin()->getLogManager()->log($message, LogSeverities::SEVERITIES[$severity]);
+        $this->getPlugin()->getLogManager()->log($message, $severity);
 
         $this->getPlugin()->formatAndSend($sender, 'success.log', ['message' => $message]);
         return true;

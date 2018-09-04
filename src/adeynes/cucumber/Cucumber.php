@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace adeynes\cucumber;
 
 use adeynes\cucumber\log\LogManager;
+use adeynes\cucumber\log\LogSeverity;
 use adeynes\cucumber\mod\PunishmentManager;
 use adeynes\cucumber\task\ExpirationCheckTask;
+use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\MessageFactory;
 use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\parsecmd;
@@ -131,8 +133,16 @@ final class Cucumber extends PluginBase implements Plugin
         // Cucumber instance is always the first arg,
         // user-supplied ones are passed starting with the second arg
         foreach ($this->getConfig()->getNested('log.loggers') as $severity => $loggers) {
+            try {
+                $severity = LogSeverity::fromString($severity);
+            } catch (CucumberException $exception) {
+                $this->log(
+                    MessageFactory::colorize("&eUnknown logger severity &b$severity&e, defaulting to &blog")
+                );
+                $severity = LogSeverity::LOG();
+            }
             foreach ($loggers as $logger) {
-                $this->getLogManager()->addLogger(
+                $this->getLogManager()->pushLogger(
                     new $logger[0]($this->getLogManager(), ...($logger[1] ?? [])),
                     $severity
                 );
