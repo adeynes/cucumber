@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\event;
 
+use adeynes\cucumber\log\LogSeverity;
 use pocketmine\Player;
 
 /**
@@ -16,6 +17,9 @@ class ModerationEvent extends CucumberPlayerEvent
 
     /** @var string */
     protected static $template;
+
+    /** @var LogSeverity */
+    protected static $severity;
 
     public function __construct(Player $player, array $data)
     {

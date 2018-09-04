@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\event;
 
+use adeynes\cucumber\log\LogSeverity;
 use adeynes\cucumber\utils\HasData;
 use pocketmine\event\Event;
 
@@ -20,10 +21,14 @@ abstract class CucumberEvent extends Event implements HasData
     /** @var string */
     protected static $template;
 
-    public static function init(string $type, string $template): void
+    /** @var LogSeverity */
+    protected static $severity;
+
+    public static function init(string $type, string $template, LogSeverity $severity): void
     {
         static::$type = $type;
         static::$template = $template;
+        static::$severity = $severity;
     }
 
     public function getType(): string
@@ -34,6 +39,11 @@ abstract class CucumberEvent extends Event implements HasData
     public function getTemplate(): string
     {
         return static::$template;
+    }
+
+    public function getSeverity(): LogSeverity
+    {
+        return self::$severity;
     }
 
 }

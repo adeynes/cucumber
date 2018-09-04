@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\event;
 
+use adeynes\cucumber\log\LogSeverity;
 use pocketmine\Player;
 
 class CommandEvent extends CucumberPlayerEvent
@@ -13,6 +14,9 @@ class CommandEvent extends CucumberPlayerEvent
 
     /** @var string */
     protected static $template;
+
+    /** @var LogSeverity */
+    protected static $severity;
 
     /** @var string */
     protected $command;

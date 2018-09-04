@@ -21,7 +21,7 @@ use poggit\libasynql\libasynql;
 final class Cucumber extends PluginBase implements Plugin
 {
 
-    private const CONFIG_VERSION = '2.1';
+    private const CONFIG_VERSION = '2.2';
 
     private const MESSAGES_VERSION = '2.0';
 
@@ -141,6 +141,7 @@ final class Cucumber extends PluginBase implements Plugin
                 );
                 $severity = LogSeverity::LOG();
             }
+
             foreach ($loggers as $logger) {
                 $this->getLogManager()->pushLogger(
                     new $logger[0]($this->getLogManager(), ...($logger[1] ?? [])),
@@ -173,10 +174,23 @@ final class Cucumber extends PluginBase implements Plugin
         ];
 
         foreach ($events as $type => $class) {
+            try {
+
+                $severity = $this->getConfig()->getNested("log.severities.$type", 'log');
+                $severity = LogSeverity::fromString($severity);
+            } catch (CucumberException $exception) {
+                /** @noinspection PhpUndefinedVariableInspection */
+                $this->log(
+                    MessageFactory::colorize("&eUnknown logger severity &b$severity&e for event &b$type&e, defaulting to &blog")
+                );
+                $severity = LogSeverity::LOG();
+            }
+
             call_user_func(
                 ["\\adeynes\\cucumber\\event\\$class[1]", 'init'],
                 $class[0],
-                $this->getMessage("log.templates.$type")
+                $this->getMessage("log.templates.$type"),
+                $severity
             );
         }
     }
