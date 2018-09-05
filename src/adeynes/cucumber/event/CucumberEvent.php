@@ -43,7 +43,7 @@ abstract class CucumberEvent extends Event implements HasData
 
     public function getSeverity(): LogSeverity
     {
-        return self::$severity;
+        return static::$severity;
     }
 
 }
