@@ -12,13 +12,12 @@ use adeynes\cucumber\utils\MessageFactory;
 use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\parsecmd;
 use pocketmine\command\CommandSender;
-use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use poggit\libasynql\DataConnector;
 use poggit\libasynql\libasynql;
 
-final class Cucumber extends PluginBase implements Plugin
+final class Cucumber extends PluginBase
 {
 
     private const CONFIG_VERSION = '2.2';
