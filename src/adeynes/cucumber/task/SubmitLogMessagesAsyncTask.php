@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\task;
 
+use adeynes\asyncio\asyncio;
+use adeynes\asyncio\FileWriteAsyncTask;
+use adeynes\asyncio\WriteMode;
 use adeynes\cucumber\Cucumber;
 
 class SubmitLogMessagesAsyncTask extends CucumberTask
@@ -22,9 +25,10 @@ class SubmitLogMessagesAsyncTask extends CucumberTask
 
     public function onRun(int $tick): void
     {
-        $this->getPlugin()->getServer()->getAsyncPool()->submitTask(
-            new LogMessagesAsyncTask($this->file, $this->messages)
-        );
+        $message = implode(PHP_EOL, $this->messages);
+        if ($message !== '') $message .= PHP_EOL;
+
+        asyncio::submitTask(new FileWriteAsyncTask($this->file, $message, WriteMode::APPEND()));
         $this->messages = [];
     }
 
