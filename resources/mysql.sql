@@ -72,20 +72,42 @@ SELECT * FROM players WHERE name = :name;
 -- #    }
 -- #    {punishments
 -- #      {bans
+-- #        {all
 SELECT bans.*, players.*
 FROM bans
 INNER JOIN players ON bans.player = players.id;
+-- #        }
+-- #        {current
+SELECT bans.*, players.*
+FROM bans
+INNER JOIN players ON bans.player = players.id
+WHERE bans.expiration > UNIX_TIMESTAMP();
+-- #        }
 -- #      }
 -- #      {ip-bans
+-- #        {all
 SELECT * FROM ip_bans;
+-- #        }
+-- #        {current
+SELECT * FROM ip_bans
+WHERE expiration > UNIX_TIMESTAMP();
+-- #        }
 -- #      }
 -- #      {ubans
 SELECT * FROM ubans;
 -- #      }
 -- #      {mutes
+-- #        {all
 SELECT mutes.*, players.*
 FROM mutes
 INNER JOIN players ON mutes.player = players.id;
+-- #        }
+-- #        {current
+SELECT mutes.*, players.*
+FROM mutes
+INNER JOIN players on mutes.player = players.id
+WHERE mutes.expiration > UNIX_TIMESTAMP();
+-- #        }
 -- #      }
 -- #    }
 -- #  }

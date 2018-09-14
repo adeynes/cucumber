@@ -83,7 +83,7 @@ final class PunishmentManager
         $connector = $this->getPlugin()->getConnector();
 
         $connector->executeSelect(
-            Queries::CUCUMBER_GET_PUNISHMENTS_BANS,
+            Queries::CUCUMBER_GET_PUNISHMENTS_BANS_CURRENT,
             [],
             function (array $rows) {
                 foreach ($rows as $row) {
@@ -93,7 +93,7 @@ final class PunishmentManager
         );
 
         $connector->executeSelect(
-            Queries::CUCUMBER_GET_PUNISHMENTS_MUTES,
+            Queries::CUCUMBER_GET_PUNISHMENTS_MUTES_CURRENT,
             [],
             function (array $rows) {
                 foreach ($rows as $row) {
@@ -103,7 +103,7 @@ final class PunishmentManager
         );
 
         $connector->executeSelect(
-            Queries::CUCUMBER_GET_PUNISHMENTS_IP_BANS,
+            Queries::CUCUMBER_GET_PUNISHMENTS_IP_BANS_CURRENT,
             [],
             function (array $rows) {
                 foreach ($rows as $row) {
