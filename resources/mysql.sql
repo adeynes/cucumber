@@ -14,11 +14,11 @@ CREATE TABLE IF NOT EXISTS players (
 -- #      {bans
 CREATE TABLE IF NOT EXISTS bans (
   id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  player INT(7) UNSIGNED UNIQUE NOT NULL,
+  player_id INT(7) UNSIGNED UNIQUE NOT NULL,
   reason VARCHAR(500) DEFAULT NULL,
   expiration INT(11) NOT NULL,
   moderator VARCHAR(30) NOT NULL,
-  FOREIGN KEY (player) REFERENCES players(id),
+  FOREIGN KEY (player_id) REFERENCES players(id),
   FOREIGN KEY (moderator) REFERENCES players(name)
 );
 -- #      }
@@ -44,11 +44,11 @@ CREATE TABLE IF NOT EXISTS ubans (
 -- #      {mutes
 CREATE TABLE IF NOT EXISTS mutes (
   id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  player INT(7) UNSIGNED UNIQUE NOT NULL,
+  player_id INT(7) UNSIGNED UNIQUE NOT NULL,
   reason VARCHAR(500) DEFAULT NULL,
   expiration INT(11) NOT NULL,
   moderator VARCHAR(30) NOT NULL,
-  FOREIGN KEY (player) REFERENCES players(id),
+  FOREIGN KEY (player_id) REFERENCES players(id),
   FOREIGN KEY (moderator) REFERENCES players(name)
 );
 -- #      }
@@ -73,14 +73,14 @@ SELECT * FROM players WHERE name = :name;
 -- #    {punishments
 -- #      {bans
 -- #        {all
-SELECT bans.*, players.*
+SELECT bans.*, players.*, players.name AS player_name
 FROM bans
-INNER JOIN players ON bans.player = players.id;
+INNER JOIN players ON bans.player_id = players.id;
 -- #        }
 -- #        {current
-SELECT bans.*, players.*
+SELECT bans.*, players.*, players.name AS player_name
 FROM bans
-INNER JOIN players ON bans.player = players.id
+INNER JOIN players ON bans.player_id = players.id
 WHERE bans.expiration > UNIX_TIMESTAMP();
 -- #        }
 -- #      }
@@ -98,14 +98,14 @@ SELECT * FROM ubans;
 -- #      }
 -- #      {mutes
 -- #        {all
-SELECT mutes.*, players.*
+SELECT mutes.*, players.*, players.name AS player_name
 FROM mutes
-INNER JOIN players ON mutes.player = players.id;
+INNER JOIN players ON mutes.player_id = players.id;
 -- #        }
 -- #        {current
-SELECT mutes.*, players.*
+SELECT mutes.*, players.*, players.name AS player_name
 FROM mutes
-INNER JOIN players on mutes.player = players.id
+INNER JOIN players on mutes.player_id = players.id
 WHERE mutes.expiration > UNIX_TIMESTAMP();
 -- #        }
 -- #      }
@@ -113,19 +113,19 @@ WHERE mutes.expiration > UNIX_TIMESTAMP();
 -- #  }
 -- #  {punish
 -- #    {ban
--- #      :name string
+-- #      :player string
 -- #      :reason string
 -- #      :expiration int
 -- #      :moderator string
-REPLACE INTO bans (player, reason, expiration, moderator)
-SELECT id, :reason, :expiration, :moderator FROM players WHERE name = :name;
+REPLACE INTO bans (player_id, reason, expiration, moderator)
+SELECT id, :reason, :expiration, :moderator FROM players WHERE name = :player;
 -- #    }
 -- #    {unban
--- #      :name string
+-- #      :player string
 DELETE FROM bans
-WHERE player IN (
+WHERE player_id IN (
   SELECT * FROM (
-    SELECT id FROM players WHERE name = :name
+    SELECT id FROM players WHERE name = :player
   ) AS a
 );
 -- #    }
@@ -149,19 +149,19 @@ REPLACE INTO ubans (ip, reason, moderator)
 VALUES (:ip, :reason, :moderator);
 -- #    }
 -- #    {mute
--- #      :name string
+-- #      :player string
 -- #      :reason string
 -- #      :expiration int
 -- #      :moderator string
-REPLACE INTO mutes (player, reason, expiration, moderator)
-SELECT id, :reason, :expiration, :moderator FROM players WHERE name = :name;
+REPLACE INTO mutes (player_id, reason, expiration, moderator)
+SELECT id, :reason, :expiration, :moderator FROM players WHERE name = :player;
 -- #    }
 -- #    {unmute
--- #      :name string
+-- #      :player string
 DELETE FROM mutes
-WHERE player IN (
+WHERE player_id IN (
   SELECT * FROM (
-    SELECT id FROM players WHERE name = :name
+    SELECT id FROM players WHERE name = :player
   ) AS a
 );
 -- #    }

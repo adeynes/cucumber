@@ -17,7 +17,7 @@ abstract class PlayerPunishment extends SimplePunishment
 
     public static function from(array $row): self
     {
-        return new static($row['name'], $row['reason'], $row['expiration'], $row['moderator']);
+        return new static($row['player_name'], $row['reason'], $row['expiration'], $row['moderator']);
     }
 
     public function getPlayer(): string

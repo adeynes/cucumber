@@ -87,7 +87,7 @@ final class PunishmentManager
             [],
             function (array $rows) {
                 foreach ($rows as $row) {
-                    $this->bans[$row['name']] = Ban::from($row);
+                    $this->bans[$row['player_name']] = Ban::from($row);
                 }
             }
         );
@@ -97,7 +97,7 @@ final class PunishmentManager
             [],
             function (array $rows) {
                 foreach ($rows as $row) {
-                    $this->mutes[$row['name']] = Mute::from($row);
+                    $this->mutes[$row['player_name']] = Mute::from($row);
                 }
             }
         );
@@ -271,7 +271,7 @@ final class PunishmentManager
         }
 
         if ($this->getBan($name) && !$override) {
-            throw new CucumberException($this->messages['ban']['alread-banned'], ['player' => $name]);
+            throw new CucumberException($this->messages['ban']['already-banned'], ['player' => $name]);
         }
 
         $ban = new Ban($name, $reason, $expiration, $moderator);
