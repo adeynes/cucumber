@@ -33,6 +33,12 @@ interface Queries
 
     /**
      * <h4>Declared in:</h4>
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:96
+     */
+    public const CUCUMBER_GET_PUNISHMENTS_BANS_COUNT = "cucumber.get.punishments.bans.count";
+
+    /**
+     * <h4>Declared in:</h4>
      * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:85
      */
     public const CUCUMBER_GET_PUNISHMENTS_BANS_CURRENT = "cucumber.get.punishments.bans.current";
@@ -48,19 +54,25 @@ interface Queries
 
     /**
      * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:98
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:101
      */
     public const CUCUMBER_GET_PUNISHMENTS_IP_BANS_ALL = "cucumber.get.punishments.ip-bans.all";
 
     /**
      * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:102
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:114
+     */
+    public const CUCUMBER_GET_PUNISHMENTS_IP_BANS_COUNT = "cucumber.get.punishments.ip-bans.count";
+
+    /**
+     * <h4>Declared in:</h4>
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:105
      */
     public const CUCUMBER_GET_PUNISHMENTS_IP_BANS_CURRENT = "cucumber.get.punishments.ip-bans.current";
 
     /**
      * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:108
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:111
      *
      * <h3>Variables</h3>
      * - <code>:limit</code> int, required in mysql.sql
@@ -69,25 +81,31 @@ interface Queries
 
     /**
      * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:118
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:124
      */
     public const CUCUMBER_GET_PUNISHMENTS_MUTES_ALL = "cucumber.get.punishments.mutes.all";
 
     /**
      * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:124
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:140
+     */
+    public const CUCUMBER_GET_PUNISHMENTS_MUTES_COUNT = "cucumber.get.punishments.mutes.count";
+
+    /**
+     * <h4>Declared in:</h4>
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:130
      */
     public const CUCUMBER_GET_PUNISHMENTS_MUTES_CURRENT = "cucumber.get.punishments.mutes.current";
 
     /**
      * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:131
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:137
      */
     public const CUCUMBER_GET_PUNISHMENTS_MUTES_LIMITED = "cucumber.get.punishments.mutes.limited";
 
     /**
      * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:112
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:118
      */
     public const CUCUMBER_GET_PUNISHMENTS_UBANS = "cucumber.get.punishments.ubans";
 
@@ -123,7 +141,7 @@ interface Queries
 
     /**
      * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:143
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:152
      *
      * <h3>Variables</h3>
      * - <code>:expiration</code> int, required in mysql.sql
@@ -135,7 +153,7 @@ interface Queries
 
     /**
      * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:160
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:169
      *
      * <h3>Variables</h3>
      * - <code>:expiration</code> int, required in mysql.sql
@@ -147,7 +165,7 @@ interface Queries
 
     /**
      * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:164
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:173
      *
      * <h3>Variables</h3>
      * - <code>:ip</code> string, required in mysql.sql
@@ -156,7 +174,7 @@ interface Queries
 
     /**
      * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:179
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:188
      *
      * <h3>Variables</h3>
      * - <code>:expiration</code> int, required in mysql.sql
@@ -168,7 +186,7 @@ interface Queries
 
     /**
      * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:171
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:180
      *
      * <h3>Variables</h3>
      * - <code>:moderator</code> string, required in mysql.sql
@@ -179,7 +197,7 @@ interface Queries
 
     /**
      * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:152
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:161
      *
      * <h3>Variables</h3>
      * - <code>:player</code> string, required in mysql.sql
@@ -188,7 +206,7 @@ interface Queries
 
     /**
      * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:188
+     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:197
      *
      * <h3>Variables</h3>
      * - <code>:player</code> string, required in mysql.sql

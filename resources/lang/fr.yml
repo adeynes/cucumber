@@ -1,5 +1,5 @@
 # NE PAS CHANGER LA LIGNE SUIVANTE
-version: '2.1'
+version: '2.2'
 
 error:
   # %player%
@@ -22,19 +22,21 @@ success:
   # %player% %reason% %expiration%
   ban: "&aVous avez banni &b%player% &ajusqu'au &d%expiration%&a!"
   banlist:
-    # %count%
+    # %count% %page%
     intro: "&e&lBans (&r&b%count%&e&l):"
     # %player% %reason% %expiration% %moderator%
     list: "&b%player% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
+    entries-per-line: 10
   # %player%
   pardon: "&aVous avez annulé le ban de &b%player%&a!"
   # %ip% %reason% %expiration%
   ipban: "&aVous avez banni l'IP &b%ip% &ajusqu'au &d%expiration%&a!"
   ipbanlist:
-    # %count%
+    # %count% %page%
     intro: "&e&lBans IP (&r&b%count%&e&l):"
     # %ip% %reason% %expiration% %moderator%
     list: "&b%ip% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
+    entries-per-line: 10
   # %ip%
   ippardon: "&aVous avez annulé le ban de l'IP &b%ip%&a!"
   # %ip% %reason% %expiration% (expiration sera toujours 2038-01-18 22:14:07 et ne sert à rien)
@@ -44,10 +46,11 @@ success:
   # %player%
   unmute: "&b%player% &apeut à nouveau tchatter!"
   mutelist:
-    # %count%
+    # %count% %page%
     intro: "&e&lMuets (&r&b%count%&e&l):"
     # %player% %reason% %expiration% %moderator%
     list: "&b%player% &fa été banni du tchat par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
+    entries-per-line: 10
   # %player% %ip%
   ip: "&eL'IP de &b%player% &eest &b%ip%"
   # %status%

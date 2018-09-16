@@ -91,6 +91,9 @@ INNER JOIN players ON bans.player_id = players.id
 ORDER BY bans.expiration DESC
 LIMIT :limit;
 -- #        }
+-- #        {count
+SELECT COUNT(*) AS count FROM bans;
+-- #        }
 -- #      }
 -- #      {ip-bans
 -- #        {all
@@ -105,6 +108,9 @@ WHERE expiration > UNIX_TIMESTAMP();
 SELECT * FROM ip_bans
 ORDER BY expiration DESC
 LIMIT :limit;
+-- #        }
+-- #        {count
+SELECT COUNT(*) AS count FROM ip_bans;
 -- #        }
 -- #      }
 -- #      {ubans
@@ -128,6 +134,9 @@ FROM mutes
 INNER JOIN players ON mutes.player_id = players.id
 ORDER BY mutes.expiration DESC
 LIMIT :limit;
+-- #        }
+-- #        {count
+SELECT COUNT(*) AS count FROM mutes;
 -- #        }
 -- #      }
 -- #    }

@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
+use adeynes\cucumber\mod\Ban;
+use adeynes\cucumber\utils\MessageFactory;
+use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
 use adeynes\parsecmd\command\ParsedCommand;
 use pocketmine\command\CommandSender;
@@ -25,15 +28,41 @@ class BanlistCommand extends CucumberCommand
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        $message = '';
-        $bans = $this->getPlugin()->getPunishmentManager()->getBans();
-        foreach ($bans as $player => $ban) {
-            $data = $ban->getDataFormatted() + ['player' => $player];
-            $message .= $this->getPlugin()->formatMessageFromConfig('success.banlist.list', $data);
-        }
+        $make_ban_info_line = function (array $ban) {
+            return $this->getPlugin()->formatMessageFromConfig(
+                'success.banlist.list',
+                Ban::from($ban)->getDataFormatted()
+            );
+        };
 
-        $this->getPlugin()->formatAndSend($sender, 'success.banlist.intro', ['count' => count($bans)]);
-        $sender->sendMessage(trim($message));
+        $entries_limit = (int) $this->getPlugin()->getMessage('success.banlist.entries-per-line');
+        [$page] = $command->get(['page']);
+        $page = $page ?? 0;
+
+        $select_bans_and_send = function (int $count) use ($sender, $make_ban_info_line, $entries_limit, $page) {
+            $this->getPlugin()->getConnector()->executeSelect(
+                Queries::CUCUMBER_GET_PUNISHMENTS_BANS_LIMITED,
+                ['limit' => $entries_limit * $page],
+                function (array $rows) use ($sender, $make_ban_info_line, $entries_limit, $page, $count) {
+                    $page = MessageFactory::makePage(
+                        $rows,
+                        $make_ban_info_line,
+                        $this->getPlugin()->formatMessageFromConfig('success.banlist.intro', ['count' => $count]),
+                        $entries_limit,
+                        $page
+                    );
+                    $sender->sendMessage($page);
+                }
+            );
+        };
+
+        $this->getPlugin()->getConnector()->executeSelect(
+            Queries::CUCUMBER_GET_PUNISHMENTS_BANS_COUNT,
+            [],
+            function (array $rows) use ($select_bans_and_send) {
+                $select_bans_and_send($rows[0]['count']);
+            }
+        );
 
         return true;
     }
