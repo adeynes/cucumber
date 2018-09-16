@@ -83,6 +83,14 @@ FROM bans
 INNER JOIN players ON bans.player_id = players.id
 WHERE bans.expiration > UNIX_TIMESTAMP();
 -- #        }
+-- #        {limited
+-- #          :limit int
+SELECT bans.*, players.*, players.name AS player_name
+FROM bans
+INNER JOIN players ON bans.player_id = players.id
+ORDER BY bans.expiration DESC
+LIMIT :limit;
+-- #        }
 -- #      }
 -- #      {ip-bans
 -- #        {all
@@ -91,6 +99,12 @@ SELECT * FROM ip_bans;
 -- #        {current
 SELECT * FROM ip_bans
 WHERE expiration > UNIX_TIMESTAMP();
+-- #        }
+-- #        {limited
+-- #          :limit int
+SELECT * FROM ip_bans
+ORDER BY expiration DESC
+LIMIT :limit;
 -- #        }
 -- #      }
 -- #      {ubans
@@ -105,8 +119,15 @@ INNER JOIN players ON mutes.player_id = players.id;
 -- #        {current
 SELECT mutes.*, players.*, players.name AS player_name
 FROM mutes
-INNER JOIN players on mutes.player_id = players.id
+INNER JOIN players ON mutes.player_id = players.id
 WHERE mutes.expiration > UNIX_TIMESTAMP();
+-- #        }
+-- #        {limited
+SELECT mutes.*, players.*, players.name AS player_name
+FROM mutes
+INNER JOIN players ON mutes.player_id = players.id
+ORDER BY mutes.expiration DESC
+LIMIT :limit;
 -- #        }
 -- #      }
 -- #    }
