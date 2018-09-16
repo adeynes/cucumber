@@ -27,12 +27,12 @@ abstract class PlayerPunishment extends SimplePunishment
 
     public function getData(): array
     {
-        return parent::getData() + ['name' => $this->getPlayer()];
+        return parent::getData() + ['player' => $this->getPlayer()];
     }
 
     public function getDataFormatted(): array
     {
-        return parent::getDataFormatted() + ['name' => $this->getPlayer()];
+        return parent::getDataFormatted() + ['player' => $this->getPlayer()];
     }
 
 }
