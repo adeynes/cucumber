@@ -50,4 +50,16 @@ final class MessageFactory
         return self::colorize(self::format($template, $data));
     }
 
+    public static function makePage(array $data, callable $make_line, string $heading, int $max_lines = 20, int $page_number = 0): string
+    {
+        array_splice($data, $max_lines * $page_number, $max_lines);
+        $message = $heading . PHP_EOL;
+
+        foreach ($data as $datum) {
+            $message .= $make_line($datum);
+        }
+
+        return trim(self::colorize($message));
+    }
+
 }
