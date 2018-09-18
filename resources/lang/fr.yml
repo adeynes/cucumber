@@ -22,8 +22,8 @@ success:
   # %player% %reason% %expiration%
   ban: "&aVous avez banni &b%player% &ajusqu'au &d%expiration%&a!"
   banlist:
-    # %count% %page%
-    intro: "&e&lBans (&r&b%count%&e&l):"
+    # %page%
+    intro: "&e&lBans:"
     # %player% %reason% %expiration% %moderator%
     list: "&b%player% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
     entries-per-line: 10
@@ -32,8 +32,8 @@ success:
   # %ip% %reason% %expiration%
   ipban: "&aVous avez banni l'IP &b%ip% &ajusqu'au &d%expiration%&a!"
   ipbanlist:
-    # %count% %page%
-    intro: "&e&lBans IP (&r&b%count%&e&l):"
+    # %page%
+    intro: "&e&lBans IP:"
     # %ip% %reason% %expiration% %moderator%
     list: "&b%ip% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
     entries-per-line: 10
@@ -46,8 +46,8 @@ success:
   # %player%
   unmute: "&b%player% &apeut à nouveau tchatter!"
   mutelist:
-    # %count% %page%
-    intro: "&e&lMuets (&r&b%count%&e&l):"
+    # %page%
+    intro: "&e&lMuets:"
     # %player% %reason% %expiration% %moderator%
     list: "&b%player% &fa été banni du tchat par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
     entries-per-line: 10
