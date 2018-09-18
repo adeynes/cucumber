@@ -43,6 +43,9 @@ final class Cucumber extends PluginBase implements Plugin
     /** @var PunishmentManager */
     private $punishment_manager;
 
+    /** @var MigrationManager */
+    private $migration_manager;
+
     public static function getInstance(): self
     {
         return self::$instance;
@@ -102,6 +105,9 @@ final class Cucumber extends PluginBase implements Plugin
 
     private function initDatabase(): void
     {
+        $this->migration_manager = new MigrationManager($this);
+        $this->getMigrationManager()->migrate();
+
         $this->connector = $connector = libasynql::create($this, $this->getConfig()->get('database'),
             ['mysql' => 'mysql.sql']);
 
@@ -206,6 +212,16 @@ final class Cucumber extends PluginBase implements Plugin
     public function getPunishmentManager(): PunishmentManager
     {
         return $this->punishment_manager;
+    }
+
+    private function getMigrationManager(): MigrationManager
+    {
+        return $this->migration_manager;
+    }
+
+    public function isMigrated(): bool
+    {
+        return $this->getMigrationManager()->isMigrated();
     }
 
     public function checkVersion(string $actual, string $minimum): bool
