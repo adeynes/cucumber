@@ -292,7 +292,6 @@ final class PunishmentManager
         }
 
         unset($this->bans[$player]);
-        $this->getPlugin()->getConnector()->executeChange(Queries::CUCUMBER_PUNISH_UNBAN, ['player' => $player]);
     }
 
     /**
@@ -347,7 +346,6 @@ final class PunishmentManager
         }
 
         unset($this->ip_bans[$ip]);
-        $this->getPlugin()->getConnector()->executeChange(Queries::CUCUMBER_PUNISH_IP_UNBAN, ['ip' => $ip]);
     }
 
     /**
@@ -457,7 +455,6 @@ final class PunishmentManager
         }
 
         unset($this->mutes[$player]);
-        $this->getPlugin()->getConnector()->executeChange(Queries::CUCUMBER_PUNISH_UNMUTE, ['player' => $player]);
     }
 
     public function isBanned(Player $player): ?SimplePunishment

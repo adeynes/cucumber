@@ -7,7 +7,6 @@ use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\mod\IpBan;
 use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
-use adeynes\parsecmd\command\ParsedCommand;
 use pocketmine\command\CommandSender;
 
 class IpbanlistCommand extends PunishmentListCommand
