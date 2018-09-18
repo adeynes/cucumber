@@ -1,5 +1,5 @@
 # DO NOT EDIT THE FOLLOWING LINE
-version: '2.1'
+version: '2.2'
 
 language: en
 
@@ -35,3 +35,7 @@ log:
       []
     alert:
       []
+
+punishment:
+  list:
+    lines-per-page: 10

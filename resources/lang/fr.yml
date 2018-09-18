@@ -26,7 +26,6 @@ success:
     intro: "&e&lBans:"
     # %player% %reason% %expiration% %moderator%
     list: "&b%player% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
-    entries-per-line: 10
   # %player%
   pardon: "&aVous avez annulé le ban de &b%player%&a!"
   # %ip% %reason% %expiration%
@@ -36,7 +35,6 @@ success:
     intro: "&e&lBans IP:"
     # %ip% %reason% %expiration% %moderator%
     list: "&b%ip% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
-    entries-per-line: 10
   # %ip%
   ippardon: "&aVous avez annulé le ban de l'IP &b%ip%&a!"
   # %ip% %reason% %expiration% (expiration sera toujours 2038-01-18 22:14:07 et ne sert à rien)
@@ -50,7 +48,6 @@ success:
     intro: "&e&lMuets:"
     # %player% %reason% %expiration% %moderator%
     list: "&b%player% &fa été banni du tchat par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
-    entries-per-line: 10
   # %player% %ip%
   ip: "&eL'IP de &b%player% &eest &b%ip%"
   # %status%

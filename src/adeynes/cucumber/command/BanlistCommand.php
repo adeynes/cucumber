@@ -7,10 +7,9 @@ use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\mod\Ban;
 use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
-use adeynes\parsecmd\command\ParsedCommand;
 use pocketmine\command\CommandSender;
 
-class BanlistCommand extends CucumberCommand
+class BanlistCommand extends PunishmentListCommand
 {
 
     public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
@@ -25,21 +24,9 @@ class BanlistCommand extends CucumberCommand
         );
     }
 
-    public function _execute(CommandSender $sender, ParsedCommand $command): bool
+    protected function getSelectQuery(): string
     {
-        $limit = (int) $this->getPlugin()->getMessage('success.banlist.entries-per-line');
-        [$page] = $command->get(['page']);
-        $page = $page ?? 0;
-
-        $this->getPlugin()->getConnector()->executeSelect(
-            Queries::CUCUMBER_GET_PUNISHMENTS_BANS_LIMITED,
-            ['from' => ($page - 1) * $limit, 'limit' => $limit],
-            function (array $rows) use ($sender, $page) {
-                $this->sendBanlist($sender, $rows, $page);
-            }
-        );
-
-        return true;
+        return Queries::CUCUMBER_GET_PUNISHMENTS_BANS_LIMITED;
     }
 
     /**
@@ -53,7 +40,7 @@ class BanlistCommand extends CucumberCommand
         );
     }
 
-    protected function sendBanlist(CommandSender $sender, array $bans, int $page_number) {
+    protected function sendList(CommandSender $sender, array $bans, int $page_number): void {
         $page = trim(
             $this->getPlugin()->formatMessageFromConfig(
                 'success.banlist.intro',
