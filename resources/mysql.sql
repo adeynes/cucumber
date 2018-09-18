@@ -2,7 +2,7 @@
 -- #{cucumber
 -- #  {init
 -- #    {players
-CREATE TABLE IF NOT EXISTS players (
+CREATE TABLE IF NOT EXISTS cucumber_players (
   id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(30) UNIQUE NOT NULL,
   ip VARCHAR(20) NOT NULL,
@@ -12,44 +12,47 @@ CREATE TABLE IF NOT EXISTS players (
 -- #    }
 -- #    {punishments
 -- #      {bans
-CREATE TABLE IF NOT EXISTS bans (
+CREATE TABLE IF NOT EXISTS cucumber_bans (
   id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   player_id INT(7) UNSIGNED UNIQUE NOT NULL,
   reason VARCHAR(500) DEFAULT NULL,
   expiration INT(11) NOT NULL,
   moderator VARCHAR(30) NOT NULL,
-  FOREIGN KEY (player_id) REFERENCES players(id),
-  FOREIGN KEY (moderator) REFERENCES players(name)
+  time_created INT(11) NOT NULL,
+  FOREIGN KEY (player_id) REFERENCES cucumber_players(id),
+  FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
 );
 -- #      }
 -- #      {ip-bans
-CREATE TABLE IF NOT EXISTS ip_bans (
+CREATE TABLE IF NOT EXISTS cucumber_ip_bans (
   id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   ip VARCHAR(20) UNIQUE NOT NULL,
   reason VARCHAR(500) DEFAULT NULL,
   expiration INT(11) NOT NULL,
   moderator VARCHAR(30) NOT NULL,
-  FOREIGN KEY (moderator) REFERENCES players(name)
+  time_created INT(11) NOT NULL,
+  FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
 );
 -- #      }
 -- #      {ubans
-CREATE TABLE IF NOT EXISTS ubans (
+CREATE TABLE IF NOT EXISTS cucumber_ubans (
   id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   ip VARCHAR(20) UNIQUE NOT NULL,
   reason VARCHAR(500) DEFAULT NULL,
   moderator VARCHAR(30) NOT NULL,
-  FOREIGN KEY (moderator) REFERENCES players(name)
+  FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
 );
 -- #      }
 -- #      {mutes
-CREATE TABLE IF NOT EXISTS mutes (
+CREATE TABLE IF NOT EXISTS cucumber_mutes (
   id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   player_id INT(7) UNSIGNED UNIQUE NOT NULL,
   reason VARCHAR(500) DEFAULT NULL,
   expiration INT(11) NOT NULL,
   moderator VARCHAR(30) NOT NULL,
-  FOREIGN KEY (player_id) REFERENCES players(id),
-  FOREIGN KEY (moderator) REFERENCES players(name)
+  time_created INT(11) NOT NULL,
+  FOREIGN KEY (player_id) REFERENCES cucumber_players(id),
+  FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
 );
 -- #      }
 -- #    }
@@ -58,7 +61,7 @@ CREATE TABLE IF NOT EXISTS mutes (
 -- #    {player
 -- #      :name string
 -- #      :ip string
-INSERT INTO players (name, ip, first_join, last_join)
+INSERT INTO cucumber_players (name, ip, first_join, last_join)
 VALUES (:name, :ip, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
 ON DUPLICATE KEY UPDATE ip = :ip, last_join = UNIX_TIMESTAMP();
 -- #    }
@@ -67,80 +70,80 @@ ON DUPLICATE KEY UPDATE ip = :ip, last_join = UNIX_TIMESTAMP();
 -- #    {player
 -- #      {by-name
 -- #        :name string
-SELECT * FROM players WHERE name = :name;
+SELECT * FROM cucumber_players WHERE name = :name;
 -- #      }
 -- #    }
 -- #    {punishments
 -- #      {bans
 -- #        {all
-SELECT bans.*, players.*, players.name AS player_name
-FROM bans
-INNER JOIN players ON bans.player_id = players.id;
+SELECT cucumber_bans.*, cucumber_players.*, cucumber_players.name AS player_name
+FROM cucumber_bans
+INNER JOIN cucumber_players ON cucumber_bans.player_id = cucumber_players.id;
 -- #        }
 -- #        {current
-SELECT bans.*, players.*, players.name AS player_name
-FROM bans
-INNER JOIN players ON bans.player_id = players.id
-WHERE bans.expiration > UNIX_TIMESTAMP();
+SELECT cucumber_bans.*, cucumber_players.*, cucumber_players.name AS player_name
+FROM cucumber_bans
+INNER JOIN cucumber_players ON cucumber_bans.player_id = cucumber_players.id
+WHERE cucumber_bans.expiration > UNIX_TIMESTAMP();
 -- #        }
 -- #        {limited
 -- #          :from int
 -- #          :limit int
-SELECT bans.*, players.*, players.name AS player_name
-FROM bans
-INNER JOIN players ON bans.player_id = players.id
-ORDER BY bans.expiration DESC
+SELECT cucumber_bans.*, cucumber_players.*, cucumber_players.name AS player_name
+FROM cucumber_bans
+INNER JOIN cucumber_players ON cucumber_bans.player_id = cucumber_players.id
+ORDER BY cucumber_bans.expiration DESC
 LIMIT :from, :limit;
 -- #        }
 -- #        {count
-SELECT COUNT(*) AS count FROM bans;
+SELECT COUNT(*) AS count FROM cucumber_bans;
 -- #        }
 -- #      }
 -- #      {ip-bans
 -- #        {all
-SELECT * FROM ip_bans;
+SELECT * FROM cucumber_ip_bans;
 -- #        }
 -- #        {current
-SELECT * FROM ip_bans
+SELECT * FROM cucumber_ip_bans
 WHERE expiration > UNIX_TIMESTAMP();
 -- #        }
 -- #        {limited
 -- #          :from int
 -- #          :limit int
-SELECT * FROM ip_bans
+SELECT * FROM cucumber_ip_bans
 ORDER BY expiration DESC
 LIMIT :from, :limit;
 -- #        }
 -- #        {count
-SELECT COUNT(*) AS count FROM ip_bans;
+SELECT COUNT(*) AS count FROM cucumber_ip_bans;
 -- #        }
 -- #      }
 -- #      {ubans
-SELECT * FROM ubans;
+SELECT * FROM cucumber_ubans;
 -- #      }
 -- #      {mutes
 -- #        {all
-SELECT mutes.*, players.*, players.name AS player_name
-FROM mutes
-INNER JOIN players ON mutes.player_id = players.id;
+SELECT cucumber_mutes.*, cucumber_players.*, cucumber_players.name AS player_name
+FROM cucumber_mutes
+INNER JOIN cucumber_players ON cucumber_mutes.player_id = cucumber_players.id;
 -- #        }
 -- #        {current
-SELECT mutes.*, players.*, players.name AS player_name
-FROM mutes
-INNER JOIN players ON mutes.player_id = players.id
-WHERE mutes.expiration > UNIX_TIMESTAMP();
+SELECT cucumber_mutes.*, cucumber_players.*, cucumber_players.name AS player_name
+FROM cucumber_mutes
+INNER JOIN cucumber_players ON cucumber_mutes.player_id = cucumber_players.id
+WHERE cucumber_mutes.expiration > UNIX_TIMESTAMP();
 -- #        }
 -- #        {limited
 -- #          :from int
 -- #          :limit int
-SELECT mutes.*, players.*, players.name AS player_name
-FROM mutes
-INNER JOIN players ON mutes.player_id = players.id
-ORDER BY mutes.expiration DESC
+SELECT cucumber_mutes.*, cucumber_players.*, cucumber_players.name AS player_name
+FROM cucumber_mutes
+INNER JOIN cucumber_players ON cucumber_mutes.player_id = cucumber_players.id
+ORDER BY cucumber_mutes.expiration DESC
 LIMIT :from, :limit;
 -- #        }
 -- #        {count
-SELECT COUNT(*) AS count FROM mutes;
+SELECT COUNT(*) AS count FROM cucumber_mutes;
 -- #        }
 -- #      }
 -- #    }
@@ -151,15 +154,17 @@ SELECT COUNT(*) AS count FROM mutes;
 -- #      :reason string
 -- #      :expiration int
 -- #      :moderator string
-REPLACE INTO bans (player_id, reason, expiration, moderator)
-SELECT id, :reason, :expiration, :moderator FROM players WHERE name = :player;
+REPLACE INTO cucumber_bans (player_id, reason, expiration, moderator, time_created)
+  SELECT id, :reason, :expiration, :moderator, UNIX_TIMESTAMP()
+  FROM cucumber_players
+  WHERE name = :player;
 -- #    }
 -- #    {unban
 -- #      :player string
-DELETE FROM bans
+DELETE FROM cucumber_bans
 WHERE player_id IN (
   SELECT * FROM (
-    SELECT id FROM players WHERE name = :player
+    SELECT id FROM cucumber_players WHERE name = :player
   ) AS a
 );
 -- #    }
@@ -168,18 +173,18 @@ WHERE player_id IN (
 -- #      :reason string
 -- #      :expiration int
 -- #      :moderator string
-REPLACE INTO ip_bans (ip, reason, expiration, moderator)
-VALUES (:ip, :reason, :expiration, :moderator);
+REPLACE INTO cucumber_ip_bans (ip, reason, expiration, moderator, time_created)
+VALUES (:ip, :reason, :expiration, :moderator, UNIX_TIMESTAMP());
 -- #    }
 -- #    {ip-unban
 -- #      :ip string
-DELETE FROM ip_bans WHERE ip = :ip;
+DELETE FROM cucumber_ip_bans WHERE ip = :ip;
 -- #    }
 -- #    {uban
 -- #      :ip string
 -- #      :reason string
 -- #      :moderator string
-REPLACE INTO ubans (ip, reason, moderator)
+REPLACE INTO cucumber_ubans (ip, reason, moderator)
 VALUES (:ip, :reason, :moderator);
 -- #    }
 -- #    {mute
@@ -187,15 +192,17 @@ VALUES (:ip, :reason, :moderator);
 -- #      :reason string
 -- #      :expiration int
 -- #      :moderator string
-REPLACE INTO mutes (player_id, reason, expiration, moderator)
-SELECT id, :reason, :expiration, :moderator FROM players WHERE name = :player;
+REPLACE INTO cucumber_mutes (player_id, reason, expiration, moderator, time_created)
+  SELECT id, :reason, :expiration, :moderator, UNIX_TIMESTAMP()
+  FROM cucumber_players
+  WHERE name = :player;
 -- #    }
 -- #    {unmute
 -- #      :player string
-DELETE FROM mutes
+DELETE FROM cucumber_mutes
 WHERE player_id IN (
   SELECT * FROM (
-    SELECT id FROM players WHERE name = :player
+    SELECT id FROM cucumber_players WHERE name = :player
   ) AS a
 );
 -- #    }
