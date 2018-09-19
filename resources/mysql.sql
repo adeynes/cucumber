@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS cucumber_ubans (
   ip VARCHAR(20) UNIQUE NOT NULL,
   reason VARCHAR(500) DEFAULT NULL,
   moderator VARCHAR(30) NOT NULL,
+  time_created INT(11) NOT NULL,
   FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
 );
 -- #      }
