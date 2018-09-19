@@ -1,12 +1,16 @@
 # DO NOT EDIT THE FOLLOWING LINE
 version: '2.2'
 
+# DO NOT EDIT THE FOLLOWING LINE. THE PLUGIN WILL NOT WORK IF YOU MANUALLY EDIT IT
+migrated: false # DO NOT EDIT THIS LINE MANUALLY
+# DO NOT EDIT THE ABOVE LINE MANUALLY
+
+# en fr
 language: en
 
 database:
   type: mysql # only mysql is supported as of now
 
-  # Only edit these settings if you selected mysql for type
   mysql:
     host: 127.0.0.1
     username: cucumber
@@ -18,8 +22,7 @@ database:
   worker-limit: 2
 
 log:
-  # Where log files will be located;
-  # this directory will be inside the resources directory
+  # Where log files will be located; relative to the plugin's data folder
   path: log/
   traffic: true # log join/quit events
   chat: true # log all messages sent to chat

@@ -106,7 +106,7 @@ final class Cucumber extends PluginBase implements Plugin
     private function initDatabase(): void
     {
         $this->migration_manager = new MigrationManager($this);
-        $this->getMigrationManager()->migrate();
+        $this->getMigrationManager()->tryMigration();
 
         $this->connector = $connector = libasynql::create($this, $this->getConfig()->get('database'),
             ['mysql' => 'mysql.sql']);
