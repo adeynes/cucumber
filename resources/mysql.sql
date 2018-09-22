@@ -99,6 +99,13 @@ LIMIT :from, :limit;
 -- #        {count
 SELECT COUNT(*) AS count FROM cucumber_bans;
 -- #        }
+-- #        {by-player
+-- #          :player string
+SELECT cucumber_bans.*, cucumber_players.*, cucumber_players.name AS player_name
+FROM cucumber_bans
+INNER JOIN cucumber_players ON cucumber_bans.player_id = cucumber_players.id
+WHERE cucumber_players.name = :player;
+-- #        }
 -- #      }
 -- #      {ip-bans
 -- #        {all
@@ -117,6 +124,11 @@ LIMIT :from, :limit;
 -- #        }
 -- #        {count
 SELECT COUNT(*) AS count FROM cucumber_ip_bans;
+-- #        }
+-- #        {by-ip
+-- #          :ip string
+SELECT * FROM cucumber_ip_bans
+WHERE ip = :ip;
 -- #        }
 -- #      }
 -- #      {ubans
@@ -145,6 +157,13 @@ LIMIT :from, :limit;
 -- #        }
 -- #        {count
 SELECT COUNT(*) AS count FROM cucumber_mutes;
+-- #        }
+-- #        {by-player
+-- #          :player string
+SELECT cucumber_mutes.*, cucumber_players.*, cucumber_players.name AS player_name
+FROM cucumber_mutes
+INNER JOIN cucumber_players ON cucumber_mutes.player_id = cucumber_players.id
+WHERE cucumber_players.name = :player;
 -- #        }
 -- #      }
 -- #    }

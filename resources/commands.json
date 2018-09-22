@@ -284,6 +284,12 @@
       "blueprint": "blank",
       "class": "\\adeynes\\cucumber\\command\\VanishCommand",
       "usage": "/vanish"
+    },
+
+    "history": {
+      "blueprint": "one-player-argument",
+      "class": "\\adeynes\\cucumber\\command\\HistoryCommand",
+      "usage": "/history <player>"
     }
   }
 }

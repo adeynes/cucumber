@@ -85,6 +85,10 @@ commands:
     usage: "/vanish"
     permission: cucumber.command.vanish
 
+  history:
+    description: "See a player's punishment history"
+    permission: cucumber.command.history
+
 permissions:
   cucumber:
     default: op
@@ -149,4 +153,8 @@ permissions:
 
       cucumber.command.vanish:
         description: "Allows for the use of /vanish"
+        default: op
+
+      cucumber.command.history:
+        description: "Allows for the user of /history"
         default: op
