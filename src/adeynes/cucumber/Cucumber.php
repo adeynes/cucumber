@@ -249,6 +249,7 @@ final class Cucumber extends PluginBase implements Plugin
      */
     public function log(string $message, string $severity = 'info'): void
     {
+        // TODO: use Logger::log()
         $this->getServer()->getLogger()->{$severity}($message);
     }
 

@@ -17,6 +17,7 @@ final class MigrationManager
     public function __construct(Cucumber $plugin)
     {
         $this->plugin = $plugin;
+        $this->setMigrated($this->getPlugin()->getConfig()->get('migrated'));
     }
 
     public function getPlugin(): Cucumber
@@ -32,76 +33,20 @@ final class MigrationManager
     private function setMigrated(bool $is_migrated): void
     {
         $this->is_migrated = $is_migrated;
+        $this->getPlugin()->getConfig()->set('migrated', true);
+        $this->getPlugin()->getConfig()->save();
     }
 
     public function tryMigration(): void
     {
-        if ($this->getPlugin()->getConfig()->get('migrated')) {
-            $this->setMigrated(true);
-            return;
-        }
+        if ($this->isMigrated()) return;
 
-        // Check table integrity
-        $tables = [
-            'cucumber_players' => [
-                'id', 'name', 'ip', 'first_join', 'last_join'
-            ],
-            'cucumber_bans' => [
-                'id', 'player_id', 'reason', 'expiration', 'moderator', 'time_created'
-            ],
-            'cucumber_ip_bans' => [
-                'id', 'ip', 'reason', 'expiration', 'moderator', 'time_created'
-            ],
-            'cucumber_ubans' => [
-                'id', 'ip', 'reason', 'moderator', 'time_created'
-            ],
-            'cucumber_mutes' => [
-                'id', 'player_id', 'reason', 'expiration', 'moderator', 'time_created'
-            ]
-        ];
-
-        $check_integrity = function (array $rows) use ($tables) {
-            $db_tables = [];
-            foreach ($rows as $row) {
-                $db_tables[] = reset($row);
-            }
-
-            foreach ($tables as $table => $columns) {
-                if (!isset($db_tables[$table])) return false;
-
-                $valid = true;
-                $this->getPlugin()->getConnector()->executeSelect(
-                    Queries::CUCUMBER_MIGRATE_GET_COLUMNS_FROM_TABLE,
-                    ['table' => $table],
-                    function (array $rows) use ($columns, &$valid) {
-                        $db_rows = [];
-                        foreach ($rows as $row) {
-                            $db_rows[] = $row['Field'];
-                        }
-
-                        foreach ($columns as $column) {
-                            $valid &= isset($db_rows[$column]);
-                        }
-                    }
-                );
-                $this->getPlugin()->getConnector()->waitAll(); // give the async fetch time to update $valid
-
-                if (!$valid) return $valid;
-            }
-
-            return true;
-        };
-
-        $this->getPlugin()->getConnector()->executeSelect(
-            Queries::CUCUMBER_MIGRATE_GET_TABLES,
-            [],
-            function (array $rows) use ($check_integrity) {
-                if ($check_integrity($rows)) return;
-                $this->migrate();
-            }
+        $this->getPlugin()->log(
+            'cucumber\'s database has not been upgraded to support 2.0 on this system. Proceeding with the migration...',
+            'notice'
         );
 
-        $this->getPlugin()->getConnector()->waitAll();
+        $this->migrate();
     }
 
     private function migrate(): void {
@@ -129,12 +74,15 @@ final class MigrationManager
 
         $connector = $this->getPlugin()->getConnector();
 
-        foreach ($queries as $group) {
-            foreach ($group as $query) {
+        foreach ($queries as $group => $group_queries) {
+            $this->getPlugin()->log("Proceeding with $group migration...", 'notice');
+            foreach ($group_queries as $query) {
                 $connector->executeGeneric($query);
+                $connector->waitAll();
             }
-            $connector->waitAll();
         }
+
+        $this->setMigrated(true);
     }
 
 }
