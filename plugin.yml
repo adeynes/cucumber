@@ -87,6 +87,7 @@ commands:
 
   history:
     description: "See a player's punishment history"
+    usage: "/history <player>"
     permission: cucumber.command.history
 
 permissions:
