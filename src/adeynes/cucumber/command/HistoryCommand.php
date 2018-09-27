@@ -64,11 +64,7 @@ class HistoryCommand extends CucumberCommand
             );
         };
 
-        $this->getPlugin()->getConnector()->executeSelect(
-            Queries::CUCUMBER_GET_PLAYER_BY_NAME,
-            ['name' => $player],
-            $processAndSendHistory
-        );
+        $this->doIfTargetExists($processAndSendHistory, $sender, $player);
 
         return true;
     }
