@@ -35,12 +35,6 @@ final class PunishmentManager
         $this->initMessages();
         $this->load();
     }
-
-    public function close(): void
-    {
-        //$this->save();
-        //$this->getPlugin()->getConnector()->waitAll(); // don't close until we're done saving
-    }
     
     public function getPlugin(): Cucumber
     {

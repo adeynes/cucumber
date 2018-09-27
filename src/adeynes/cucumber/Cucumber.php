@@ -71,9 +71,7 @@ final class Cucumber extends PluginBase
 
     public function onDisable(): void
     {
-        if ($this->punishment_manager) $this->getPunishmentManager()->close();
-
-        if ($this->connector) $this->getConnector()->close(); // last
+        if ($this->connector) $this->getConnector()->close();
     }
 
     private function initConfigs(): void
@@ -106,8 +104,11 @@ final class Cucumber extends PluginBase
 
     private function initDatabase(): void
     {
-        $this->connector = $connector = libasynql::create($this, $this->getConfig()->get('database'),
-            ['mysql' => 'mysql.sql']);
+        $this->connector = $connector = libasynql::create(
+            $this,
+            $this->getConfig()->get('database'),
+            ['mysql' => 'mysql.sql']
+        );
 
         $this->migration_manager = new MigrationManager($this);
         $this->getMigrationManager()->tryMigration();
@@ -118,8 +119,12 @@ final class Cucumber extends PluginBase
 
         $connector->executeGeneric(Queries::CUCUMBER_ADD_PLAYER, ['name' => 'CONSOLE', 'ip' => '127.0.0.1']);
 
-        $create_queries = [Queries::CUCUMBER_INIT_PUNISHMENTS_BANS, Queries::CUCUMBER_INIT_PUNISHMENTS_IP_BANS,
-            Queries::CUCUMBER_INIT_PUNISHMENTS_UBANS, Queries::CUCUMBER_INIT_PUNISHMENTS_MUTES];
+        $create_queries = [
+            Queries::CUCUMBER_INIT_PUNISHMENTS_BANS,
+            Queries::CUCUMBER_INIT_PUNISHMENTS_IP_BANS,
+            Queries::CUCUMBER_INIT_PUNISHMENTS_UBANS,
+            Queries::CUCUMBER_INIT_PUNISHMENTS_MUTES
+        ];
         foreach ($create_queries as $query) $connector->executeGeneric($query);
 
         $connector->waitAll();
@@ -133,10 +138,8 @@ final class Cucumber extends PluginBase
     private function initLog(): void
     {
         $this->log_manager = new LogManager($this);
-        // Loggers are defined in the config as
-        // [severity => [fqn, [constructor args]]]
-        // Cucumber instance is always the first arg,
-        // user-supplied ones are passed starting with the second arg
+        // Loggers are defined in the config as [severity => [fqn, [constructor args]]]
+        // LogManager instance is always the first arg, user-supplied ones are passed starting with the second arg
         foreach ($this->getConfig()->getNested('log.loggers') as $severity => $loggers) {
             try {
                 $severity = LogSeverity::fromString($severity);
@@ -273,7 +276,7 @@ final class Cucumber extends PluginBase
     public function log(string $message, string $severity = 'info'): void
     {
         // TODO: use Logger::log()
-        $this->getServer()->getLogger()->{$severity}($message);
+        $this->getServer()->getLogger()->log($severity, $message);
     }
 
     /**
