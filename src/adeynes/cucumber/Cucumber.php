@@ -105,11 +105,11 @@ final class Cucumber extends PluginBase implements Plugin
 
     private function initDatabase(): void
     {
-        $this->migration_manager = new MigrationManager($this);
-        $this->getMigrationManager()->tryMigration();
-
         $this->connector = $connector = libasynql::create($this, $this->getConfig()->get('database'),
             ['mysql' => 'mysql.sql']);
+
+        $this->migration_manager = new MigrationManager($this);
+        $this->getMigrationManager()->tryMigration();
 
         // other tables have a foreign key constraint on players so it must be first
         $connector->executeGeneric(Queries::CUCUMBER_INIT_PLAYERS);
