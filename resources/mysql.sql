@@ -93,7 +93,7 @@ WHERE cucumber_bans.expiration > UNIX_TIMESTAMP();
 SELECT cucumber_bans.*, cucumber_players.*, cucumber_players.name AS player_name
 FROM cucumber_bans
 INNER JOIN cucumber_players ON cucumber_bans.player_id = cucumber_players.id
-ORDER BY cucumber_bans.expiration DESC
+ORDER BY cucumber_bans.time_created DESC
 LIMIT :from, :limit;
 -- #        }
 -- #        {count
@@ -119,7 +119,7 @@ WHERE expiration > UNIX_TIMESTAMP();
 -- #          :from int
 -- #          :limit int
 SELECT * FROM cucumber_ip_bans
-ORDER BY expiration DESC
+ORDER BY time_created DESC
 LIMIT :from, :limit;
 -- #        }
 -- #        {count
@@ -152,7 +152,7 @@ WHERE cucumber_mutes.expiration > UNIX_TIMESTAMP();
 SELECT cucumber_mutes.*, cucumber_players.*, cucumber_players.name AS player_name
 FROM cucumber_mutes
 INNER JOIN cucumber_players ON cucumber_mutes.player_id = cucumber_players.id
-ORDER BY cucumber_mutes.expiration DESC
+ORDER BY cucumber_mutes.time_created DESC
 LIMIT :from, :limit;
 -- #        }
 -- #        {count

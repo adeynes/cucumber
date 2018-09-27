@@ -17,11 +17,14 @@ abstract class SimplePunishment implements Punishment, Expirable
     /** @var string */
     protected $moderator;
 
-    public function __construct(string $reason, int $expiration, string $moderator)
+    protected $time_created;
+
+    public function __construct(string $reason, int $expiration, string $moderator, int $time_created)
     {
         $this->reason = $reason;
         $this->expiration = $expiration;
         $this->moderator = $moderator;
+        $this->time_created = $time_created;
     }
 
     abstract public static function from(array $row);
@@ -46,6 +49,16 @@ abstract class SimplePunishment implements Punishment, Expirable
         return $this->moderator;
     }
 
+    public function getTimeOfCreation(): int
+    {
+        return $this->time_created;
+    }
+
+    public function getTimeOfCreationFormatted(): string
+    {
+        return date(Cucumber::getInstance()->getMessage('time-format'), $this->getTimeOfCreation());
+    }
+
     public function isExpired(): bool
     {
         return time() > $this->getExpiration();
@@ -56,7 +69,8 @@ abstract class SimplePunishment implements Punishment, Expirable
         return [
             'reason' => $this->getReason(),
             'expiration' => $this->getExpiration(),
-            'moderator' => $this->getModerator()
+            'moderator' => $this->getModerator(),
+            'time_created' => $this->getTimeOfCreation()
         ];
     }
 
@@ -65,7 +79,8 @@ abstract class SimplePunishment implements Punishment, Expirable
         return [
             'reason' => $this->getReason(),
             'expiration' => $this->getExpirationFormatted(),
-            'moderator' => $this->getModerator()
+            'moderator' => $this->getModerator(),
+            'time_created' => $this->getTimeOfCreationFormatted()
         ];
     }
 

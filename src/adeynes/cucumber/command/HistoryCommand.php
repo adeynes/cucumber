@@ -81,7 +81,7 @@ class HistoryCommand extends CucumberCommand
         usort(
             $history,
             function (SimplePunishment $a, SimplePunishment $b) {
-                return ($a->getExpiration() <=> $b->getExpiration()) * -1; // desc order
+                return ($a->getTimeOfCreation() <=> $b->getTimeOfCreation()) * -1; // desc order
             }
         );
 
