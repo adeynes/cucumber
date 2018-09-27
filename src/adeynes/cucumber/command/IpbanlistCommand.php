@@ -35,7 +35,7 @@ class IpbanlistCommand extends PunishmentListCommand
      */
     protected function makeIpBanInfoLine(array $ip_ban_row): string {
         return $this->getPlugin()->formatMessageFromConfig(
-            'success.mutelist.list',
+            'success.ipbanlist.list',
             IpBan::from($ip_ban_row)->getDataFormatted()
         );
     }

@@ -11,7 +11,7 @@ abstract class PunishmentListCommand extends CucumberCommand
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        $page = (int) ($command->get(['page'])[0] ?? 0);
+        $page = (int) ($command->get(['page'])[0] ?? 1);
         $limit = $this->getPlugin()->getConfig()->getNested('punishment.list.lines-per-page');
 
         $this->getPlugin()->getConnector()->executeSelect(
