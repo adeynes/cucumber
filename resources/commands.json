@@ -16,6 +16,17 @@
       "flags": {}
     },
 
+    "paginated": {
+      "arguments": {
+        "page": {
+          "length": 1,
+          "display": "Page",
+          "optional": true
+        }
+      },
+      "flags": {}
+    },
+
     "player-punish": {
       "arguments": {
         "player": {
@@ -184,9 +195,9 @@
     },
 
     "banlist": {
-      "blueprint": "blank",
+      "blueprint": "paginated",
       "class": "\\adeynes\\cucumber\\command\\BanlistCommand",
-      "usage": "/banlist"
+      "usage": "/banlist [page]"
     },
 
     "pardon": {
@@ -203,9 +214,9 @@
     },
 
     "ipbanlist": {
-      "blueprint": "blank",
+      "blueprint": "paginated",
       "class": "\\adeynes\\cucumber\\command\\IpbanlistCommand",
-      "usage": "/ipbanlist"
+      "usage": "/ipbanlist [page]"
     },
 
     "ippardon": {
@@ -252,9 +263,9 @@
     },
 
     "mutelist": {
-      "blueprint": "blank",
+      "blueprint": "paginated",
       "class": "\\adeynes\\cucumber\\command\\MutelistCommand",
-      "usage": "/mutelist"
+      "usage": "/mutelist [page]"
     },
 
     "unmute": {
@@ -273,6 +284,12 @@
       "blueprint": "blank",
       "class": "\\adeynes\\cucumber\\command\\VanishCommand",
       "usage": "/vanish"
+    },
+
+    "history": {
+      "blueprint": "one-player-argument",
+      "class": "\\adeynes\\cucumber\\command\\HistoryCommand",
+      "usage": "/history <player>"
     }
   }
 }

@@ -9,15 +9,15 @@ abstract class IpPunishment extends SimplePunishment
     /** @var string */
     protected $ip;
 
-    public function __construct(string $ip, string $reason, int $expiration, string $moderator)
+    public function __construct(string $ip, string $reason, int $expiration, string $moderator, int $time_created)
     {
         $this->ip = $ip;
-        parent::__construct($reason, $expiration, $moderator);
+        parent::__construct($reason, $expiration, $moderator, $time_created);
     }
 
     public static function from(array $row): self
     {
-        return new static($row['ip'], $row['reason'], $row['expiration'], $row['moderator']);
+        return new static($row['ip'], $row['reason'], $row['expiration'], $row['moderator'], $row['time_created']);
     }
 
     public function getIp(): string

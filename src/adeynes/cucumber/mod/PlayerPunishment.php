@@ -9,15 +9,15 @@ abstract class PlayerPunishment extends SimplePunishment
     /** @var string */
     protected $player;
 
-    public function __construct(string $player, string $reason, int $expiration, string $moderator)
+    public function __construct(string $player, string $reason, int $expiration, string $moderator, int $time_created)
     {
         $this->player = $player;
-        parent::__construct($reason, $expiration, $moderator);
+        parent::__construct($reason, $expiration, $moderator, $time_created);
     }
 
     public static function from(array $row): self
     {
-        return new static($row['name'], $row['reason'], $row['expiration'], $row['moderator']);
+        return new static($row['player_name'], $row['reason'], $row['expiration'], $row['moderator'], $row['time_created']);
     }
 
     public function getPlayer(): string
@@ -27,12 +27,12 @@ abstract class PlayerPunishment extends SimplePunishment
 
     public function getData(): array
     {
-        return parent::getData() + ['name' => $this->getPlayer()];
+        return parent::getData() + ['player' => $this->getPlayer()];
     }
 
     public function getDataFormatted(): array
     {
-        return parent::getDataFormatted() + ['name' => $this->getPlayer()];
+        return parent::getDataFormatted() + ['player' => $this->getPlayer()];
     }
 
 }

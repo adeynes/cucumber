@@ -22,7 +22,7 @@ final class Cucumber extends PluginBase
 
     private const CONFIG_VERSION = '2.2';
 
-    private const MESSAGES_VERSION = '2.0';
+    private const MESSAGES_VERSION = '2.2';
 
     private const SUPPORTED_LANGUAGES = ['en' => 'en', 'fr' => 'fr'];
 

@@ -4,11 +4,12 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
+use adeynes\cucumber\mod\Mute;
+use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
-use adeynes\parsecmd\command\ParsedCommand;
 use pocketmine\command\CommandSender;
 
-class MutelistCommand extends CucumberCommand
+class MutelistCommand extends PunishmentListCommand
 {
 
     public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
@@ -23,19 +24,31 @@ class MutelistCommand extends CucumberCommand
         );
     }
 
-    public function _execute(CommandSender $sender, ParsedCommand $command): bool
+    public function getSelectQuery(): string
     {
-        $message = '';
-        $mutes = $this->getPlugin()->getPunishmentManager()->getMutes();
-        foreach ($mutes as $player => $mute) {
-            $data = $mute->getDataFormatted() + ['player' => $player];
-            $message .= $this->getPlugin()->formatMessageFromConfig('success.mutelist.list', $data);
-        }
+        return Queries::CUCUMBER_GET_PUNISHMENTS_MUTES_LIMITED;
+    }
 
-        $this->getPlugin()->formatAndSend($sender, 'success.mutelist.intro', ['count' => count($mutes)]);
-        $sender->sendMessage(trim($message));
+    /**
+     * @param array $mute_row The database representation of a mute
+     * @return string
+     */
+    protected function makeMuteInfoLine(array $mute_row): string {
+        return $this->getPlugin()->formatMessageFromConfig(
+            'success.mutelist.list',
+            Mute::from($mute_row)->getDataFormatted()
+        );
+    }
 
-        return true;
+    protected function sendList(CommandSender $sender, array $mutes, int $page_number): void {
+        $page = trim(
+            $this->getPlugin()->formatMessageFromConfig(
+                'success.mutelist.intro',
+                ['page' => $page_number]
+            ) . PHP_EOL .
+            implode(PHP_EOL, array_map([$this, 'makeMuteInfoLine'], $mutes))
+        );
+        $sender->sendMessage($page);
     }
 
 }

@@ -4,11 +4,12 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
+use adeynes\cucumber\mod\Ban;
+use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
-use adeynes\parsecmd\command\ParsedCommand;
 use pocketmine\command\CommandSender;
 
-class BanlistCommand extends CucumberCommand
+class BanlistCommand extends PunishmentListCommand
 {
 
     public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
@@ -23,19 +24,30 @@ class BanlistCommand extends CucumberCommand
         );
     }
 
-    public function _execute(CommandSender $sender, ParsedCommand $command): bool
+    protected function getSelectQuery(): string
     {
-        $message = '';
-        $bans = $this->getPlugin()->getPunishmentManager()->getBans();
-        foreach ($bans as $player => $ban) {
-            $data = $ban->getDataFormatted() + ['player' => $player];
-            $message .= $this->getPlugin()->formatMessageFromConfig('success.banlist.list', $data);
-        }
-
-        $this->getPlugin()->formatAndSend($sender, 'success.banlist.intro', ['count' => count($bans)]);
-        $sender->sendMessage(trim($message));
-
-        return true;
+        return Queries::CUCUMBER_GET_PUNISHMENTS_BANS_LIMITED;
     }
 
+    /**
+     * @param array $ban_row The database representation of a ban
+     * @return string
+     */
+    protected function makeBanInfoLine(array $ban_row): string {
+        return $this->getPlugin()->formatMessageFromConfig(
+            'success.banlist.list',
+            Ban::from($ban_row)->getDataFormatted()
+        );
+    }
+
+    protected function sendList(CommandSender $sender, array $bans, int $page_number): void {
+        $page = trim(
+            $this->getPlugin()->formatMessageFromConfig(
+                'success.banlist.intro',
+                ['page' => $page_number]
+            ) . PHP_EOL .
+            implode(PHP_EOL, array_map([$this, 'makeBanInfoLine'], $bans))
+        );
+        $sender->sendMessage($page);
+    }
 }

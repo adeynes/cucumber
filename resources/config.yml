@@ -41,3 +41,7 @@ log:
     chat: log
     chat-attempt: log
     command: log
+
+punishment:
+  list:
+    lines-per-page: 10

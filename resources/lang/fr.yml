@@ -1,5 +1,5 @@
 # NE PAS CHANGER LA LIGNE SUIVANTE
-version: '2.1'
+version: '2.2'
 
 error:
   # %player%
@@ -22,31 +22,31 @@ success:
   # %player% %reason% %expiration%
   ban: "&aVous avez banni &b%player% &ajusqu'au &d%expiration%&a!"
   banlist:
-    # %count%
-    intro: "&e&lBans (&r&b%count%&e&l):"
-    # %player% %reason% %expiration% %moderator%
+    # %page%
+    intro: "&e&lBans:"
+    # %player% %reason% %expiration% %moderator% %time_created%
     list: "&b%player% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
   # %player%
   pardon: "&aVous avez annulé le ban de &b%player%&a!"
   # %ip% %reason% %expiration%
   ipban: "&aVous avez banni l'IP &b%ip% &ajusqu'au &d%expiration%&a!"
   ipbanlist:
-    # %count%
-    intro: "&e&lBans IP (&r&b%count%&e&l):"
-    # %ip% %reason% %expiration% %moderator%
+    # %page%
+    intro: "&e&lBans IP:"
+    # %ip% %reason% %expiration% %moderator% %time_created%
     list: "&b%ip% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
   # %ip%
   ippardon: "&aVous avez annulé le ban de l'IP &b%ip%&a!"
-  # %ip% %reason% %expiration% (expiration sera toujours 2038-01-18 22:14:07 et ne sert à rien)
+  # %ip% %reason% %expiration% (expiration sera toujours 2038-01-18T22:14:07 et ne sert à rien)
   uban: "&aVous avez banni tout joueur qui rejoint le serveur avec l'IP &b%ip%&a!"
   # %player% %reason% %expiration%
   mute: "&aVous avez désactivé le tchat de &b%player% &ajusqu'au &d%expiration%&a!"
   # %player%
   unmute: "&b%player% &apeut à nouveau tchatter!"
   mutelist:
-    # %count%
-    intro: "&e&lMuets (&r&b%count%&e&l):"
-    # %player% %reason% %expiration% %moderator%
+    # %page%
+    intro: "&e&lMuets:"
+    # %player% %reason% %expiration% %moderator% %time_created%
     list: "&b%player% &fa été banni du tchat par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
   # %player% %ip%
   ip: "&eL'IP de &b%player% &eest &b%ip%"
@@ -96,4 +96,4 @@ log:
     command: "%player%: %command%"
 
 # Symboles: https://secure.php.net/manual/fr/function.date.php
-time-format: d-m-Y H:i:s
+time-format: Y-m-d\TH:i:s
