@@ -8,7 +8,6 @@ use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\Queries;
 use pocketmine\Player;
 
-// TODO: Punishment dates
 final class PunishmentManager
 {
 
@@ -274,7 +273,7 @@ final class PunishmentManager
             throw new CucumberException($this->messages['ban']['already-banned'], ['player' => $player]);
         }
 
-        $ban = new Ban($player, $reason, $expiration, $moderator);
+        $ban = new Ban($player, $reason, $expiration, $moderator, time());
         $this->bans[$player] = $ban;
         $this->getPlugin()->getConnector()->executeInsert(Queries::CUCUMBER_PUNISH_BAN, $ban->getData());
 
@@ -328,7 +327,7 @@ final class PunishmentManager
             throw new CucumberException($this->messages['ip-ban']['not-banned'], ['ip' => $ip]);
         }
 
-        $ip_ban = new IpBan($ip, $reason, $expiration, $moderator);
+        $ip_ban = new IpBan($ip, $reason, $expiration, $moderator, time());
         $this->ip_bans[$ip] = $ip_ban;
         $this->getPlugin()->getConnector()->executeInsert(Queries::CUCUMBER_PUNISH_IP_BAN, $ip_ban->getData());
 
@@ -378,7 +377,7 @@ final class PunishmentManager
             throw new CucumberException($this->messages['uban']['already-banned'], ['ip' => $ip]);
         }
 
-        $uban = new UBan($ip, $reason, 0x7FFFFFFF, $moderator);
+        $uban = new UBan($ip, $reason, 0x7FFFFFFF, $moderator, time());
         $data = $uban->getData();
         unset($data['expiration']);
         $this->ubans[$ip] = $uban;
@@ -437,7 +436,7 @@ final class PunishmentManager
             throw new CucumberException($this->messages['mute']['already-muted'], ['player' => $player]);
         }
 
-        $mute = new Mute($player, $reason, $expiration, $moderator);
+        $mute = new Mute($player, $reason, $expiration, $moderator, time());
         $this->mutes[$player] = $mute;
         $this->getPlugin()->getConnector()->executeInsert(Queries::CUCUMBER_PUNISH_MUTE, $mute->getData());
 
