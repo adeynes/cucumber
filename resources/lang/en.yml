@@ -24,7 +24,7 @@ success:
   banlist:
     # %page%
     intro: "&e&lBans:"
-    # %player% %reason% %expiration% %moderator%
+    # %player% %reason% %expiration% %moderator% %time_created%
     list: "&b%player% &fwas banned by &9%moderator% &funtil &d%expiration% &ffor &7%reason%"
   # %player%
   pardon: "&aYou have successfully unbanned &b%player%&a!"
@@ -33,11 +33,11 @@ success:
   ipbanlist:
     # %page%
     intro: "&e&lIP Bans:"
-    # %ip% %reason% %expiration% %moderator%
+    # %ip% %reason% %expiration% %moderator% %time_created%
     list: "&b%ip% &fwas banned by &9%moderator% &funtil &d%expiration% &ffor &7%reason%"
   # %ip%
   ippardon: "&aYou have successfully unbanned IP &b%ip%&a!"
-  # %ip% %reason% %expiration% (expiration will always be 2038-01-18 22:14:07 and is useless)
+  # %ip% %reason% %expiration% (expiration will always be 2038-01-18T22:14:07 and is useless)
   uban: "&aYou have successfully banned any player who joins with IP &b%ip%&a!"
   # %player% %reason% %expiration%
   mute: "&aYou have successully muted &b%player% &auntil &d%expiration%&a!"
@@ -46,7 +46,7 @@ success:
   mutelist:
     # %page%
     intro: "&e&lMutes:"
-    # %player% %reason% %expiration% %moderator%
+    # %player% %reason% %expiration% %moderator% %time_created%
     list: "&b%player% &fwas muted by &9%moderator% &funtil &d%expiration% &ffor &7%reason%"
   # %player% %ip%
   ip: "&b%player%'s &eIP is &b%ip%"

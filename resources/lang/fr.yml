@@ -24,7 +24,7 @@ success:
   banlist:
     # %page%
     intro: "&e&lBans:"
-    # %player% %reason% %expiration% %moderator%
+    # %player% %reason% %expiration% %moderator% %time_created%
     list: "&b%player% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
   # %player%
   pardon: "&aVous avez annulé le ban de &b%player%&a!"
@@ -33,11 +33,11 @@ success:
   ipbanlist:
     # %page%
     intro: "&e&lBans IP:"
-    # %ip% %reason% %expiration% %moderator%
+    # %ip% %reason% %expiration% %moderator% %time_created%
     list: "&b%ip% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
   # %ip%
   ippardon: "&aVous avez annulé le ban de l'IP &b%ip%&a!"
-  # %ip% %reason% %expiration% (expiration sera toujours 2038-01-18 22:14:07 et ne sert à rien)
+  # %ip% %reason% %expiration% (expiration sera toujours 2038-01-18T22:14:07 et ne sert à rien)
   uban: "&aVous avez banni tout joueur qui rejoint le serveur avec l'IP &b%ip%&a!"
   # %player% %reason% %expiration%
   mute: "&aVous avez désactivé le tchat de &b%player% &ajusqu'au &d%expiration%&a!"
@@ -46,7 +46,7 @@ success:
   mutelist:
     # %page%
     intro: "&e&lMuets:"
-    # %player% %reason% %expiration% %moderator%
+    # %player% %reason% %expiration% %moderator% %time_created%
     list: "&b%player% &fa été banni du tchat par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
   # %player% %ip%
   ip: "&eL'IP de &b%player% &eest &b%ip%"
@@ -96,4 +96,4 @@ log:
     command: "%player%: %command%"
 
 # Symboles: https://secure.php.net/manual/fr/function.date.php
-time-format: d-m-Y H:i:s
+time-format: Y-m-d\TH:i:s
