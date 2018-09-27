@@ -58,6 +58,69 @@ CREATE TABLE IF NOT EXISTS cucumber_mutes (
 -- #      }
 -- #    }
 -- #  }
+-- #  {migrate
+-- #    {get
+-- #      {tables
+SHOW TABLES;
+-- #      }
+-- #      {columns-from-table
+-- #        :table string
+SHOW COLUMNS FROM :table;
+-- #      }
+-- #    }
+-- #    {tables
+-- #      {players
+-- #        {rename
+# noinspection SqlResolve
+RENAME TABLE players TO cucumber_players;
+-- #        }
+-- #      }
+-- #      {bans
+-- #        {rename
+# noinspection SqlResolve
+RENAME TABLE bans TO cucumber_bans;
+-- #        }
+-- #        {alter
+# noinspection SqlResolve
+ALTER TABLE cucumber_bans
+  CHANGE COLUMN player player_id INT(7) UNSIGNED NOT NULL,
+  ADD COLUMN time_created INT(11) NOT NULL AFTER moderator;
+-- #        }
+-- #      }
+-- #      {ip-bans
+-- #        {rename
+# noinspection SqlResolve
+RENAME TABLE ip_bans TO cucumber_ip_bans;
+-- #        }
+-- #        {alter
+ALTER TABLE cucumber_ip_bans
+    ADD COLUMN time_created INT(11) NOT NULL AFTER moderator;
+-- #        }
+-- #      }
+-- #      {ubans
+-- #        {rename
+# noinspection SqlResolve
+RENAME TABLE ubans TO cucumber_ubans;
+-- #        }
+-- #        {alter
+ALTER TABLE cucumber_ubans
+    ADD COLUMN time_created INT(11) NOT NULL AFTER moderator;
+-- #        }
+-- #      }
+-- #      {mutes
+-- #        {rename
+# noinspection SqlResolve
+RENAME TABLE mutes TO cucumber_mutes;
+-- #        }
+-- #        {alter
+# noinspection SqlResolve
+ALTER TABLE cucumber_mutes
+  CHANGE COLUMN player player_id INT(7) UNSIGNED NOT NULL,
+  ADD COLUMN time_created INT(11) NOT NULL AFTER moderator;
+-- #        }
+-- #      }
+-- #    }
+-- #  }
 -- #  {add
 -- #    {player
 -- #      :name string
