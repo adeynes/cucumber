@@ -271,7 +271,7 @@ final class PunishmentManager
         }
 
         if ($this->getBan($name) && !$override) {
-            throw new CucumberException($this->messages['ban']['alread-banned'], ['player' => $name]);
+            throw new CucumberException($this->messages['ban']['already-banned'], ['player' => $name]);
         }
 
         $ban = new Ban($name, $reason, $expiration, $moderator);
