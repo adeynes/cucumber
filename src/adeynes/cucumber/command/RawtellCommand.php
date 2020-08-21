@@ -10,7 +10,7 @@ use adeynes\parsecmd\command\blueprint\CommandBlueprint;
 use adeynes\parsecmd\command\ParsedCommand;
 use pocketmine\command\CommandSender;
 
-class RawtellCommand extends CucumberCommand
+class WarnCommand extends CucumberCommand
 {
 
     public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
@@ -18,10 +18,10 @@ class RawtellCommand extends CucumberCommand
         parent::__construct(
             $plugin,
             $blueprint,
-            'rawtell',
-            'cucumber.command.rawtell',
+            'warn',
+            'cucumber.command.warn',
             'Send a raw message to a player',
-            '/rawtell <player> <message> [-nomessage|-nom] [-popup|-p] [-title|-t]'
+            '/warn <player> <reason>'
         );
     }
 
@@ -39,17 +39,9 @@ class RawtellCommand extends CucumberCommand
             $target->sendMessage($message);
         }
 
-        if (!is_null($command->getFlag('popup'))) {
-            $target->sendPopup($message);
-        }
-
-        if (!is_null($command->getFlag('title'))) {
-            $target->addTitle('', $message); // title is too big
-        }
-
         $this->getPlugin()->formatAndSend(
             $sender,
-            'success.rawtell',
+            'success.warn',
             ['player' => $target_name, 'message' => $message]
         );
         return true;
