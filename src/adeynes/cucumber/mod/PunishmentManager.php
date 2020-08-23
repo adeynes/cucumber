@@ -37,9 +37,9 @@ final class PunishmentManager
         return $this->plugin;
     }
 
-    private function getFormattedErrorMessage(string $path, array $data): string
+    private function getRawErrorMessage(string $path): string
     {
-        return $this->getPlugin()->formatMessageFromConfig("error.$path", $data);
+        return $this->getPlugin()->getMessage("error.$path");
     }
 
     private function load(): void
@@ -125,7 +125,7 @@ final class PunishmentManager
         }
 
         if ($this->getBan($player) && !$override) {
-            throw new CucumberException($this->getFormattedErrorMessage('ban.already-banned', ['player' => $player]));
+            throw new CucumberException($this->getRawErrorMessage('ban.already-banned'), ['player' => $player]);
         }
 
         $ban = new Ban($player, $reason, $expiration, $moderator, time());
@@ -142,7 +142,7 @@ final class PunishmentManager
     public function unban(string $player): void
     {
         if (!$this->getBan($player)) {
-            throw new CucumberException($this->getFormattedErrorMessage('ban.not-banned', ['player' => $player]));
+            throw new CucumberException($this->getRawErrorMessage('ban.not-banned'), ['player' => $player]);
         }
 
         unset($this->bans[$player]);
@@ -179,7 +179,7 @@ final class PunishmentManager
         }
 
         if ($this->getIpBan($ip)) {
-            throw new CucumberException($this->getFormattedErrorMessage('ipban.already-banned', ['ip' => $ip]));
+            throw new CucumberException($this->getRawErrorMessage('ipban.already-banned'), ['ip' => $ip]);
         }
 
         $ip_ban = new IpBan($ip, $reason, $expiration, $moderator, time());
@@ -196,7 +196,7 @@ final class PunishmentManager
     public function ipUnban(string $ip): void
     {
         if (!$this->getIpBan($ip)) {
-            throw new CucumberException($this->getFormattedErrorMessage('ipban.not-banned', ['ip' => $ip]));
+            throw new CucumberException($this->getRawErrorMessage('ipban.not-banned'), ['ip' => $ip]);
         }
 
         unset($this->ip_bans[$ip]);
@@ -229,7 +229,7 @@ final class PunishmentManager
         }
 
         if ($this->getUBan($ip)) {
-            throw new CucumberException($this->getFormattedErrorMessage('uban.already-banned', ['ip' => $ip]));
+            throw new CucumberException($this->getRawErrorMessage('uban.already-banned'), ['ip' => $ip]);
         }
 
         $uban = new UBan($ip, $reason, 0x7FFFFFFF, $moderator, time());
@@ -288,7 +288,7 @@ final class PunishmentManager
         }
 
         if ($this->getMute($player)) {
-            throw new CucumberException($this->getFormattedErrorMessage('mute.already-muted', ['player' => $player]));
+            throw new CucumberException($this->getRawErrorMessage('mute.already-muted'), ['player' => $player]);
         }
 
         $mute = new Mute($player, $reason, $expiration, $moderator, time());
@@ -305,7 +305,7 @@ final class PunishmentManager
     public function unmute(string $player): void
     {
         if (!$this->getMute($player)) {
-            throw new CucumberException($this->getFormattedErrorMessage('mute.not-muted', ['player' => $player]));
+            throw new CucumberException($this->getRawErrorMessage('mute.not-muted'), ['player' => $player]);
         }
 
         unset($this->mutes[$player]);

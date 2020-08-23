@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\log;
 
+use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\ds\Enum;
 
@@ -51,7 +52,7 @@ final class LogSeverity extends Enum
             return self::$uppercase_severity();
         } catch (\BadMethodCallException $exception) {
             throw new CucumberException(
-                '&cUnknown log severity &b%severity%&c!',
+                Cucumber::getInstance()->getMessage('error.unknown-log-severity'),
                 ['severity' => $severity]
             );
         }
