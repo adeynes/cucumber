@@ -9,7 +9,7 @@ projects:
       - src: poggit/libasynql/libasynql
         version: ^3.1.1
       - src: adeynes/parsecmd/parsecmd
-        version: ^4.0.0
+        version: ^5.0.0
       - src: adeynes/asyncio/asyncio
         version: ^0.1.0
 ...
