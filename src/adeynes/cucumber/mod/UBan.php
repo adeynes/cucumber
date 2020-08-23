@@ -9,6 +9,11 @@ use poggit\libasynql\DataConnector;
 class UBan extends IpPunishment
 {
 
+    public static function from(array $row): UBan
+    {
+        return new UBan($row['ip'], $row['reason'], $row['moderator'], $row['time_created']);
+    }
+
     public function getFormatData(): array
     {
         return [
