@@ -206,7 +206,7 @@ final class PunishmentManager
         }
 
         if ($this->getIpBan($ip)) {
-            throw new CucumberException($this->messages['ip-ban']['not-banned'], ['ip' => $ip]);
+            throw new CucumberException($this->messages['ip-ban']['already-banned'], ['ip' => $ip]);
         }
 
         $ip_ban = new IpBan($ip, $reason, $expiration, $moderator, time());
