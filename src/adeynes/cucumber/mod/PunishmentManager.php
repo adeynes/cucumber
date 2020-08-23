@@ -223,7 +223,7 @@ final class PunishmentManager
     public function ipUnban(string $ip): void
     {
         if (!$this->getIpBan($ip)) {
-            throw new CucumberException($this->messages['ip-ban']['not-banned']);
+            throw new CucumberException($this->messages['ip-ban']['not-banned'], ['ip' => $ip]);
         }
 
         unset($this->ip_bans[$ip]);
