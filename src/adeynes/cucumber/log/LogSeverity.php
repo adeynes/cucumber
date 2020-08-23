@@ -51,7 +51,7 @@ final class LogSeverity extends Enum
             return self::$uppercase_severity();
         } catch (\BadMethodCallException $exception) {
             throw new CucumberException(
-                'Unknown log severity %severity%!',
+                '&cUnknown log severity &b%severity%&c!',
                 ['severity' => $severity]
             );
         }
