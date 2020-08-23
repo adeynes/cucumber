@@ -14,9 +14,6 @@ final class PunishmentManager
     /** @var Cucumber */
     private $plugin;
 
-    /** @var string[][] */
-    private $messages;
-
     /** @var Ban[] */
     private $bans = [];
 
@@ -32,7 +29,6 @@ final class PunishmentManager
     public function __construct(Cucumber $plugin)
     {
         $this->plugin = $plugin;
-        $this->initMessages();
         $this->load();
     }
     
@@ -41,32 +37,9 @@ final class PunishmentManager
         return $this->plugin;
     }
 
-    private function initMessages(): void
+    private function getFormattedErrorMessage(string $path, array $data): string
     {
-        // TODO: config messages
-        
-        $this->messages = [
-            'ban' => [
-                'already-banned' => '%player% is already banned!',
-                'not-banned' => '%player% is not banned!'
-            ],
-            'ip-ban' => [
-                'already-banned' => 'IP %ip% is already banned!',
-                'not-banned' => 'IP %ip% is not banned!',
-            ],
-            'uban' => [
-                'already-banned' => 'IP %ip% is already banned!'
-            ],
-            'mute' => [
-                'already-muted' => '%player% is already muted!',
-                'not-muted' => '%player% is not muted!'
-            ]
-        ];
-    }
-
-    public function getMessages(): array
-    {
-        return $this->messages;
+        return $this->getPlugin()->formatMessageFromConfig("error.$path", $data);
     }
 
     private function load(): void
@@ -152,7 +125,7 @@ final class PunishmentManager
         }
 
         if ($this->getBan($player) && !$override) {
-            throw new CucumberException($this->messages['ban']['already-banned'], ['player' => $player]);
+            throw new CucumberException($this->getFormattedErrorMessage('ban.already-banned', ['player' => $player]));
         }
 
         $ban = new Ban($player, $reason, $expiration, $moderator, time());
@@ -169,7 +142,7 @@ final class PunishmentManager
     public function unban(string $player): void
     {
         if (!$this->getBan($player)) {
-            throw new CucumberException($this->messages['ban']['not-banned'], ['player' => $player]);
+            throw new CucumberException($this->getFormattedErrorMessage('ban.not-banned', ['player' => $player]));
         }
 
         unset($this->bans[$player]);
@@ -206,7 +179,7 @@ final class PunishmentManager
         }
 
         if ($this->getIpBan($ip)) {
-            throw new CucumberException($this->messages['ip-ban']['already-banned'], ['ip' => $ip]);
+            throw new CucumberException($this->getFormattedErrorMessage('ipban.already-banned', ['ip' => $ip]));
         }
 
         $ip_ban = new IpBan($ip, $reason, $expiration, $moderator, time());
@@ -223,7 +196,7 @@ final class PunishmentManager
     public function ipUnban(string $ip): void
     {
         if (!$this->getIpBan($ip)) {
-            throw new CucumberException($this->messages['ip-ban']['not-banned'], ['ip' => $ip]);
+            throw new CucumberException($this->getFormattedErrorMessage('ipban.not-banned', ['ip' => $ip]));
         }
 
         unset($this->ip_bans[$ip]);
@@ -256,7 +229,7 @@ final class PunishmentManager
         }
 
         if ($this->getUBan($ip)) {
-            throw new CucumberException($this->messages['uban']['already-banned'], ['ip' => $ip]);
+            throw new CucumberException($this->getFormattedErrorMessage('uban.already-banned', ['ip' => $ip]));
         }
 
         $uban = new UBan($ip, $reason, 0x7FFFFFFF, $moderator, time());
@@ -315,7 +288,7 @@ final class PunishmentManager
         }
 
         if ($this->getMute($player)) {
-            throw new CucumberException($this->messages['mute']['already-muted'], ['player' => $player]);
+            throw new CucumberException($this->getFormattedErrorMessage('mute.already-muted', ['player' => $player]));
         }
 
         $mute = new Mute($player, $reason, $expiration, $moderator, time());
@@ -332,7 +305,7 @@ final class PunishmentManager
     public function unmute(string $player): void
     {
         if (!$this->getMute($player)) {
-            throw new CucumberException($this->messages['mute']['not-muted'], ['player' => $player]);
+            throw new CucumberException($this->getFormattedErrorMessage('mute.not-muted', ['player' => $player]));
         }
 
         unset($this->mutes[$player]);

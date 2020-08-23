@@ -11,6 +11,24 @@ error:
   not-ingame: "&cPlease use this command in-game!"
   # %ip%
   player-ip-ambiguity: "&b%ip% &cresembles an IP, but there is also a player by that name! Please set one of &b-player &cor &b-ip &cto resolve this ambiguity"
+  ban:
+    # %player%
+    already-banned: "&b%player% &cis already banned!"
+    # %player%
+    not-banned: "&b%player% &cis not banned!"
+  ipban:
+    # %ip%
+    already-banned: "&cIP &b%ip% &cis already banned!"
+    # %ip%
+    not-banned: "&cIP &b%ip% &cis not banned!"
+  uban:
+    # %ip%
+    already-banned: "&cIP &b%ip% &cis already u-banned!"
+  mute:
+    # %player%
+    already-muted: "&b%player% &cis already muted!"
+    # %player%
+    not-muted: "&b%player% &cis not muted!"
 
 success:
   # %player% %message%
