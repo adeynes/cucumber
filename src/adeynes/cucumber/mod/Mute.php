@@ -16,7 +16,7 @@ class Mute extends PlayerPunishment
         return new Mute($row['name'], $row['reason'], $row['expiration'], $row['moderator'], $row['time_created']);
     }
 
-    public function __construct(string $player, string $reason, int $expiration, string $moderator, int $time_created)
+    public function __construct(string $player, string $reason, ?int $expiration, string $moderator, int $time_created)
     {
         $this->expiration = $expiration;
         parent::__construct($player, $reason, $moderator, $time_created);

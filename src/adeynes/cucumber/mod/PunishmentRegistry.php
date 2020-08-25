@@ -212,7 +212,7 @@ final class PunishmentRegistry
     {
         $uban = $this->getUban($player->getAddress());
         if ($uban) {
-            $ban = new Ban($player->getLowerCaseName(), $uban->getReason(), 0x7FFFFFFF, $uban->getModerator(), $uban->getTimeOfCreation());
+            $ban = new Ban($player->getLowerCaseName(), $uban->getReason(), null, $uban->getModerator(), $uban->getTimeOfCreation());
             $this->addBan($ban, true);
         }
 

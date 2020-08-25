@@ -3,57 +3,57 @@
 -- #  {init
 -- #    {players
 CREATE TABLE IF NOT EXISTS cucumber_players (
-  id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(30) UNIQUE NOT NULL,
-  ip VARCHAR(20) NOT NULL,
-  first_join INT(11) UNSIGNED NOT NULL,
-  last_join INT(11) UNSIGNED NOT NULL
+    id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(30) UNIQUE NOT NULL,
+    ip VARCHAR(20) NOT NULL,
+    first_join INT(11) UNSIGNED NOT NULL,
+    last_join INT(11) UNSIGNED NOT NULL
 );
 -- #    }
 -- #    {punishments
 -- #      {bans
 CREATE TABLE IF NOT EXISTS cucumber_bans (
-  id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  player_id INT(7) UNSIGNED UNIQUE NOT NULL,
-  reason VARCHAR(500) DEFAULT NULL,
-  expiration INT(11) NOT NULL,
-  moderator VARCHAR(30) NOT NULL,
-  time_created INT(11) NOT NULL,
-  FOREIGN KEY (player_id) REFERENCES cucumber_players(id),
-  FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
+    id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    player_id INT(7) UNSIGNED UNIQUE NOT NULL,
+    reason VARCHAR(500) DEFAULT NULL,
+    expiration INT UNSIGNED,
+    moderator VARCHAR(30) NOT NULL,
+    time_created INT UNSIGNED NOT NULL,
+    FOREIGN KEY (player_id) REFERENCES cucumber_players(id),
+    FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
 );
 -- #      }
 -- #      {ip-bans
 CREATE TABLE IF NOT EXISTS cucumber_ip_bans (
-  id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  ip VARCHAR(20) UNIQUE NOT NULL,
-  reason VARCHAR(500) DEFAULT NULL,
-  expiration INT(11) NOT NULL,
-  moderator VARCHAR(30) NOT NULL,
-  time_created INT(11) NOT NULL,
-  FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
+    id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    ip VARCHAR(20) UNIQUE NOT NULL,
+    reason VARCHAR(500) DEFAULT NULL,
+    expiration INT UNSIGNED,
+    moderator VARCHAR(30) NOT NULL,
+    time_created INT UNSIGNED NOT NULL,
+    FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
 );
 -- #      }
 -- #      {ubans
 CREATE TABLE IF NOT EXISTS cucumber_ubans (
-  id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  ip VARCHAR(20) UNIQUE NOT NULL,
-  reason VARCHAR(500) DEFAULT NULL,
-  moderator VARCHAR(30) NOT NULL,
-  time_created INT(11) NOT NULL,
-  FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
+    id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    ip VARCHAR(20) UNIQUE NOT NULL,
+    reason VARCHAR(500) DEFAULT NULL,
+    moderator VARCHAR(30) NOT NULL,
+    time_created INT UNSIGNED NOT NULL,
+    FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
 );
 -- #      }
 -- #      {mutes
 CREATE TABLE IF NOT EXISTS cucumber_mutes (
-  id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  player_id INT(7) UNSIGNED UNIQUE NOT NULL,
-  reason VARCHAR(500) DEFAULT NULL,
-  expiration INT(11) NOT NULL,
-  moderator VARCHAR(30) NOT NULL,
-  time_created INT(11) NOT NULL,
-  FOREIGN KEY (player_id) REFERENCES cucumber_players(id),
-  FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
+    id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    player_id INT(7) UNSIGNED UNIQUE NOT NULL,
+    reason VARCHAR(500) DEFAULT NULL,
+    expiration INT UNSIGNED,
+    moderator VARCHAR(30) NOT NULL,
+    time_created INT UNSIGNED NOT NULL,
+    FOREIGN KEY (player_id) REFERENCES cucumber_players(id),
+    FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
 );
 -- #      }
 -- #    }
@@ -83,8 +83,9 @@ RENAME TABLE bans TO cucumber_bans;
 -- #        {alter
 # noinspection SqlResolve
 ALTER TABLE cucumber_bans
-  CHANGE COLUMN player player_id INT(7) UNSIGNED NOT NULL,
-  ADD COLUMN time_created INT(11) NOT NULL AFTER moderator;
+    CHANGE COLUMN player player_id INT(7) UNSIGNED NOT NULL,
+    MODIFY COLUMN expiration INT UNSIGNED,
+    ADD COLUMN time_created INT UNSIGNED NOT NULL AFTER moderator;
 -- #        }
 -- #      }
 -- #      {ip-bans
@@ -94,7 +95,8 @@ RENAME TABLE ip_bans TO cucumber_ip_bans;
 -- #        }
 -- #        {alter
 ALTER TABLE cucumber_ip_bans
-    ADD COLUMN time_created INT(11) NOT NULL AFTER moderator;
+    MODIFY COLUMN expiration INT UNSIGNED,
+    ADD COLUMN time_created INT UNSIGNED NOT NULL AFTER moderator;
 -- #        }
 -- #      }
 -- #      {ubans
@@ -104,7 +106,7 @@ RENAME TABLE ubans TO cucumber_ubans;
 -- #        }
 -- #        {alter
 ALTER TABLE cucumber_ubans
-    ADD COLUMN time_created INT(11) NOT NULL AFTER moderator;
+    ADD COLUMN time_created INT UNSIGNED NOT NULL AFTER moderator;
 -- #        }
 -- #      }
 -- #      {mutes
@@ -115,8 +117,9 @@ RENAME TABLE mutes TO cucumber_mutes;
 -- #        {alter
 # noinspection SqlResolve
 ALTER TABLE cucumber_mutes
-  CHANGE COLUMN player player_id INT(7) UNSIGNED NOT NULL,
-  ADD COLUMN time_created INT(11) NOT NULL AFTER moderator;
+    CHANGE COLUMN player player_id INT(7) UNSIGNED NOT NULL,
+    MODIFY COLUMN expiration INT UNSIGNED,
+    ADD COLUMN time_created INT UNSIGNED NOT NULL AFTER moderator;
 -- #        }
 -- #      }
 -- #    }
@@ -238,17 +241,17 @@ WHERE cucumber_players.name = :player;
 -- #      :expiration int
 -- #      :moderator string
 REPLACE INTO cucumber_bans (player_id, reason, expiration, moderator, time_created)
-  SELECT id, :reason, :expiration, :moderator, UNIX_TIMESTAMP()
-  FROM cucumber_players
-  WHERE name = :player;
+    SELECT id, :reason, :expiration, :moderator, UNIX_TIMESTAMP()
+    FROM cucumber_players
+    WHERE name = :player;
 -- #    }
 -- #    {unban
 -- #      :player string
 DELETE FROM cucumber_bans
 WHERE player_id IN (
-  SELECT * FROM (
-    SELECT id FROM cucumber_players WHERE name = :player
-  ) AS a
+    SELECT * FROM (
+        SELECT id FROM cucumber_players WHERE name = :player
+    ) AS a
 );
 -- #    }
 -- #    {ip-ban
@@ -276,17 +279,17 @@ VALUES (:ip, :reason, :moderator);
 -- #      :expiration int
 -- #      :moderator string
 REPLACE INTO cucumber_mutes (player_id, reason, expiration, moderator, time_created)
-  SELECT id, :reason, :expiration, :moderator, UNIX_TIMESTAMP()
-  FROM cucumber_players
-  WHERE name = :player;
+    SELECT id, :reason, :expiration, :moderator, UNIX_TIMESTAMP()
+    FROM cucumber_players
+    WHERE name = :player;
 -- #    }
 -- #    {unmute
 -- #      :player string
 DELETE FROM cucumber_mutes
 WHERE player_id IN (
-  SELECT * FROM (
-    SELECT id FROM cucumber_players WHERE name = :player
-  ) AS a
+    SELECT * FROM (
+        SELECT id FROM cucumber_players WHERE name = :player
+    ) AS a
 );
 -- #    }
 -- #  }
