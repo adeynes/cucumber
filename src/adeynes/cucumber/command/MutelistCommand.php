@@ -36,7 +36,7 @@ class MutelistCommand extends PunishmentListCommand
     protected function makeMuteInfoLine(array $mute_row): string {
         return $this->getPlugin()->formatMessageFromConfig(
             'success.mutelist.list',
-            Mute::from($mute_row)->getDataFormatted()
+            Mute::from($mute_row)->getFormatData()
         );
     }
 

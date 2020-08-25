@@ -36,7 +36,7 @@ class BanlistCommand extends PunishmentListCommand
     protected function makeBanInfoLine(array $ban_row): string {
         return $this->getPlugin()->formatMessageFromConfig(
             'success.banlist.list',
-            Ban::from($ban_row)->getDataFormatted()
+            Ban::from($ban_row)->getFormatData()
         );
     }
 

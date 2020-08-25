@@ -85,7 +85,7 @@ class HistoryCommand extends CucumberCommand
             $this->getPlugin()->formatAndSend(
                 $sender,
                 self::PUNISHMENT_LIST_PATHS[get_class($punishment)],
-                $punishment->getDataFormatted()
+                $punishment->getFormatData()
             );
         }
     }
