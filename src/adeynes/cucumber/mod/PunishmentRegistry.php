@@ -239,7 +239,7 @@ final class PunishmentRegistry
     {
         $player = $mute->getPlayer();
         if ($this->getMute($player) && !$override) {
-            throw new CucumberException($this->getRawErrorMessage('mute.already-banned'), ['player' => $player]);
+            throw new CucumberException($this->getRawErrorMessage('mute.already-muted'), ['player' => $player]);
         }
 
         $this->mutes[$player] = $mute;
@@ -251,7 +251,6 @@ final class PunishmentRegistry
      */
     public function removeMute(string $player): void
     {
-        var_dump($this->mutes);
         if ($this->getMute($player) === null) {
             throw new CucumberException($this->getRawErrorMessage('mute.not-muted'), ['player' => $player]);
         }
