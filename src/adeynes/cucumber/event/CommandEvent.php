@@ -37,9 +37,9 @@ class CommandEvent extends CucumberPlayerEvent
         return $this->command;
     }
 
-    public function getData(): array
+    public function getFormatData(): array
     {
-        return parent::getData() + ['command' => $this->getCommand()];
+        return parent::getFormatData() + ['command' => $this->getCommand()];
     }
 
 }

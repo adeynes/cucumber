@@ -6,8 +6,6 @@ namespace adeynes\cucumber\mod;
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\Queries;
-use pocketmine\IPlayer;
-use pocketmine\OfflinePlayer;
 use pocketmine\Player;
 
 final class PunishmentRegistry

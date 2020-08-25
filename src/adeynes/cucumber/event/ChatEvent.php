@@ -32,9 +32,9 @@ class ChatEvent extends CucumberPlayerEvent
         return $this->message;
     }
 
-    public function getData(): array
+    public function getFormatData(): array
     {
-        return parent::getData() + ['message' => $this->getMessage()];
+        return parent::getFormatData() + ['message' => $this->getMessage()];
     }
 
 }

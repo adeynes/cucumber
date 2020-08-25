@@ -68,6 +68,7 @@ abstract class Enum implements \JsonSerializable
     {
         $class = get_called_class();
         if (!isset(static::$cache[$class])) {
+            /** @noinspection PhpUnhandledExceptionInspection */
             $reflection = new \ReflectionClass($class);
             static::$cache[$class] = $reflection->getConstants();
         }

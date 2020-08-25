@@ -26,9 +26,9 @@ class ModerationEvent extends CucumberPlayerEvent
         parent::__construct($player);
     }
 
-    public function getData(): array
+    public function getFormatData(): array
     {
-        return parent::getData();
+        return parent::getFormatData();
     }
 
 }

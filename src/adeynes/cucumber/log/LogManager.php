@@ -98,7 +98,7 @@ final class LogManager
     {
         return MessageFactory::format(
             $this->global_template,
-            $this->generateGlobalTemplateData($ev->getTemplate(), $ev->getType(), $ev->getData())
+            $this->generateGlobalTemplateData($ev->getTemplate(), $ev->getType(), $ev->getFormatData())
         );
     }
 
