@@ -80,12 +80,15 @@ RENAME TABLE players TO cucumber_players;
 # noinspection SqlResolve
 RENAME TABLE bans TO cucumber_bans;
 -- #        }
--- #        {alter
+-- #        {alter-change
 # noinspection SqlResolve
 ALTER TABLE cucumber_bans
     CHANGE COLUMN player player_id INT(7) UNSIGNED NOT NULL,
-    MODIFY COLUMN expiration INT UNSIGNED,
     ADD COLUMN time_created INT UNSIGNED NOT NULL AFTER moderator;
+-- #        }
+-- #        {alter-modify
+ALTER TABLE cucumber_bans
+    MODIFY COLUMN expiration INT UNSIGNED;
 -- #        }
 -- #      }
 -- #      {ip-bans
@@ -93,10 +96,13 @@ ALTER TABLE cucumber_bans
 # noinspection SqlResolve
 RENAME TABLE ip_bans TO cucumber_ip_bans;
 -- #        }
--- #        {alter
+-- #        {alter-change
 ALTER TABLE cucumber_ip_bans
-    MODIFY COLUMN expiration INT UNSIGNED,
     ADD COLUMN time_created INT UNSIGNED NOT NULL AFTER moderator;
+-- #        }
+-- #        {alter-modify
+ALTER TABLE cucumber_ip_bans
+    MODIFY COLUMN expiration INT UNSIGNED;
 -- #        }
 -- #      }
 -- #      {ubans
@@ -104,7 +110,7 @@ ALTER TABLE cucumber_ip_bans
 # noinspection SqlResolve
 RENAME TABLE ubans TO cucumber_ubans;
 -- #        }
--- #        {alter
+-- #        {alter-change
 ALTER TABLE cucumber_ubans
     ADD COLUMN time_created INT UNSIGNED NOT NULL AFTER moderator;
 -- #        }
@@ -114,12 +120,15 @@ ALTER TABLE cucumber_ubans
 # noinspection SqlResolve
 RENAME TABLE mutes TO cucumber_mutes;
 -- #        }
--- #        {alter
+-- #        {alter-change
 # noinspection SqlResolve
 ALTER TABLE cucumber_mutes
     CHANGE COLUMN player player_id INT(7) UNSIGNED NOT NULL,
-    MODIFY COLUMN expiration INT UNSIGNED,
     ADD COLUMN time_created INT UNSIGNED NOT NULL AFTER moderator;
+-- #        }
+-- #        {alter-modify
+ALTER TABLE cucumber_mutes
+    MODIFY COLUMN expiration INT UNSIGNED;
 -- #        }
 -- #      }
 -- #    }

@@ -56,19 +56,22 @@ final class MigrationManager
             ],
             'ban' => [
                 Queries::CUCUMBER_MIGRATE_TABLES_BANS_RENAME,
-                Queries::CUCUMBER_MIGRATE_TABLES_BANS_ALTER
+                Queries::CUCUMBER_MIGRATE_TABLES_BANS_ALTER_CHANGE,
+                Queries::CUCUMBER_MIGRATE_TABLES_BANS_ALTER_MODIFY
             ],
             'ip-ban' => [
                 Queries::CUCUMBER_MIGRATE_TABLES_IP_BANS_RENAME,
-                Queries::CUCUMBER_MIGRATE_TABLES_IP_BANS_ALTER
+                Queries::CUCUMBER_MIGRATE_TABLES_IP_BANS_ALTER_CHANGE,
+                Queries::CUCUMBER_MIGRATE_TABLES_IP_BANS_ALTER_MODIFY
             ],
             'uban' => [
                 Queries::CUCUMBER_MIGRATE_TABLES_UBANS_RENAME,
-                Queries::CUCUMBER_MIGRATE_TABLES_UBANS_ALTER
+                Queries::CUCUMBER_MIGRATE_TABLES_UBANS_ALTER_CHANGE
             ],
             'mute' => [
                 Queries::CUCUMBER_MIGRATE_TABLES_MUTES_RENAME,
-                Queries::CUCUMBER_MIGRATE_TABLES_MUTES_ALTER
+                Queries::CUCUMBER_MIGRATE_TABLES_MUTES_ALTER_CHANGE,
+                Queries::CUCUMBER_MIGRATE_TABLES_MUTES_ALTER_MODIFY
             ]
         ];
 
