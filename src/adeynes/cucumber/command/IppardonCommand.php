@@ -5,6 +5,7 @@ namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberException;
+use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
 use adeynes\parsecmd\command\ParsedCommand;
 use pocketmine\command\CommandSender;
@@ -30,6 +31,10 @@ class IppardonCommand extends CucumberCommand
 
         try {
             $this->getPlugin()->getPunishmentRegistry()->removeIpBan($ip);
+            $this->getPlugin()->getConnector()->executeChange(
+                Queries::CUCUMBER_PUNISH_IP_UNBAN,
+                ['ip' => $ip]
+            );
 
             $this->getPlugin()->formatAndSend($sender, 'success.ippardon', ['ip' => $ip]);
             return true;
