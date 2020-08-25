@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
+use adeynes\cucumber\mod\UBan;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\cucumber\utils\Queries;
@@ -30,25 +31,26 @@ class UbanCommand extends CucumberCommand
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
         [$target, $reason] = $command->get(['target', 'reason']);
-        if ($reason === '') $reason = null;
+        if ($reason === '') {
+            $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
+        }
 
         $uban = function(string $ip) use ($sender, $reason) {
             try {
-                $ban_data = $this->getPlugin()->getPunishmentManager()
-                    ->addUban($ip, $reason, $sender->getName())
-                    ->getDataFormatted();
-                $ban_data = $ban_data + ['ip' => $ip];
+                $uban = new UBan($ip, $reason, $sender->getName(), time());
+                $uban_data = $uban->getFormatData();
+                $this->getPlugin()->getPunishmentRegistry()->addUBan($uban);
 
                 foreach ($this->getPlugin()->getServer()->getOnlinePlayers() as $player) {
-                    if ($this->getPlugin()->getPunishmentManager()->checkUban($player)) {
+                    if ($this->getPlugin()->getPunishmentRegistry()->checkUban($player)) {
                         $player->kick(
-                            $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban_data),
+                            $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $uban_data),
                             false // don't say Kicked by admin
                         );
                     }
                 }
 
-                $this->getPlugin()->formatAndSend($sender, 'success.uban', $ban_data);
+                $this->getPlugin()->formatAndSend($sender, 'success.uban', $uban_data);
                 return true;
             } catch (CucumberException $exception) {
                 $sender->sendMessage($exception->getMessage());

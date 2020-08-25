@@ -6,9 +6,11 @@ namespace adeynes\cucumber\mod;
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\Queries;
+use pocketmine\IPlayer;
+use pocketmine\OfflinePlayer;
 use pocketmine\Player;
 
-final class PunishmentManager
+final class PunishmentRegistry
 {
 
     /** @var Cucumber */
@@ -44,8 +46,6 @@ final class PunishmentManager
 
     private function load(): void
     {
-        // I could do all punishments with one foreach but it gets gross
-
         $connector = $this->getPlugin()->getConnector();
 
         $connector->executeSelect(
@@ -54,16 +54,6 @@ final class PunishmentManager
             function (array $rows) {
                 foreach ($rows as $row) {
                     $this->bans[$row['player_name']] = Ban::from($row);
-                }
-            }
-        );
-
-        $connector->executeSelect(
-            Queries::CUCUMBER_GET_PUNISHMENTS_MUTES_CURRENT,
-            [],
-            function (array $rows) {
-                foreach ($rows as $row) {
-                    $this->mutes[$row['player_name']] = Mute::from($row);
                 }
             }
         );
@@ -82,10 +72,18 @@ final class PunishmentManager
             Queries::CUCUMBER_GET_PUNISHMENTS_UBANS,
             [],
             function(array $rows) {
-                $expiration = 0x7FFFFFFF;
                 foreach ($rows as $row) {
-                    $row = $row + ['expiration' => $expiration];
                     $this->ubans[$row['ip']] = UBan::from($row);
+                }
+            }
+        );
+
+        $connector->executeSelect(
+            Queries::CUCUMBER_GET_PUNISHMENTS_MUTES_CURRENT,
+            [],
+            function (array $rows) {
+                foreach ($rows as $row) {
+                    $this->mutes[$row['player_name']] = Mute::from($row);
                 }
             }
         );
@@ -107,39 +105,25 @@ final class PunishmentManager
     }
 
     /**
-     * @param string $player
-     * @param string|null $reason
-     * @param int|null $expiration Defaults to +10 years
-     * @param string $moderator
-     * @param bool $override When set to true, replaces an old ban with a new one and doesn't throw
-     * @return Ban
+     * @param Ban $ban
+     * @param bool $override
      * @throws CucumberException If the player is already banned
      */
-    public function ban(string $player, ?string $reason, ?int $expiration, string $moderator, bool $override = false): Ban
+    public function addBan(Ban $ban, bool $override = false): void
     {
-        if (is_null($reason)) {
-            $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
-        }
-        if (is_null($expiration)) {
-            $expiration = 0x7FFFFFFF;
-        }
-
+        $player = $ban->getPlayer();
         if ($this->getBan($player) && !$override) {
             throw new CucumberException($this->getRawErrorMessage('ban.already-banned'), ['player' => $player]);
         }
 
-        $ban = new Ban($player, $reason, $expiration, $moderator, time());
         $this->bans[$player] = $ban;
-        $this->getPlugin()->getConnector()->executeInsert(Queries::CUCUMBER_PUNISH_BAN, $ban->getData());
-
-        return $ban;
     }
 
     /**
      * @param string $player
      * @throws CucumberException If the player is not banned
      */
-    public function unban(string $player): void
+    public function removeBan(string $player): void
     {
         if (!$this->getBan($player)) {
             throw new CucumberException($this->getRawErrorMessage('ban.not-banned'), ['player' => $player]);
@@ -162,38 +146,25 @@ final class PunishmentManager
     }
 
     /**
-     * @param string $ip
-     * @param string|null $reason
-     * @param int|null $expiration
-     * @param string $moderator
-     * @return IpBan
+     * @param IpBan $ip_ban
+     * @param bool $override
      * @throws CucumberException If the IP is already banned
      */
-    public function ipBan(string $ip, ?string $reason, ?int $expiration, string $moderator): IpBan
+    public function addIpBan(IpBan $ip_ban, bool $override = false): void
     {
-        if (is_null($reason)) {
-            $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
-        }
-        if (is_null($expiration)) {
-            $expiration = 0x7FFFFFFF;
-        }
-
-        if ($this->getIpBan($ip)) {
+        $ip = $ip_ban->getIp();
+        if ($this->getIpBan($ip) && !$override) {
             throw new CucumberException($this->getRawErrorMessage('ipban.already-banned'), ['ip' => $ip]);
         }
 
-        $ip_ban = new IpBan($ip, $reason, $expiration, $moderator, time());
-        $this->ip_bans[$ip] = $ip_ban;
-        $this->getPlugin()->getConnector()->executeInsert(Queries::CUCUMBER_PUNISH_IP_BAN, $ip_ban->getData());
-
-        return $ip_ban;
+        $this->bans[$ip] = $ip_ban;
     }
 
     /**
      * @param string $ip
      * @throws CucumberException If the IP is not banned
      */
-    public function ipUnban(string $ip): void
+    public function removeIpBan(string $ip): void
     {
         if (!$this->getIpBan($ip)) {
             throw new CucumberException($this->getRawErrorMessage('ipban.not-banned'), ['ip' => $ip]);
@@ -216,31 +187,21 @@ final class PunishmentManager
     }
 
     /**
-     * @param string $ip
-     * @param null|string $reason
-     * @param string $moderator
-     * @return UBan
+     * @param UBan $uban
+     * @param bool $override
      * @throws CucumberException If the IP is already ubanned
      */
-    public function addUBan(string $ip, ?string $reason, string $moderator): UBan
+    public function addUBan(UBan $uban, bool $override = false): void
     {
-        if (is_null($reason)) {
-            $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
-        }
-
-        if ($this->getUBan($ip)) {
+        $ip = $uban->getIp();
+        if ($this->getUBan($ip) && !$override) {
             throw new CucumberException($this->getRawErrorMessage('uban.already-banned'), ['ip' => $ip]);
         }
 
-        $uban = new UBan($ip, $reason, 0x7FFFFFFF, $moderator, time());
-        $data = $uban->getData();
-        unset($data['expiration']);
         $this->ubans[$ip] = $uban;
-        $this->getPlugin()->getConnector()->executeInsert(Queries::CUCUMBER_PUNISH_UBAN, $data);
-
-        return $uban;
     }
 
+    // TODO: remove this wow
     /**
      * Checks if a player is affected by a uban. If so, bans them
      * @param Player $player
@@ -251,7 +212,8 @@ final class PunishmentManager
     {
         $uban = $this->getUban($player->getAddress());
         if ($uban) {
-            $this->ban($player->getLowerCaseName(), $uban->getReason(), $uban->getExpiration(), $uban->getModerator(), true);
+            $ban = new Ban($player->getLowerCaseName(), $uban->getReason(), 0x7FFFFFFF, $uban->getModerator(), $uban->getTimeOfCreation());
+            $this->addBan($ban, true);
         }
 
         return (bool) $uban;
@@ -271,38 +233,25 @@ final class PunishmentManager
     }
 
     /**
-     * @param string $player
-     * @param string|null $reason
-     * @param int|null $expiration
-     * @param string $moderator
-     * @return Mute
+     * @param Mute $mute
+     * @param bool $override
      * @throws CucumberException If the player is already muted
      */
-    public function mute(string $player, ?string $reason, ?int $expiration, string $moderator): Mute
+    public function addMute(Mute $mute, bool $override = false): void
     {
-        if (is_null($reason)) {
-            $reason = $this->getPlugin()->getMessage('moderation.mute.mute.default-reason');
-        }
-        if (is_null($expiration)) {
-            $expiration = 0x7FFFFFFF;
+        $player = $mute->getPlayer();
+        if ($this->getMute($player) && !$override) {
+            throw new CucumberException($this->getRawErrorMessage('mute.already-banned'), ['player' => $player]);
         }
 
-        if ($this->getMute($player)) {
-            throw new CucumberException($this->getRawErrorMessage('mute.already-muted'), ['player' => $player]);
-        }
-
-        $mute = new Mute($player, $reason, $expiration, $moderator, time());
         $this->mutes[$player] = $mute;
-        $this->getPlugin()->getConnector()->executeInsert(Queries::CUCUMBER_PUNISH_MUTE, $mute->getData());
-
-        return $mute;
     }
 
     /**
      * @param string $player
      * @throws CucumberException If the player is not muted
      */
-    public function unmute(string $player): void
+    public function removeMute(string $player): void
     {
         if (!$this->getMute($player)) {
             throw new CucumberException($this->getRawErrorMessage('mute.not-muted'), ['player' => $player]);
@@ -311,38 +260,54 @@ final class PunishmentManager
         unset($this->mutes[$player]);
     }
 
-    public function isBanned(Player $player): ?SimplePunishment
+    public function isBanned(Player $player, ?Punishment &$punishment = null, bool $remove_if_expired = true): bool
     {
         $name = $player->getLowerCaseName();
         if ($ban = $this->getBan($name)) {
+            $punishment = $ban;
             if ($ban->isExpired()) {
-                $this->unban($name);
+                if ($remove_if_expired) {
+                    /** @ign */
+                    /** @noinspection PhpUnhandledExceptionInspection */
+                    $this->removeBan($name);
+                }
+                return false;
             }
-            else return $ban;
+            return true;
         }
 
         $ip = $player->getAddress();
         if ($ip_ban = $this->getIpBan($ip)) {
+            $punishment = $ip_ban;
             if ($ip_ban->isExpired()) {
-                $this->ipUnban($ip);
+                if ($remove_if_expired) {
+                    /** @noinspection PhpUnhandledExceptionInspection */
+                    $this->removeIpBan($ip);
+                }
+                return false;
             }
-            else return $ip_ban;
+            return true;
         }
 
-        return null;
+        return false;
     }
 
-    public function isMuted(Player $player): ?SimplePunishment
+    public function isMuted(Player $player, ?Punishment &$punishment = null, bool $remove_if_expired = true): bool
     {
         $name = $player->getLowerCaseName();
         if ($mute = $this->getMute($name)) {
+            $punishment = $mute;
             if ($mute->isExpired()) {
-                $this->unmute($name);
+                if ($remove_if_expired) {
+                    /** @noinspection PhpUnhandledExceptionInspection */
+                    $this->removeMute($name);
+                }
+                return false;
             }
-            else return $mute;
+            return true;
         }
 
-        return null;
+        return false;
     }
 
 }

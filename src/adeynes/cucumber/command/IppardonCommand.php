@@ -29,7 +29,7 @@ class IppardonCommand extends CucumberCommand
         [$ip] = $command->get(['ip']);
 
         try {
-            $this->getPlugin()->getPunishmentManager()->ipUnban($ip);
+            $this->getPlugin()->getPunishmentRegistry()->removeIpBan($ip);
 
             $this->getPlugin()->formatAndSend($sender, 'success.ippardon', ['ip' => $ip]);
             return true;

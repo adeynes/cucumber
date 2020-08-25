@@ -30,7 +30,7 @@ class PardonCommand extends CucumberCommand
         $target_name = strtolower($target_name);
 
         try {
-            $this->getPlugin()->getPunishmentManager()->unban($target_name);
+            $this->getPlugin()->getPunishmentRegistry()->removeBan($target_name);
 
             $this->getPlugin()->formatAndSend($sender, 'success.pardon', ['player' => $target_name]);
             return true;

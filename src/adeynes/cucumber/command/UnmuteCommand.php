@@ -31,7 +31,7 @@ class UnmuteCommand extends CucumberCommand
         $target_name = strtolower($target_name);
 
         try {
-            $this->getPlugin()->getPunishmentManager()->unmute($target_name);
+            $this->getPlugin()->getPunishmentRegistry()->removeMute($target_name);
 
             if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
                 $this->getPlugin()->formatAndSend(

@@ -11,6 +11,7 @@ use adeynes\cucumber\event\CommandEvent;
 use adeynes\cucumber\event\JoinAttemptEvent;
 use adeynes\cucumber\event\JoinEvent;
 use adeynes\cucumber\event\QuitEvent;
+use adeynes\cucumber\mod\Punishment;
 use adeynes\cucumber\utils\MessageFactory;
 use adeynes\cucumber\utils\Queries;
 use pocketmine\event\Event;
@@ -55,12 +56,13 @@ final class CucumberListener implements Listener
         $player = $ev->getPlayer();
         $message = $ev->getMessage();
 
-        if ($mute = $this->getPlugin()->getPunishmentManager()->isMuted($player)) {
+        if ($this->getPlugin()->getPunishmentRegistry()->isMuted($player, $mute)) {
+            /** @var Punishment $mute */
             $ev->setCancelled();
             $messages = $this->getPlugin()->getMessageConfig();
             $player->sendMessage(MessageFactory::fullFormat(
                 $messages->getNested('moderation.mute.chat-attempt') ?? $messages->getNested('moderation.mute.mute.message'),
-                $mute->getDataFormatted()
+                $mute->getFormatData()
             ));
             if ($this->log_chat) {
                 $this->callEvent(new ChatAttemptEvent($player, $message));
@@ -81,12 +83,13 @@ final class CucumberListener implements Listener
     public function onPreLogin(PlayerPreLoginEvent $ev)
     {
         $player = $ev->getPlayer();
-        $punishment_manager = $this->getPlugin()->getPunishmentManager();
+        $punishment_manager = $this->getPlugin()->getPunishmentRegistry();
         $punishment_manager->checkUBan($player);
 
-        if ($ban = $punishment_manager->isBanned($player)) {
+        if ($punishment_manager->isBanned($player, $ban)) {
+            /** @var Punishment $ban */
             $ev->setKickMessage(
-                $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban->getDataFormatted())
+                $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban->getFormatData())
             );
             $ev->setCancelled();
 

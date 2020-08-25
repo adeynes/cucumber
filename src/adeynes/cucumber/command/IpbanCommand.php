@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
+use adeynes\cucumber\mod\IpBan;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\cucumber\utils\Queries;
@@ -30,27 +31,28 @@ class IpbanCommand extends CucumberCommand
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
         [$target, $reason] = $command->get(['target', 'reason']);
-        if ($reason === '') $reason = null;
+        if ($reason === '') {
+            $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
+        }
         $duration = $command->getFlag('duration');
         $expiration = $duration ? CommandParser::parseDuration($duration) : null;
 
         $ip_ban = function (string $ip) use ($sender, $reason, $expiration) {
             try {
-                $ban_data = $this->getPlugin()->getPunishmentManager()
-                    ->ipBan($ip, $reason, $expiration, $sender->getName())
-                    ->getDataFormatted();
-                $ban_data = $ban_data + ['ip' => $ip];
+                $ip_ban = new IpBan($ip, $reason, $expiration, $sender->getName(), time());
+                $ip_ban_data = $ip_ban->getFormatData();
+                $this->getPlugin()->getPunishmentRegistry()->addIpBan($ip_ban);
 
                 foreach ($this->getPlugin()->getServer()->getOnlinePlayers() as $player) {
                     if ($player->getAddress() === $ip) {
                         $player->kick(
-                            $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban_data),
+                            $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ip_ban_data),
                             false // don't say Kicked by admin
                         );
                     }
                 }
 
-                $this->getPlugin()->formatAndSend($sender, 'success.ipban', $ban_data);
+                $this->getPlugin()->formatAndSend($sender, 'success.ipban', $ip_ban_data);
                 return true;
             } catch (CucumberException $exception) {
                 $sender->sendMessage($exception->getMessage());

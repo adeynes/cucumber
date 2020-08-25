@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
+use adeynes\cucumber\mod\Ban;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
@@ -30,16 +31,17 @@ class BanCommand extends CucumberCommand
     {
         [$target_name, $reason] = $command->get(['player', 'reason']);
         $target_name = strtolower($target_name);
-        if ($reason === '') $reason = null;
+        if ($reason === '') {
+            $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
+        }
         $duration = $command->getFlag('duration');
         $expiration = $duration ? CommandParser::parseDuration($duration) : null;
 
         $ban = function () use ($sender, $target_name, $reason, $expiration) {
             try {
-                $ban_data = $this->getPlugin()->getPunishmentManager()
-                    ->ban($target_name, $reason, $expiration, $sender->getName())
-                    ->getDataFormatted();
-                $ban_data = $ban_data + ['player' => $target_name];
+                $ban = new Ban($target_name, $reason, $expiration, $sender->getName(), time());
+                $ban_data = $ban->getFormatData();
+                $this->getPlugin()->getPunishmentRegistry()->addBan($ban);
 
                 if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
                     $target->kick(

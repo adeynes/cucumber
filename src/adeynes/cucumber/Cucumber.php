@@ -5,7 +5,7 @@ namespace adeynes\cucumber;
 
 use adeynes\cucumber\log\LogManager;
 use adeynes\cucumber\log\LogSeverity;
-use adeynes\cucumber\mod\PunishmentManager;
+use adeynes\cucumber\mod\PunishmentRegistry;
 use adeynes\cucumber\task\ExpirationCheckTask;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\MessageFactory;
@@ -41,8 +41,8 @@ final class Cucumber extends PluginBase
     /** @var LogManager */
     private $log_manager;
 
-    /** @var PunishmentManager */
-    private $punishment_manager;
+    /** @var PunishmentRegistry */
+    private $punishment_registry;
 
     /** @var MigrationManager */
     private $migration_manager;
@@ -160,12 +160,12 @@ final class Cucumber extends PluginBase
     }
 
     /**
-     * Instantiate PunishmentManager & load punishments
+     * Instantiate PunishmentRegistry & load punishments
      * @return void
      */
     private function initMod(): void
     {
-        $this->punishment_manager = new PunishmentManager($this);
+        $this->punishment_registry = new PunishmentRegistry($this);
         // Check for expired punishments every 5 mins
         $this->getScheduler()->scheduleRepeatingTask(new ExpirationCheckTask($this), 300 * 20);
     }
@@ -235,9 +235,9 @@ final class Cucumber extends PluginBase
         return $this->log_manager;
     }
 
-    public function getPunishmentManager(): PunishmentManager
+    public function getPunishmentRegistry(): PunishmentRegistry
     {
-        return $this->punishment_manager;
+        return $this->punishment_registry;
     }
 
     private function getMigrationManager(): MigrationManager
