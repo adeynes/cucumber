@@ -19,6 +19,7 @@ class UBan extends IpPunishment
         return [
             'ip' => $this->getIp(),
             'reason' => $this->getReason(),
+            'expiration' => 'the Big Crunch',
             'moderator' => $this->getModerator(),
             'time_created' => $this->getTimeOfCreationFormatted()
         ];
