@@ -160,7 +160,7 @@ INNER JOIN cucumber_players ON cucumber_bans.player_id = cucumber_players.id;
 SELECT cucumber_bans.*, cucumber_players.*, cucumber_players.name AS player_name
 FROM cucumber_bans
 INNER JOIN cucumber_players ON cucumber_bans.player_id = cucumber_players.id
-WHERE cucumber_bans.expiration > UNIX_TIMESTAMP();
+WHERE cucumber_bans.expiration > UNIX_TIMESTAMP() OR cucumber_bans.expiration IS NULL;
 -- #        }
 -- #        {limited
 -- #          :from int
@@ -188,7 +188,7 @@ SELECT * FROM cucumber_ip_bans;
 -- #        }
 -- #        {current
 SELECT * FROM cucumber_ip_bans
-WHERE expiration > UNIX_TIMESTAMP();
+WHERE expiration > UNIX_TIMESTAMP() OR expiration IS NULL;
 -- #        }
 -- #        {limited
 -- #          :from int
@@ -219,7 +219,7 @@ INNER JOIN cucumber_players ON cucumber_mutes.player_id = cucumber_players.id;
 SELECT cucumber_mutes.*, cucumber_players.*, cucumber_players.name AS player_name
 FROM cucumber_mutes
 INNER JOIN cucumber_players ON cucumber_mutes.player_id = cucumber_players.id
-WHERE cucumber_mutes.expiration > UNIX_TIMESTAMP();
+WHERE cucumber_mutes.expiration > UNIX_TIMESTAMP() OR cucumber_mutes.expiration IS NULL;
 -- #        }
 -- #        {limited
 -- #          :from int
@@ -247,7 +247,7 @@ WHERE cucumber_players.name = :player;
 -- #    {ban
 -- #      :player string
 -- #      :reason string
--- #      :expiration int
+-- #      :expiration ?int
 -- #      :moderator string
 REPLACE INTO cucumber_bans (player_id, reason, expiration, moderator, time_created)
     SELECT id, :reason, :expiration, :moderator, UNIX_TIMESTAMP()
@@ -266,7 +266,7 @@ WHERE player_id IN (
 -- #    {ip-ban
 -- #      :ip string
 -- #      :reason string
--- #      :expiration int
+-- #      :expiration ?int
 -- #      :moderator string
 REPLACE INTO cucumber_ip_bans (ip, reason, expiration, moderator, time_created)
 VALUES (:ip, :reason, :expiration, :moderator, UNIX_TIMESTAMP());
@@ -285,7 +285,7 @@ VALUES (:ip, :reason, :moderator);
 -- #    {mute
 -- #      :player string
 -- #      :reason string
--- #      :expiration int
+-- #      :expiration ?int
 -- #      :moderator string
 REPLACE INTO cucumber_mutes (player_id, reason, expiration, moderator, time_created)
     SELECT id, :reason, :expiration, :moderator, UNIX_TIMESTAMP()

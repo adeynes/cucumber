@@ -31,8 +31,7 @@ class MuteCommand extends CucumberCommand
     {
         [$target_name, $reason] = $command->get(['player', 'reason']);
         $target_name = strtolower($target_name);
-        // TODO: what happens if no reason: '' or null?
-        if ($reason === '') {
+        if ($reason === null) {
             $reason = $this->getPlugin()->getMessage('moderation.mute.mute.default-reason');
         }
         $duration = $command->getFlag('duration');

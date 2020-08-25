@@ -22,6 +22,11 @@ class IpBan extends IpPunishment
         parent::__construct($ip, $reason, $moderator, $time_created);
     }
 
+    public function getRawData(): array
+    {
+        return parent::getRawData() + ['expiration' => $this->getExpiration()];
+    }
+
     public function getFormatData(): array
     {
         return [

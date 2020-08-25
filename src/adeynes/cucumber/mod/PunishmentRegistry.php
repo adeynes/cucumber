@@ -251,7 +251,8 @@ final class PunishmentRegistry
      */
     public function removeMute(string $player): void
     {
-        if (!$this->getMute($player)) {
+        var_dump($this->mutes);
+        if ($this->getMute($player) === null) {
             throw new CucumberException($this->getRawErrorMessage('mute.not-muted'), ['player' => $player]);
         }
 

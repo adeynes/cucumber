@@ -31,7 +31,7 @@ class IpbanCommand extends CucumberCommand
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
         [$target, $reason] = $command->get(['target', 'reason']);
-        if ($reason === '') {
+        if ($reason === null) {
             $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
         }
         $duration = $command->getFlag('duration');

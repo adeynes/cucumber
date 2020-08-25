@@ -167,7 +167,7 @@ final class Cucumber extends PluginBase
     {
         $this->punishment_registry = new PunishmentRegistry($this);
         // Check for expired punishments every 5 mins
-        $this->getScheduler()->scheduleRepeatingTask(new ExpirationCheckTask($this), 300 * 20);
+        $this->getScheduler()->scheduleRepeatingTask(new ExpirationCheckTask($this), 60 * 20);
     }
 
     private function initEvents(): void

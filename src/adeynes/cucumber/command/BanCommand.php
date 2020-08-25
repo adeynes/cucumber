@@ -31,7 +31,7 @@ class BanCommand extends CucumberCommand
     {
         [$target_name, $reason] = $command->get(['player', 'reason']);
         $target_name = strtolower($target_name);
-        if ($reason === '') {
+        if ($reason === null) {
             $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
         }
         $duration = $command->getFlag('duration');
