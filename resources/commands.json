@@ -27,6 +27,23 @@
       "flags": {}
     },
 
+    "paginated-allable": {
+      "arguments": {
+        "page": {
+          "length": 1,
+          "display": "Page",
+          "optional": true
+        }
+      },
+      "flags": {
+        "all": {
+          "length": 0,
+          "display": "All",
+          "aliases": ["a"]
+        }
+      }
+    },
+
     "player-punish": {
       "arguments": {
         "player": {
@@ -195,7 +212,7 @@
     },
 
     "banlist": {
-      "blueprint": "paginated",
+      "blueprint": "paginated-allable",
       "class": "\\adeynes\\cucumber\\command\\BanlistCommand",
       "usage": "/banlist [page]"
     },
@@ -214,7 +231,7 @@
     },
 
     "ipbanlist": {
-      "blueprint": "paginated",
+      "blueprint": "paginated-allable",
       "class": "\\adeynes\\cucumber\\command\\IpbanlistCommand",
       "usage": "/ipbanlist [page]"
     },
@@ -263,7 +280,7 @@
     },
 
     "mutelist": {
-      "blueprint": "paginated",
+      "blueprint": "paginated-allable",
       "class": "\\adeynes\\cucumber\\command\\MutelistCommand",
       "usage": "/mutelist [page]"
     },

@@ -11,12 +11,24 @@ abstract class PunishmentListCommand extends CucumberCommand
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        $page = (int) ($command->get(['page'])[0] ?? 1);
+        [$page] = $command->get(['page']);
+        $page = $page ?? '1';
+        if (!is_numeric($page) || intval($page) < 1) {
+            $this->getPlugin()->formatAndSend($sender, 'error.invalid-argument', ['argument' => $page]);
+            return false;
+        }
+        $page = intval($page);
         $limit = $this->getPlugin()->getConfig()->getNested('punishment.list.lines-per-page');
+        $extra_args = [];
+        if ($this->isAllable()) {
+            if ($command->getFlag('all') !== null) {
+                $extra_args += ['all' => true];
+            }
+        }
 
         $this->getPlugin()->getConnector()->executeSelect(
             $this->getSelectQuery(),
-            ['from' => ($page - 1) * $limit, 'limit' => $limit],
+            ['from' => ($page - 1) * $limit, 'limit' => $limit] + $extra_args,
             function (array $rows) use ($sender, $page) {
                 $this->sendList($sender, $rows, $page);
             }
@@ -24,6 +36,8 @@ abstract class PunishmentListCommand extends CucumberCommand
 
         return true;
     }
+
+    abstract protected function isAllable(): bool;
 
     abstract protected function getSelectQuery(): string;
 

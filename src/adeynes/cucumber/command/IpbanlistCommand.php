@@ -24,6 +24,11 @@ class IpbanlistCommand extends PunishmentListCommand
         );
     }
 
+    public function isAllable(): bool
+    {
+        return true;
+    }
+
     public function getSelectQuery(): string
     {
         return Queries::CUCUMBER_GET_PUNISHMENTS_IP_BANS_LIMITED;

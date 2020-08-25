@@ -24,6 +24,11 @@ class BanlistCommand extends PunishmentListCommand
         );
     }
 
+    public function isAllable(): bool
+    {
+        return true;
+    }
+
     protected function getSelectQuery(): string
     {
         return Queries::CUCUMBER_GET_PUNISHMENTS_BANS_LIMITED;
