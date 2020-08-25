@@ -40,6 +40,7 @@ class UbanCommand extends CucumberCommand
                 $uban = new UBan($ip, $reason, $sender->getName(), time());
                 $uban_data = $uban->getFormatData();
                 $this->getPlugin()->getPunishmentRegistry()->addUBan($uban);
+                $uban->save($this->getPlugin()->getConnector());
 
                 foreach ($this->getPlugin()->getServer()->getOnlinePlayers() as $player) {
                     if ($this->getPlugin()->getPunishmentRegistry()->checkUban($player)) {

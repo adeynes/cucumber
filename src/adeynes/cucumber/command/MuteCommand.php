@@ -43,6 +43,7 @@ class MuteCommand extends CucumberCommand
                 $mute = new Mute($target_name, $reason, $expiration, $sender->getName(), time());
                 $mute_data = $mute->getFormatData();
                 $this->getPlugin()->getPunishmentRegistry()->addMute($mute);
+                $mute->save($this->getPlugin()->getConnector());
 
                 if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
                     $this->getPlugin()->formatAndSend($target, 'moderation.mute.mute.message', $mute_data);

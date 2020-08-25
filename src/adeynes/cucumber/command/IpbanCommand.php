@@ -42,6 +42,7 @@ class IpbanCommand extends CucumberCommand
                 $ip_ban = new IpBan($ip, $reason, $expiration, $sender->getName(), time());
                 $ip_ban_data = $ip_ban->getFormatData();
                 $this->getPlugin()->getPunishmentRegistry()->addIpBan($ip_ban);
+                $ip_ban->save($this->getPlugin()->getConnector());
 
                 foreach ($this->getPlugin()->getServer()->getOnlinePlayers() as $player) {
                     if ($player->getAddress() === $ip) {

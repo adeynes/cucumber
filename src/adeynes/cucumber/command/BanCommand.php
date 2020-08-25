@@ -42,6 +42,7 @@ class BanCommand extends CucumberCommand
                 $ban = new Ban($target_name, $reason, $expiration, $sender->getName(), time());
                 $ban_data = $ban->getFormatData();
                 $this->getPlugin()->getPunishmentRegistry()->addBan($ban);
+                $ban->save($this->getPlugin()->getConnector());
 
                 if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
                     $target->kick(
