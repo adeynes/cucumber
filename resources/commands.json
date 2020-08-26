@@ -83,17 +83,7 @@
           "optional": true
         }
       },
-      "flags": {
-        "player": {
-          "length": 0,
-          "display": "Player",
-          "aliases": ["p"]
-        },
-        "ip": {
-          "length": 0,
-          "display": "IP"
-        }
-      }
+      "flags": {}
     },
 
     "ip-pardon": {
@@ -256,17 +246,7 @@
             "optional": true
           }
         },
-        "flags": {
-          "player": {
-            "length": 0,
-            "display": "Player",
-            "aliases": ["p"]
-          },
-          "ip": {
-            "length": 0,
-            "display": "IP"
-          }
-        }
+        "flags": {}
       },
       "class": "\\adeynes\\cucumber\\command\\UbanCommand",
       "usage": "/uban <target> [reason] [-player|-p] [-ip]"

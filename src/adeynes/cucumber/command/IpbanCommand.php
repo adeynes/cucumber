@@ -69,57 +69,22 @@ class IpbanCommand extends CucumberCommand
             }
         };
 
-        // TODO: refactor this logic
-        if (!is_null($ip_flag = $command->getFlag('ip')) xor
-            !is_null($player_flag = $command->getFlag('player'))) {
-
-            if (!is_null($ip_flag)) {
-                $ip_ban($target);
-            } elseif (!is_null($player_flag)) {
-                if ($player = CucumberPlayer::getOnlinePlayer($target)) {
-                    $ip_ban($player->getAddress());
-                } else {
-                    $this->doIfTargetExists(
-                        function (array $rows) use ($ip_ban) {
-                            $ip_ban($rows[0]['ip']);
-                        },
-                        $sender,
-                        $target
-                    );
-                }
-            }
-        } else {
-            $ip_matches = [];
-
-            preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/', $target, $ip_matches);
-
-            if ($ip_matches === []) {
-                if ($player = CucumberPlayer::getOnlinePlayer($target)) {
-                    $ip_ban($player->getAddress());
-                } else {
-                    $this->doIfTargetExists(
-                        function (array $rows) use ($ip_ban) {
-                            $ip_ban($rows[0]['ip']);
-                        },
-                        $sender,
-                        $target
-                    );
-                }
+        $ip_matches = [];
+        preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/', $target, $ip_matches);
+        if ($ip_matches === []) {
+            if ($player = CucumberPlayer::getOnlinePlayer($target)) {
+                $ip_ban($player->getAddress());
             } else {
-                $ip = $ip_matches[0];
-                $this->getPlugin()->getConnector()->executeSelect(
-                    Queries::CUCUMBER_GET_PLAYER_BY_NAME,
-                    ['name' => $ip],
-                    function (array $rows) use ($sender, $ip, $ip_ban) {
-                        if (count($rows) !== 0) {
-                            $this->getPlugin()->formatAndSend($sender, 'error.player-ip-ambiguity', ['ip' => $ip]);
-                            return;
-                        }
-
-                        $ip_ban($ip);
-                    }
+                $this->doIfTargetExists(
+                    function (array $rows) use ($ip_ban) {
+                        $ip_ban($rows[0]['ip']);
+                    },
+                    $sender,
+                    $target
                 );
             }
+        } else {
+            $ip_ban($ip_matches[0]);
         }
 
         /*if ($target_name) {
