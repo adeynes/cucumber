@@ -23,19 +23,27 @@ class BanCommand extends CucumberCommand
             'ban',
             'cucumber.command.ban',
             'Ban a player by name',
-            '/ban <player> [reason] [-d <duration>]'
+            '/ban <player> <duration>|inf [reason]'
         );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$target_name, $reason] = $command->get(['player', 'reason']);
+        [$target_name, $duration, $reason] = $command->get(['player', 'duration', 'reason']);
         $target_name = strtolower($target_name);
         if ($reason === null) {
             $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
         }
-        $duration = $command->getFlag('duration');
-        $expiration = $duration ? CommandParser::parseDuration($duration) : null;
+        if (in_array($duration, self::PERMANENT_DURATION_STRINGS)) {
+            $expiration = null;
+        } else {
+            try {
+                $expiration = $duration ? CommandParser::parseDuration($duration) : null;
+            } catch (\InvalidArgumentException $exception) {
+                $this->getPlugin()->formatAndSend($sender, 'error.invalid-duration', ['duration' => $duration]);
+                return false;
+            }
+        }
 
         $ban = function () use ($sender, $target_name, $reason, $expiration) {
             try {

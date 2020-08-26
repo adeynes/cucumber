@@ -29,13 +29,21 @@ class MuteCommand extends CucumberCommand
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$target_name, $reason] = $command->get(['player', 'reason']);
+        [$target_name, $duration, $reason] = $command->get(['player', 'duration', 'reason']);
         $target_name = strtolower($target_name);
         if ($reason === null) {
             $reason = $this->getPlugin()->getMessage('moderation.mute.mute.default-reason');
         }
-        $duration = $command->getFlag('duration');
-        $expiration = $duration ? CommandParser::parseDuration($duration) : null;
+        if (in_array($duration, self::PERMANENT_DURATION_STRINGS)) {
+            $expiration = null;
+        } else {
+            try {
+                $expiration = $duration ? CommandParser::parseDuration($duration) : null;
+            } catch (\InvalidArgumentException $exception) {
+                $this->getPlugin()->formatAndSend($sender, 'error.invalid-duration', ['duration' => $duration]);
+                return false;
+            }
+        }
 
         $mute = function () use ($sender, $target_name, $reason, $expiration) {
             try {

@@ -30,12 +30,20 @@ class IpbanCommand extends CucumberCommand
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$target, $reason] = $command->get(['target', 'reason']);
+        [$target, $duration, $reason] = $command->get(['target', 'duration', 'reason']);
         if ($reason === null) {
             $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
         }
-        $duration = $command->getFlag('duration');
-        $expiration = $duration ? CommandParser::parseDuration($duration) : null;
+        if (in_array($duration, self::PERMANENT_DURATION_STRINGS)) {
+            $expiration = null;
+        } else {
+            try {
+                $expiration = $duration ? CommandParser::parseDuration($duration) : null;
+            } catch (\InvalidArgumentException $exception) {
+                $this->getPlugin()->formatAndSend($sender, 'error.invalid-duration', ['duration' => $duration]);
+                return false;
+            }
+        }
 
         $ip_ban = function (string $ip) use ($sender, $reason, $expiration) {
             try {

@@ -51,19 +51,18 @@
           "display": "Player",
           "optional": false
         },
+        "duration": {
+          "length": 1,
+          "display": "Duration (\"inf\" for permanent)",
+          "optional": false
+        },
         "reason": {
           "length": -1,
           "display": "Reason",
           "optional": true
         }
       },
-      "flags": {
-        "duration": {
-          "length": 1,
-          "display": "Duration",
-          "aliases": ["d"]
-        }
-      }
+      "flags": {}
     },
 
     "ip-punish": {
@@ -71,6 +70,11 @@
         "target": {
           "length": 1,
           "display": "Player/IP",
+          "optional": false
+        },
+        "duration": {
+          "length": 1,
+          "display": "Duration (\"inf\" for permanent)",
           "optional": false
         },
         "reason": {
@@ -88,11 +92,6 @@
         "ip": {
           "length": 0,
           "display": "IP"
-        },
-        "duration": {
-          "length": 1,
-          "display": "Duration",
-          "aliases": ["d"]
         }
       }
     },
@@ -208,7 +207,7 @@
     "ban": {
       "blueprint": "player-punish",
       "class": "\\adeynes\\cucumber\\command\\BanCommand",
-      "usage": "/ban <player> [reason] [-duration|-d <duration>]"
+      "usage": "/ban <player> <duration>|inf [reason]"
     },
 
     "banlist": {
@@ -227,7 +226,7 @@
     "ipban": {
       "blueprint": "ip-punish",
       "class": "\\adeynes\\cucumber\\command\\IpbanCommand",
-      "usage": "/ipban <target> [reason] [-duration|-d <duration>] [-player|-p] [-ip]"
+      "usage": "/ipban <target> <duration>|inf [reason] [-player|-p] [-ip]"
     },
 
     "ipbanlist": {
@@ -276,7 +275,7 @@
     "mute": {
       "blueprint": "player-punish",
       "class": "\\adeynes\\cucumber\\command\\MuteCommand",
-      "usage": "/mute <player> [reason] [-duration|-d <duration>]"
+      "usage": "/mute <player> <duration>|inf [reason]"
     },
 
     "mutelist": {
