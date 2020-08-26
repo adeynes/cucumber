@@ -83,10 +83,10 @@ final class CucumberListener implements Listener
     public function onPreLogin(PlayerPreLoginEvent $ev)
     {
         $player = $ev->getPlayer();
-        $punishment_manager = $this->getPlugin()->getPunishmentRegistry();
-        $punishment_manager->getUBanChecker()->checkFor($player);
+        $punishment_registry = $this->getPlugin()->getPunishmentRegistry();
+        $punishment_registry->getUBanChecker()->checkFor($player);
 
-        if ($punishment_manager->isBanned($player, $ban)) {
+        if ($punishment_registry->isBanned($player, $ban)) {
             /** @var Punishment $ban */
             $ev->setKickMessage(
                 $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban->getFormatData())

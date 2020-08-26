@@ -3,16 +3,17 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\mod;
 
-use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\Queries;
 use pocketmine\Player;
+use pocketmine\utils\Config;
+use poggit\libasynql\DataConnector;
 
 final class PunishmentRegistry
 {
 
-    /** @var Cucumber */
-    private $plugin;
+    /** @var Config */
+    private $message_config;
 
     /** @var Ban[] */
     private $bans = [];
@@ -29,16 +30,11 @@ final class PunishmentRegistry
     /** @var Mute[] */
     private $mutes = [];
 
-    public function __construct(Cucumber $plugin)
+    public function __construct(Config $message_config, DataConnector $connector)
     {
-        $this->plugin = $plugin;
-        $this->uban_checker = new UBanChecker($this, $plugin->getConnector());
-        $this->load();
-    }
-    
-    public function getPlugin(): Cucumber
-    {
-        return $this->plugin;
+        $this->message_config = $message_config;
+        $this->uban_checker = new UBanChecker($this, $connector);
+        $this->load($connector);
     }
 
     public function getUBanChecker(): UBanChecker
@@ -48,13 +44,11 @@ final class PunishmentRegistry
 
     private function getRawErrorMessage(string $path): string
     {
-        return $this->getPlugin()->getMessage("error.$path");
+        return $this->message_config->getNested("error.$path");
     }
 
-    private function load(): void
+    private function load(DataConnector $connector, bool $blocking = true): void
     {
-        $connector = $this->getPlugin()->getConnector();
-
         $connector->executeSelect(
             Queries::CUCUMBER_GET_PUNISHMENTS_BANS_CURRENT,
             [],
@@ -95,7 +89,9 @@ final class PunishmentRegistry
             }
         );
 
-        $connector->waitAll(); // don't go on until everything is loaded
+        if ($blocking) {
+            $connector->waitAll();
+        }
     }
 
     /**

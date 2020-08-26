@@ -10,27 +10,27 @@ class ExpirationCheckTask extends CucumberTask
 
     public function onRun(int $tick): void
     {
-        $punishment_manager = $this->getPlugin()->getPunishmentRegistry();
+        $punishment_registry = $this->getPlugin()->getPunishmentRegistry();
 
         // It's nasty & hacky if I have an array of getters and iterate over it
-        foreach ($punishment_manager->getBans() as $name => $ban) {
+        foreach ($punishment_registry->getBans() as $name => $ban) {
             if ($ban->isExpired()) {
                 /** @noinspection PhpUnhandledExceptionInspection */
-                $punishment_manager->removeBan($name);
+                $punishment_registry->removeBan($name);
             }
         }
 
-        foreach ($punishment_manager->getIpBans() as $ip => $ip_ban) {
+        foreach ($punishment_registry->getIpBans() as $ip => $ip_ban) {
             if ($ip_ban->isExpired()) {
                 /** @noinspection PhpUnhandledExceptionInspection */
-                $punishment_manager->removeIpBan($ip);
+                $punishment_registry->removeIpBan($ip);
             }
         }
 
-        foreach ($punishment_manager->getMutes() as $name => $mute) {
+        foreach ($punishment_registry->getMutes() as $name => $mute) {
             if ($mute->isExpired()) {
                 /** @noinspection PhpUnhandledExceptionInspection */
-                $punishment_manager->removeMute($name);
+                $punishment_registry->removeMute($name);
                 if ($player = CucumberPlayer::getOnlinePlayer($name)) {
                     $this->getPlugin()->formatAndSend($player, 'moderation.mute.unmute.auto');
                 }
