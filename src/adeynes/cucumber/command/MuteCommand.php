@@ -23,7 +23,7 @@ class MuteCommand extends CucumberCommand
             'mute',
             'cucumber.command.mute',
             'Mute a player',
-            '/mute <player> [reason] [-d <duration>]'
+            '/mute <player> <duration>|inf [reason]'
         );
     }
 

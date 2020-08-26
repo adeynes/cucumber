@@ -20,7 +20,7 @@ class BanlistCommand extends PunishmentListCommand
             'banlist',
             'cucumber.command.banlist',
             'See the list of bans',
-            '/banlist'
+            '/banlist [page]'
         );
     }
 

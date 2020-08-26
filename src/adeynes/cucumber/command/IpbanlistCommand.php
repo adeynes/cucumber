@@ -20,7 +20,7 @@ class IpbanlistCommand extends PunishmentListCommand
             'ipbanlist',
             'cucumber.command.ipbanlist',
             'See the list of IP bans',
-            '/ipbanlist'
+            '/ipbanlist [page]'
         );
     }
 

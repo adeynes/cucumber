@@ -24,7 +24,7 @@ class UbanCommand extends CucumberCommand
             'uban',
             'cucumber.command.uban',
             'Ban any player that joins using an IP. Irreversible',
-            '/uban <-p <player>|-ip <ip>> [reason]'
+            '/uban <player>|<ip> [reason]'
         );
     }
 

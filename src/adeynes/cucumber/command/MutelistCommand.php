@@ -20,7 +20,7 @@ class MutelistCommand extends PunishmentListCommand
             'mutelist',
             'cucumber.command.mutelist',
             'See the list of mutes',
-            '/mutelist'
+            '/mutelist [page]'
         );
     }
 

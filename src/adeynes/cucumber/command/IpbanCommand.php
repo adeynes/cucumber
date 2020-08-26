@@ -24,7 +24,7 @@ class IpbanCommand extends CucumberCommand
             'ipban',
             'cucumber.command.ipban',
             'Ban an IP',
-            '/ipban <-p <player>|-ip <ip>> [reason]'
+            '/ipban <player>|<ip> <duration>|inf [reason]'
         );
     }
 

@@ -21,7 +21,7 @@ class LogCommand extends CucumberCommand
             'log',
             'cucumber.command.log',
             'Log a message',
-            '/log <message>'
+            '/log <message> [-severity|-s <severity>]'
         );
     }
 

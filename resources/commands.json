@@ -216,7 +216,7 @@
     "ipban": {
       "blueprint": "ip-punish",
       "class": "\\adeynes\\cucumber\\command\\IpbanCommand",
-      "usage": "/ipban <target> <duration>|inf [reason] [-player|-p] [-ip]"
+      "usage": "/ipban <player>|<ip> <duration>|inf [reason]"
     },
 
     "ipbanlist": {
@@ -249,7 +249,7 @@
         "flags": {}
       },
       "class": "\\adeynes\\cucumber\\command\\UbanCommand",
-      "usage": "/uban <target> [reason] [-player|-p] [-ip]"
+      "usage": "/uban <player>|<ip> [reason]"
     },
 
     "mute": {
