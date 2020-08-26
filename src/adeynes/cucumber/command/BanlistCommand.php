@@ -49,7 +49,7 @@ class BanlistCommand extends PunishmentListCommand
         $page = trim(
             $this->getPlugin()->formatMessageFromConfig(
                 'success.banlist.intro',
-                ['page' => $page_number]
+                ['page' => strval($page_number), 'count' => strval(count($bans))]
             ) . PHP_EOL .
             implode(PHP_EOL, array_map([$this, 'makeBanInfoLine'], $bans))
         );

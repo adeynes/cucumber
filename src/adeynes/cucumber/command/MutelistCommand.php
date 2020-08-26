@@ -49,7 +49,7 @@ class MutelistCommand extends PunishmentListCommand
         $page = trim(
             $this->getPlugin()->formatMessageFromConfig(
                 'success.mutelist.intro',
-                ['page' => $page_number]
+                ['page' => strval($page_number), 'count' => strval(count($mutes))]
             ) . PHP_EOL .
             implode(PHP_EOL, array_map([$this, 'makeMuteInfoLine'], $mutes))
         );

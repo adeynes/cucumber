@@ -54,8 +54,8 @@ class HistoryCommand extends CucumberCommand
                             $this->addMutesToHistory(
                                 $player['name'],
                                 $history,
-                                function (array $history) use ($sender) {
-                                    $this->showHistory($sender, $history);
+                                function (array $history) use ($player, $sender) {
+                                    $this->showHistory($sender, $history, $player['name']);
                                 }
                             );
                         }
@@ -72,8 +72,9 @@ class HistoryCommand extends CucumberCommand
     /**
      * @param CommandSender $sender
      * @param SimplePunishment[] $history
+     * @param string $player_name
      */
-    protected function showHistory(CommandSender $sender, array $history) {
+    protected function showHistory(CommandSender $sender, array $history, string $player_name) {
         usort(
             $history,
             function (SimplePunishment $a, SimplePunishment $b) {
@@ -81,13 +82,19 @@ class HistoryCommand extends CucumberCommand
             }
         );
 
+        $this->getPlugin()->formatAndSend(
+            $sender,
+            'success.history.intro',
+            ['player' => $player_name, 'count' => strval(count($history))]
+        );
+        $lines = [];
         foreach ($history as $punishment) {
-            $this->getPlugin()->formatAndSend(
-                $sender,
+            $lines[] = $this->getPlugin()->formatMessageFromConfig(
                 self::PUNISHMENT_LIST_PATHS[get_class($punishment)],
                 $punishment->getFormatData()
             );
         }
+        $sender->sendMessage(implode(PHP_EOL, $lines));
     }
 
     protected function addBansToHistory(string $player, array &$history, ?callable $next): void
