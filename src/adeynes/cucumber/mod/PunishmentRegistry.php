@@ -23,18 +23,27 @@ final class PunishmentRegistry
     /** @var UBan[] */
     private $ubans = [];
 
+    /** @var UBanChecker */
+    private $uban_checker;
+
     /** @var Mute[] */
     private $mutes = [];
 
     public function __construct(Cucumber $plugin)
     {
         $this->plugin = $plugin;
+        $this->uban_checker = new UBanChecker($this, $plugin->getConnector());
         $this->load();
     }
     
     public function getPlugin(): Cucumber
     {
         return $this->plugin;
+    }
+
+    public function getUBanChecker(): UBanChecker
+    {
+        return $this->uban_checker;
     }
 
     private function getRawErrorMessage(string $path): string
@@ -85,7 +94,7 @@ final class PunishmentRegistry
                 }
             }
         );
-        
+
         $connector->waitAll(); // don't go on until everything is loaded
     }
 
@@ -197,25 +206,6 @@ final class PunishmentRegistry
         }
 
         $this->ubans[$ip] = $uban;
-    }
-
-    // TODO: remove this wow
-    /**
-     * Checks if a player is affected by a uban. If so, bans them
-     * @param Player $player
-     * @return bool
-     * @throws CucumberException
-     */
-    public function checkUBan(Player $player): bool
-    {
-        $uban = $this->getUban($player->getAddress());
-        if ($uban) {
-            $ban = new Ban($player->getLowerCaseName(), $uban->getReason(), null, $uban->getModerator(), $uban->getTimeOfCreation());
-            $this->addBan($ban, true);
-            $ban->save($this->getPlugin()->getConnector());
-        }
-
-        return (bool) $uban;
     }
 
     /**
