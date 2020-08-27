@@ -21,6 +21,15 @@ database:
   # Recommended: 1 for sqlite, 2 for MySQL. You may want to further increase this value if your MySQL connection is very slow.
   worker-limit: 2
 
+task:
+  # How often to check for expired punishments, in seconds
+  expiration-task-period: 20
+  # How often to sync memory with the db, also how often punishments will be synchronized across servers, in seconds
+  # Increase this if you have a LOT of punishments and experience lag every 20 seconds
+  db-sync-task-period: 20
+  # How often to write to the log file in seconds
+  write-task-period: 10
+
 log:
   # Where log files will be located; relative to the plugin's data folder
   path: log/

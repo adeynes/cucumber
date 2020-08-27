@@ -22,7 +22,10 @@ class BaseLogger implements Logger
         $this->file = $manager->getDirectory() . $file;
         $this->init();
         $this->submit_log_messages_async_task = $task = new SubmitLogMessagesAsyncTask($this->file);
-        $manager->getPlugin()->getScheduler()->scheduleRepeatingTask($task, 10 * 20);
+        $manager->getPlugin()->getScheduler()->scheduleRepeatingTask(
+            $task,
+            $manager->getPlugin()->getConfig()->getNested('task.write-task-period') * 20
+        );
     }
 
     protected function init(): void

@@ -170,11 +170,11 @@ final class Cucumber extends PluginBase
         // Check for expired punishments every 5 mins
         $this->getScheduler()->scheduleRepeatingTask(
             new ExpirationCheckTask($this->getPunishmentRegistry(), $this->getMessageConfig()),
-            60 * 20
+            $this->getConfig()->getNested('task.expiration-task-period') * 20
         );
         $this->getScheduler()->scheduleRepeatingTask(
             new DbSynchronizationTask($this->getPunishmentRegistry(), $this->getConnector()),
-            20 * 20
+            $this->getConfig()->getNested('task.db-sync-task-period') * 20
         );
     }
 
