@@ -41,10 +41,7 @@ final class MigrationManager
     {
         if ($this->isMigrated()) return;
 
-        $this->getPlugin()->log(
-            'cucumber\'s database has not been upgraded to support 2.0 on this system. Proceeding with the migration...',
-            'notice'
-        );
+        $this->getPlugin()->getLogger()->notice('cucumber\'s database has not been upgraded to support 2.0 on this system. Proceeding with the migration...');
 
         $this->migrate();
     }
@@ -80,7 +77,7 @@ final class MigrationManager
         $connector = $this->getPlugin()->getConnector();
 
         foreach ($queries as $group => $group_queries) {
-            $this->getPlugin()->log("Proceeding with $group migration...", 'notice');
+            $this->getPlugin()->getLogger()->notice("Proceeding with $group migration...");
             foreach ($group_queries as $query) {
                 $connector->executeGeneric($query);
                 $connector->waitAll();

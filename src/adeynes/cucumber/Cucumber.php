@@ -160,7 +160,7 @@ final class Cucumber extends PluginBase
             try {
                 $severity = LogSeverity::fromString($severity);
             } catch (CucumberException $exception) {
-                $this->log(
+                $this->getLogger()->warning(
                     MessageFactory::colorize("&eUnknown logger severity &b$severity&e, defaulting to &blog")
                 );
                 $severity = LogSeverity::LOG();
@@ -215,7 +215,7 @@ final class Cucumber extends PluginBase
                 $severity = LogSeverity::fromString($severity);
             } catch (CucumberException $exception) {
                 /** @noinspection PhpUndefinedVariableInspection */
-                $this->log(
+                $this->getLogger()->warning(
                     MessageFactory::colorize("&eUnknown logger severity &b$severity&e for event &b$type&e, defaulting to &blog")
                 );
                 $severity = LogSeverity::LOG();
@@ -297,18 +297,6 @@ final class Cucumber extends PluginBase
     }
 
     /**
-     * Logs the supplied message at the supplied severity level in the server's logger
-     * @param string $message
-     * @param string $severity The severity of the message (defined in SPL/LogLevel), default info
-     * @return void
-     */
-    public function log(string $message, string $severity = 'info'): void
-    {
-        // TODO: use Logger::log()
-        $this->getServer()->getLogger()->log($severity, $message);
-    }
-
-    /**
      * Logs the supplied message and disables the plugin
      * @param string $message
      * @param string $severity The severity of the message (defined in SPL/LogLevel), default alert
@@ -316,7 +304,7 @@ final class Cucumber extends PluginBase
      */
     public function fail(string $message, string $severity = 'alert'): void
     {
-        $this->log($message, $severity);
+        $this->getLogger()->log($severity, $message);
         $this->getServer()->getPluginManager()->disablePlugin($this);
     }
 
