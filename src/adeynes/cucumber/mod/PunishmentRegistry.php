@@ -53,6 +53,7 @@ final class PunishmentRegistry
             Queries::CUCUMBER_GET_PUNISHMENTS_BANS_CURRENT,
             [],
             function (array $rows) {
+                $this->bans = [];
                 foreach ($rows as $row) {
                     $this->bans[$row['player_name']] = Ban::from($row);
                 }
@@ -63,6 +64,7 @@ final class PunishmentRegistry
             Queries::CUCUMBER_GET_PUNISHMENTS_IP_BANS_CURRENT,
             [],
             function (array $rows) {
+                $this->ip_bans = [];
                 foreach ($rows as $row) {
                     $this->ip_bans[$row['ip']] = IpBan::from($row);
                 }
@@ -73,6 +75,7 @@ final class PunishmentRegistry
             Queries::CUCUMBER_GET_PUNISHMENTS_UBANS,
             [],
             function(array $rows) {
+                $this->ubans = [];
                 foreach ($rows as $row) {
                     $this->ubans[$row['ip']] = UBan::from($row);
                 }
@@ -83,6 +86,7 @@ final class PunishmentRegistry
             Queries::CUCUMBER_GET_PUNISHMENTS_MUTES_CURRENT,
             [],
             function (array $rows) {
+                $this->mutes = [];
                 foreach ($rows as $row) {
                     $this->mutes[$row['player_name']] = Mute::from($row);
                 }
