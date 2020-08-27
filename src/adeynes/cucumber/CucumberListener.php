@@ -65,17 +65,17 @@ final class CucumberListener implements Listener
                 $mute->getFormatData()
             ));
             if ($this->log_chat) {
-                $this->callEvent(new ChatAttemptEvent($player, $message));
+                (new ChatAttemptEvent($player, $message))->call();
             }
         } elseif ($this->log_chat) {
-            $this->callEvent(new ChatEvent($player, $message));
+            (new ChatEvent($player, $message))->call();
         }
     }
 
     public function onCommandPreprocess(PlayerCommandPreprocessEvent $ev)
     {
         if (strpos(($command = $ev->getMessage()), '/') === 0 && $this->log_command) {
-            $this->callEvent(new CommandEvent($ev->getPlayer(), $command));
+            (new CommandEvent($ev->getPlayer(), $command))->call();
         }
     }
 
@@ -94,7 +94,7 @@ final class CucumberListener implements Listener
             $ev->setCancelled();
 
             if ($this->log_traffic) {
-                $this->callEvent(new JoinAttemptEvent($player));
+                (new JoinAttemptEvent($player))->call();
             }
         }
 
@@ -113,26 +113,21 @@ final class CucumberListener implements Listener
         }
 
         if ($this->log_traffic) {
-            $this->callEvent(new JoinEvent($player));
+            (new JoinEvent($player))->call();
         }
     }
 
     public function onQuit(PlayerQuitEvent $ev)
     {
         if ($this->log_traffic) {
-            $this->callEvent(new QuitEvent($ev->getPlayer()));
+            (new QuitEvent($ev->getPlayer()))->call();
         }
     }
 
     public function onCucumberEvent(CucumberEvent $ev)
     {
-        $log_manager = $this->getPlugin()->getLogManager();
-        $log_manager->log($log_manager->formatEventMessage($ev), $ev->getSeverity());
-    }
-
-    private function callEvent(Event $ev): void
-    {
-        $this->getPlugin()->getServer()->getPluginManager()->callEvent($ev);
+        $log_dispatcher = $this->getPlugin()->getLogDispatcher();
+        $log_dispatcher->log($log_dispatcher->formatEventMessage($ev), $ev->getSeverity());
     }
 
 }

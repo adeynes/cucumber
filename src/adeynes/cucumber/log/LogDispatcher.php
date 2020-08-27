@@ -8,7 +8,7 @@ use adeynes\cucumber\event\CucumberEvent;
 use adeynes\cucumber\utils\ds\Stack;
 use adeynes\cucumber\utils\MessageFactory;
 
-final class LogManager
+final class LogDispatcher
 {
 
     /** @var Cucumber */
@@ -63,7 +63,7 @@ final class LogManager
 
             /** @var Logger $logger */
             foreach ($loggers as $logger) {
-                if ($logger->log($message) === false) break 2;
+                $logger->log($message);
             }
         }
     }

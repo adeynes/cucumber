@@ -17,14 +17,14 @@ class BaseLogger implements Logger
     /** @var SubmitLogMessagesAsyncTask */
     protected $submit_log_messages_async_task;
 
-    public function __construct(LogManager $manager, string $file = 'log_out.txt')
+    public function __construct(LogDispatcher $dispatcher, string $file = 'log_out.txt')
     {
-        $this->file = $manager->getDirectory() . $file;
+        $this->file = $dispatcher->getDirectory() . $file;
         $this->init();
         $this->submit_log_messages_async_task = $task = new SubmitLogMessagesAsyncTask($this->file);
-        $manager->getPlugin()->getScheduler()->scheduleRepeatingTask(
+        $dispatcher->getPlugin()->getScheduler()->scheduleRepeatingTask(
             $task,
-            $manager->getPlugin()->getConfig()->getNested('task.write-task-period') * 20
+            $dispatcher->getPlugin()->getConfig()->getNested('task.write-task-period') * 20
         );
     }
 

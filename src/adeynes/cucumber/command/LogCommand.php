@@ -37,7 +37,7 @@ class LogCommand extends CucumberCommand
             return false;
         }
 
-        $this->getPlugin()->getLogManager()->log($message, $severity);
+        $this->getPlugin()->getLogDispatcher()->log($message, $severity);
 
         $this->getPlugin()->formatAndSend($sender, 'success.log', ['message' => $message]);
         return true;

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber;
 
-use adeynes\cucumber\log\LogManager;
+use adeynes\cucumber\log\LogDispatcher;
 use adeynes\cucumber\log\LogSeverity;
 use adeynes\cucumber\mod\PunishmentRegistry;
 use adeynes\cucumber\task\DbSynchronizationTask;
@@ -39,8 +39,8 @@ final class Cucumber extends PluginBase
     /** @var parsecmd */
     private $parsecmd;
 
-    /** @var LogManager */
-    private $log_manager;
+    /** @var LogDispatcher */
+    private $log_dispatcher;
 
     /** @var PunishmentRegistry */
     private $punishment_registry;
@@ -132,15 +132,15 @@ final class Cucumber extends PluginBase
     }
 
     /**
-     * Instantiate LogManager & push loggers defined
+     * Instantiate LogDispatcher & push loggers defined
      * under log.loggers to the logger stack
      * @return void
      */
     private function initLog(): void
     {
-        $this->log_manager = new LogManager($this);
+        $this->log_dispatcher = new LogDispatcher($this);
         // Loggers are defined in the config as [severity => [fqn, [constructor args]]]
-        // LogManager instance is always the first arg, user-supplied ones are passed starting with the second arg
+        // LogDispatcher instance is always the first arg, user-supplied ones are passed starting with the second arg
         foreach ($this->getConfig()->getNested('log.loggers') as $severity => $loggers) {
             try {
                 $severity = LogSeverity::fromString($severity);
@@ -152,8 +152,8 @@ final class Cucumber extends PluginBase
             }
 
             foreach ($loggers as $logger) {
-                $this->getLogManager()->pushLogger(
-                    new $logger[0]($this->getLogManager(), ...($logger[1] ?? [])),
+                $this->getLogDispatcher()->pushLogger(
+                    new $logger[0]($this->getLogDispatcher(), ...($logger[1] ?? [])),
                     $severity
                 );
             }
@@ -238,9 +238,9 @@ final class Cucumber extends PluginBase
         return $this->parsecmd;
     }
 
-    public function getLogManager(): LogManager
+    public function getLogDispatcher(): LogDispatcher
     {
-        return $this->log_manager;
+        return $this->log_dispatcher;
     }
 
     public function getPunishmentRegistry(): PunishmentRegistry
