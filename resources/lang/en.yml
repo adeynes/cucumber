@@ -37,7 +37,7 @@ error:
 success:
   # %player% %message%
   rawtell: "&e[&bYOU &r&e-> &b%player%&e] &7%message%"
-  # %message%
+  # %message% %severity%
   log: "&aYou have successfully logged &7%message%&a!"
   # %message%
   alert: '' # the sender will get the alert message

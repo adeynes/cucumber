@@ -28,18 +28,18 @@ class LogCommand extends CucumberCommand
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
         [$message] = $command->get(['message']);
-        $severity = $command->getFlag('severity') ?? 'log';
+        $severity_str = $command->getFlag('severity') ?? 'log';
 
         try {
-            $severity = LogSeverity::fromString($severity);
+            $severity = LogSeverity::fromString($severity_str);
         } catch (CucumberException $exception) {
-            $this->getPlugin()->formatAndSend($sender, 'error.unknown-log-severity', ['severity' => $severity]);
+            $this->getPlugin()->formatAndSend($sender, 'error.unknown-log-severity', ['severity' => $severity_str]);
             return false;
         }
 
         $this->getPlugin()->getLogDispatcher()->log($message, $severity);
 
-        $this->getPlugin()->formatAndSend($sender, 'success.log', ['message' => $message]);
+        $this->getPlugin()->formatAndSend($sender, 'success.log', ['message' => $message, 'severity' => $severity_str]);
         return true;
     }
 
