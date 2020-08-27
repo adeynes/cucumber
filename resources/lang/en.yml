@@ -45,7 +45,7 @@ success:
   ban: "&aYou have successfully banned &b%player% &auntil &d%expiration%&a!"
   banlist:
     # %page% %count%
-    intro: "&e&lBans &r&7(page &b%count%&7)&e&l:"
+    intro: "&e&lBans &r&7(&b%count%&7)&e&l:"
     # %player% %reason% %expiration% %moderator% %time_created%
     list: "&b%player% &fwas banned by &9%moderator% &funtil &d%expiration% &ffor &7%reason%"
   # %player%
@@ -54,7 +54,7 @@ success:
   ipban: "&aYou have successfully banned IP &b%ip% &auntil &d%expiration%&a!"
   ipbanlist:
     # %page% %count%
-    intro: "&e&lIP Bans &r&7(page &b%count%&7)&e&l:"
+    intro: "&e&lIP Bans &r&7(&b%count%&7)&e&l:"
     # %ip% %reason% %expiration% %moderator% %time_created%
     list: "&b%ip% &fwas banned by &9%moderator% &funtil &d%expiration% &ffor &7%reason%"
   # %ip%
@@ -67,7 +67,7 @@ success:
   unmute: "&aYou have successfully unmuted &b%player%&a!"
   mutelist:
     # %page% %count%
-    intro: "&e&lMutes &r&7(page &b%count%&7)&e&l:"
+    intro: "&e&lMutes &r&7(&b%count%&7)&e&l:"
     # %player% %reason% %expiration% %moderator% %time_created%
     list: "&b%player% &fwas muted by &9%moderator% &funtil &d%expiration% &ffor &7%reason%"
   # %player% %ip%
