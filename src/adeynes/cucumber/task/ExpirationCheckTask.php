@@ -12,7 +12,6 @@ class ExpirationCheckTask extends CucumberTask
     {
         $punishment_registry = $this->getPlugin()->getPunishmentRegistry();
 
-        // It's nasty & hacky if I have an array of getters and iterate over it
         foreach ($punishment_registry->getBans() as $name => $ban) {
             if ($ban->isExpired()) {
                 /** @noinspection PhpUnhandledExceptionInspection */

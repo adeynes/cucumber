@@ -6,6 +6,7 @@ namespace adeynes\cucumber;
 use adeynes\cucumber\log\LogManager;
 use adeynes\cucumber\log\LogSeverity;
 use adeynes\cucumber\mod\PunishmentRegistry;
+use adeynes\cucumber\task\DbSynchronizationTask;
 use adeynes\cucumber\task\ExpirationCheckTask;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\MessageFactory;
@@ -168,6 +169,7 @@ final class Cucumber extends PluginBase
         $this->punishment_registry = new PunishmentRegistry($this->getMessageConfig(), $this->getConnector());
         // Check for expired punishments every 5 mins
         $this->getScheduler()->scheduleRepeatingTask(new ExpirationCheckTask($this), 60 * 20);
+        $this->getScheduler()->scheduleRepeatingTask(new DbSynchronizationTask($this), 20 * 20);
     }
 
     private function initEvents(): void

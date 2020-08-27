@@ -34,7 +34,7 @@ final class PunishmentRegistry
     {
         $this->message_config = $message_config;
         $this->uban_checker = new UBanChecker($this, $connector);
-        $this->load($connector);
+        $this->load($connector, true);
     }
 
     public function getUBanChecker(): UBanChecker
@@ -47,7 +47,7 @@ final class PunishmentRegistry
         return $this->message_config->getNested("error.$path");
     }
 
-    private function load(DataConnector $connector, bool $blocking = true): void
+    public function load(DataConnector $connector, bool $blocking = false): void
     {
         $connector->executeSelect(
             Queries::CUCUMBER_GET_PUNISHMENTS_BANS_CURRENT,
