@@ -67,6 +67,7 @@ final class Cucumber extends PluginBase
         $this->initEvents();
         $this->registerCommands();
 
+        if ($this->isDisabled()) return;
         $this->getServer()->getPluginManager()->registerEvents(new CucumberListener($this), $this);
     }
 
@@ -77,6 +78,8 @@ final class Cucumber extends PluginBase
 
     private function initConfigs(): void
     {
+        if ($this->isDisabled()) return;
+
         @mkdir($this->getDataFolder());
         $this->saveDefaultConfig();
 
@@ -84,6 +87,7 @@ final class Cucumber extends PluginBase
         $config_version = $this->getConfig()->get('version');
         if (!$this->checkVersion($config_version, self::CONFIG_VERSION)) {
             $this->fail('Outdated config.yml version! Try to delete cucumber/config.yml');
+            return;
         }
 
         foreach (self::SUPPORTED_LANGUAGES as $language) {
@@ -93,6 +97,7 @@ final class Cucumber extends PluginBase
         if (!isset(self::SUPPORTED_LANGUAGES[$language = $this->getConfig()->get('language')])) {
             $language_list = implode(', ', self::SUPPORTED_LANGUAGES);
             $this->fail("Unsupported language $language! Please pick one of the following: $language_list");
+            return;
         }
 
         $this->messages = new Config("{$this->getDataFolder()}lang/$language.yml");
@@ -100,16 +105,24 @@ final class Cucumber extends PluginBase
         $messages_version = $this->getMessage('version');
         if (!$this->checkVersion($messages_version, self::MESSAGES_VERSION)) {
             $this->fail("Outdated $language.yml version Try to delete cucumber/$language.yml");
+            return;
         }
     }
 
     private function initDatabase(): void
     {
-        $this->connector = $connector = libasynql::create(
-            $this,
-            $this->getConfig()->get('database'),
-            ['mysql' => 'mysql.sql']
-        );
+        if ($this->isDisabled()) return;
+
+        try {
+            $this->connector = $connector = libasynql::create(
+                $this,
+                $this->getConfig()->get('database'),
+                ['mysql' => 'mysql.sql']
+            );
+        } catch (\Exception|\Error $e) {
+            $this->fail($e->getMessage());
+            return;
+        }
 
         $this->migration_manager = new MigrationManager($this);
         $this->getMigrationManager()->tryMigration();
@@ -138,6 +151,8 @@ final class Cucumber extends PluginBase
      */
     private function initLog(): void
     {
+        if ($this->isDisabled()) return;
+
         $this->log_dispatcher = new LogDispatcher($this);
         // Loggers are defined in the config as [severity => [fqn, [constructor args]]]
         // LogDispatcher instance is always the first arg, user-supplied ones are passed starting with the second arg
@@ -166,6 +181,8 @@ final class Cucumber extends PluginBase
      */
     private function initMod(): void
     {
+        if ($this->isDisabled()) return;
+
         $this->punishment_registry = new PunishmentRegistry($this->getMessageConfig(), $this->getConnector());
         // Check for expired punishments every 5 mins
         $this->getScheduler()->scheduleRepeatingTask(
@@ -180,6 +197,8 @@ final class Cucumber extends PluginBase
 
     private function initEvents(): void
     {
+        if ($this->isDisabled()) return;
+
         $events = [
             'join' => ['join', 'JoinEvent'],
             'join-attempt' => ['join attempt', 'JoinAttemptEvent'],
@@ -213,6 +232,8 @@ final class Cucumber extends PluginBase
 
     private function registerCommands(): void
     {
+        if ($this->isDisabled()) return;
+
         $this->saveResource('commands.json');
         $commands = new Config($this->getDataFolder() . 'commands.json', CONFIG::JSON);
         $this->parsecmd = parsecmd::new($this, $commands->getAll(), true);
@@ -292,12 +313,11 @@ final class Cucumber extends PluginBase
      * @param string $message
      * @param string $severity The severity of the message (defined in SPL/LogLevel), default alert
      * @return void
-     * @throws \Exception To disable the plugin
      */
     public function fail(string $message, string $severity = 'alert'): void
     {
         $this->log($message, $severity);
-        throw new \Exception($message);
+        $this->getServer()->getPluginManager()->disablePlugin($this);
     }
 
     public function cancelTask(int $id)
