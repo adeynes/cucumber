@@ -52,7 +52,8 @@ final class MigrationManager
     private function migrate(): void {
         $queries = [
             'player' => [
-                Queries::CUCUMBER_MIGRATE_TABLES_PLAYERS_RENAME
+                Queries::CUCUMBER_MIGRATE_TABLES_PLAYERS_RENAME,
+                Queries::CUCUMBER_MIGRATE_TABLES_PLAYERS_ALTER_MODIFY
             ],
             'ban' => [
                 Queries::CUCUMBER_MIGRATE_TABLES_BANS_RENAME,
@@ -66,7 +67,8 @@ final class MigrationManager
             ],
             'uban' => [
                 Queries::CUCUMBER_MIGRATE_TABLES_UBANS_RENAME,
-                Queries::CUCUMBER_MIGRATE_TABLES_UBANS_ALTER_CHANGE
+                Queries::CUCUMBER_MIGRATE_TABLES_UBANS_ALTER_CHANGE,
+                Queries::CUCUMBER_MIGRATE_TABLES_UBANS_ALTER_MODIFY
             ],
             'mute' => [
                 Queries::CUCUMBER_MIGRATE_TABLES_MUTES_RENAME,

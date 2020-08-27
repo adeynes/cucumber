@@ -4,7 +4,7 @@
 -- #    {players
 CREATE TABLE IF NOT EXISTS cucumber_players (
     id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(30) UNIQUE NOT NULL,
+    name VARCHAR(32) UNIQUE NOT NULL,
     ip VARCHAR(20) NOT NULL,
     first_join INT(11) UNSIGNED NOT NULL,
     last_join INT(11) UNSIGNED NOT NULL
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS cucumber_bans (
     player_id INT(7) UNSIGNED UNIQUE NOT NULL,
     reason VARCHAR(500) DEFAULT NULL,
     expiration INT UNSIGNED,
-    moderator VARCHAR(30) NOT NULL,
+    moderator VARCHAR(32) NOT NULL,
     time_created INT UNSIGNED NOT NULL,
     FOREIGN KEY (player_id) REFERENCES cucumber_players(id),
     FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS cucumber_ip_bans (
     ip VARCHAR(20) UNIQUE NOT NULL,
     reason VARCHAR(500) DEFAULT NULL,
     expiration INT UNSIGNED,
-    moderator VARCHAR(30) NOT NULL,
+    moderator VARCHAR(32) NOT NULL,
     time_created INT UNSIGNED NOT NULL,
     FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
 );
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS cucumber_ubans (
     id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     ip VARCHAR(20) UNIQUE NOT NULL,
     reason VARCHAR(500) DEFAULT NULL,
-    moderator VARCHAR(30) NOT NULL,
+    moderator VARCHAR(32) NOT NULL,
     time_created INT UNSIGNED NOT NULL,
     FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
 );
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS cucumber_mutes (
     player_id INT(7) UNSIGNED UNIQUE NOT NULL,
     reason VARCHAR(500) DEFAULT NULL,
     expiration INT UNSIGNED,
-    moderator VARCHAR(30) NOT NULL,
+    moderator VARCHAR(32) NOT NULL,
     time_created INT UNSIGNED NOT NULL,
     FOREIGN KEY (player_id) REFERENCES cucumber_players(id),
     FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
@@ -74,6 +74,10 @@ SHOW COLUMNS FROM :table;
 # noinspection SqlResolve
 RENAME TABLE players TO cucumber_players;
 -- #        }
+-- #        {alter-modify
+ALTER TABLE cucumber_players
+    MODIFY COLUMN name VARCHAR(32) UNIQUE NOT NULL;
+-- #        }
 -- #      }
 -- #      {bans
 -- #        {rename
@@ -88,7 +92,8 @@ ALTER TABLE cucumber_bans
 -- #        }
 -- #        {alter-modify
 ALTER TABLE cucumber_bans
-    MODIFY COLUMN expiration INT UNSIGNED;
+    MODIFY COLUMN expiration INT UNSIGNED,
+    MODIFY COLUMN moderator VARCHAR(32) NOT NULL;
 -- #        }
 -- #      }
 -- #      {ip-bans
@@ -102,7 +107,8 @@ ALTER TABLE cucumber_ip_bans
 -- #        }
 -- #        {alter-modify
 ALTER TABLE cucumber_ip_bans
-    MODIFY COLUMN expiration INT UNSIGNED;
+    MODIFY COLUMN expiration INT UNSIGNED,
+    MODIFY COLUMN moderator VARCHAR(32) NOT NULL;
 -- #        }
 -- #      }
 -- #      {ubans
@@ -113,6 +119,10 @@ RENAME TABLE ubans TO cucumber_ubans;
 -- #        {alter-change
 ALTER TABLE cucumber_ubans
     ADD COLUMN time_created INT UNSIGNED NOT NULL AFTER moderator;
+-- #        }
+-- #        {alter-modify
+ALTER TABLE cucumber_ubans
+    MODIFY COLUMN moderator VARCHAR(32) NOT NULL;
 -- #        }
 -- #      }
 -- #      {mutes
@@ -128,7 +138,8 @@ ALTER TABLE cucumber_mutes
 -- #        }
 -- #        {alter-modify
 ALTER TABLE cucumber_mutes
-    MODIFY COLUMN expiration INT UNSIGNED;
+    MODIFY COLUMN expiration INT UNSIGNED,
+    MODIFY COLUMN moderator VARCHAR(32) NOT NULL;
 -- #        }
 -- #      }
 -- #    }
