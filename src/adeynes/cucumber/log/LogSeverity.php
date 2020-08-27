@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnusedPrivateFieldInspection */
 declare(strict_types=1);
 
 namespace adeynes\cucumber\log;

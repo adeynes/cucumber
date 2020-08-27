@@ -14,7 +14,6 @@ use adeynes\cucumber\event\QuitEvent;
 use adeynes\cucumber\mod\Punishment;
 use adeynes\cucumber\utils\MessageFactory;
 use adeynes\cucumber\utils\Queries;
-use pocketmine\event\Event;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerCommandPreprocessEvent;

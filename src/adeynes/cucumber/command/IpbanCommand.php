@@ -7,7 +7,6 @@ use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\mod\IpBan;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\CucumberPlayer;
-use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
 use adeynes\parsecmd\command\CommandParser;
 use adeynes\parsecmd\command\ParsedCommand;

@@ -6,7 +6,6 @@ namespace adeynes\cucumber\task;
 use adeynes\asyncio\asyncio;
 use adeynes\asyncio\FileWriteAsyncTask;
 use adeynes\asyncio\WriteMode;
-use adeynes\cucumber\Cucumber;
 use pocketmine\scheduler\Task;
 
 class SubmitLogMessagesAsyncTask extends Task
