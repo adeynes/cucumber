@@ -7,8 +7,9 @@ use adeynes\asyncio\asyncio;
 use adeynes\asyncio\FileWriteAsyncTask;
 use adeynes\asyncio\WriteMode;
 use adeynes\cucumber\Cucumber;
+use pocketmine\scheduler\Task;
 
-class SubmitLogMessagesAsyncTask extends CucumberTask
+class SubmitLogMessagesAsyncTask extends Task
 {
 
     /** @var string */
@@ -17,10 +18,9 @@ class SubmitLogMessagesAsyncTask extends CucumberTask
     /** @var string[] */
     protected $messages = [];
 
-    public function __construct(Cucumber $plugin, string $file)
+    public function __construct(string $file)
     {
         $this->file = $file;
-        parent::__construct($plugin);
     }
 
     public function onRun(int $tick): void

@@ -20,9 +20,8 @@ class BaseLogger implements Logger
     public function __construct(LogManager $manager, string $file = 'log_out.txt')
     {
         $this->file = $manager->getDirectory() . $file;
-        $plugin = $manager->getPlugin();
         $this->init();
-        $this->submit_log_messages_async_task = $task = new SubmitLogMessagesAsyncTask($plugin, $this->file);
+        $this->submit_log_messages_async_task = $task = new SubmitLogMessagesAsyncTask($this->file);
         $manager->getPlugin()->getScheduler()->scheduleRepeatingTask($task, 10 * 20);
     }
 
