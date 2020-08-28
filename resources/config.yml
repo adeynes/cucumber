@@ -1,12 +1,16 @@
 # DO NOT EDIT THE FOLLOWING LINE
-version: '2.1'
+version: '2.2'
 
+# DO NOT EDIT THE FOLLOWING LINE. THE PLUGIN WILL NOT WORK IF YOU MANUALLY EDIT IT
+migrated: false # DO NOT EDIT THIS LINE MANUALLY
+# DO NOT EDIT THE ABOVE LINE MANUALLY
+
+# en fr
 language: en
 
 database:
   type: mysql # only mysql is supported as of now
 
-  # Only edit these settings if you selected mysql for type
   mysql:
     host: 127.0.0.1
     username: cucumber
@@ -17,15 +21,23 @@ database:
   # Recommended: 1 for sqlite, 2 for MySQL. You may want to further increase this value if your MySQL connection is very slow.
   worker-limit: 2
 
+task:
+  # How often to check for expired punishments, in seconds
+  expiration-task-period: 20
+  # How often to sync memory with the db, also how often punishments will be synchronized across servers, in seconds
+  # Increase this if you have a LOT of punishments and experience lag every 20 seconds
+  db-sync-task-period: 20
+  # How often to write to the log file in seconds
+  write-task-period: 10
+
 log:
-  # Where log files will be located;
-  # this directory will be inside the resources directory
+  # Where log files will be located; relative to the plugin's data folder
   path: log/
   traffic: true # log join/quit events
   chat: true # log all messages sent to chat
   command: true # log all commands
   # Loggers are in the form [fully-classified class name => constructor args]
-  # Constructor args must be constant, and will be passed after the plugin instance
+  # Constructor args must be constant, and will be passed after the LogDispatcher instance
   loggers:
     log:
       - [\adeynes\cucumber\log\BaseLogger, []]
@@ -35,3 +47,14 @@ log:
       []
     alert:
       []
+  severities:
+    join: log
+    join-attempt: log
+    quit: log
+    chat: log
+    chat-attempt: log
+    command: log
+
+punishment:
+  list:
+    lines-per-page: 10

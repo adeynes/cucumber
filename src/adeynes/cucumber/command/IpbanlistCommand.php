@@ -4,11 +4,12 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
+use adeynes\cucumber\mod\IpBan;
+use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
-use adeynes\parsecmd\command\ParsedCommand;
 use pocketmine\command\CommandSender;
 
-class IpbanlistCommand extends CucumberCommand
+class IpbanlistCommand extends PunishmentListCommand
 {
 
     public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
@@ -19,23 +20,40 @@ class IpbanlistCommand extends CucumberCommand
             'ipbanlist',
             'cucumber.command.ipbanlist',
             'See the list of IP bans',
-            '/ipbanlist'
+            '/ipbanlist [page]'
         );
     }
 
-    public function _execute(CommandSender $sender, ParsedCommand $command): bool
+    public function isAllable(): bool
     {
-        $message = '';
-        $ip_bans = $this->getPlugin()->getPunishmentManager()->getIpBans();
-        foreach ($ip_bans as $ip => $ip_ban) {
-            $data = $ip_ban->getDataFormatted() + ['ip' => $ip];
-            $message .= $this->getPlugin()->formatMessageFromConfig('success.ipbanlist.list', $data);
-        }
-
-        $this->getPlugin()->formatAndSend($sender, 'success.ipbanlist.intro', ['count' => count($ip_bans)]);
-        $sender->sendMessage(trim($message));
-
         return true;
+    }
+
+    public function getSelectQuery(): string
+    {
+        return Queries::CUCUMBER_GET_PUNISHMENTS_IP_BANS_LIMITED;
+    }
+
+    /**
+     * @param array $ip_ban_row The database representation of an IP ban
+     * @return string
+     */
+    protected function makeIpBanInfoLine(array $ip_ban_row): string {
+        return $this->getPlugin()->formatMessageFromConfig(
+            'success.ipbanlist.list',
+            IpBan::from($ip_ban_row)->getFormatData()
+        );
+    }
+
+    protected function sendList(CommandSender $sender, array $ip_bans, int $page_number): void {
+        $page = trim(
+            $this->getPlugin()->formatMessageFromConfig(
+                'success.ipbanlist.intro',
+                ['page' => strval($page_number), 'count' => strval(count($ip_bans))]
+            ) . PHP_EOL .
+            implode(PHP_EOL, array_map([$this, 'makeIpBanInfoLine'], $ip_bans))
+        );
+        $sender->sendMessage($page);
     }
 
 }

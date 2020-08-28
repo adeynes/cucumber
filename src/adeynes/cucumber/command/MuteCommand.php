@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
+use adeynes\cucumber\mod\Mute;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
@@ -22,24 +23,34 @@ class MuteCommand extends CucumberCommand
             'mute',
             'cucumber.command.mute',
             'Mute a player',
-            '/mute <player> [reason] [-d <duration>]'
+            '/mute <player> <duration>|inf [reason]'
         );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$target_name, $reason] = $command->get(['player', 'reason']);
+        [$target_name, $duration, $reason] = $command->get(['player', 'duration', 'reason']);
         $target_name = strtolower($target_name);
-        if ($reason === '') $reason = null;
-        $duration = $command->getFlag('duration');
-        $expiration = $duration ? CommandParser::parseDuration($duration) : null;
+        if ($reason === null) {
+            $reason = $this->getPlugin()->getMessage('moderation.mute.mute.default-reason');
+        }
+        if (in_array($duration, self::PERMANENT_DURATION_STRINGS)) {
+            $expiration = null;
+        } else {
+            try {
+                $expiration = $duration ? CommandParser::parseDuration($duration) : null;
+            } catch (\InvalidArgumentException $exception) {
+                $this->getPlugin()->formatAndSend($sender, 'error.invalid-duration', ['duration' => $duration]);
+                return false;
+            }
+        }
 
         $mute = function () use ($sender, $target_name, $reason, $expiration) {
             try {
-                $mute_data = $this->getPlugin()->getPunishmentManager()
-                    ->mute($target_name, $reason, $expiration, $sender->getName())
-                    ->getDataFormatted();
-                $mute_data = $mute_data + ['player' => $target_name];
+                $mute = new Mute($target_name, $reason, $expiration, $sender->getName(), time());
+                $mute_data = $mute->getFormatData();
+                $this->getPlugin()->getPunishmentRegistry()->addMute($mute);
+                $mute->save($this->getPlugin()->getConnector());
 
                 if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
                     $this->getPlugin()->formatAndSend($target, 'moderation.mute.mute.message', $mute_data);

@@ -3,30 +3,35 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber;
 
-use adeynes\cucumber\log\LogManager;
-use adeynes\cucumber\mod\PunishmentManager;
+use adeynes\cucumber\log\LogDispatcher;
+use adeynes\cucumber\log\LogSeverity;
+use adeynes\cucumber\mod\PunishmentRegistry;
+use adeynes\cucumber\task\DbSynchronizationTask;
 use adeynes\cucumber\task\ExpirationCheckTask;
+use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\MessageFactory;
 use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\parsecmd;
 use pocketmine\command\CommandSender;
-use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use poggit\libasynql\DataConnector;
 use poggit\libasynql\libasynql;
 
-final class Cucumber extends PluginBase implements Plugin
+final class Cucumber extends PluginBase
 {
 
-    private const CONFIG_VERSION = '2.1';
+    private const CONFIG_VERSION = '3.0';
 
-    private const MESSAGES_VERSION = '2.0';
+    private const MESSAGES_VERSION = '3.0';
 
     private const SUPPORTED_LANGUAGES = ['en' => 'en', 'fr' => 'fr'];
 
     /** @var Cucumber */
     private static $instance;
+
+    /** @var Config We need to override PocketMine's config: it is private and we can't have it run saveDefaultConfig() */
+    private $config_;
 
     /** @var Config */
     private $messages;
@@ -37,11 +42,11 @@ final class Cucumber extends PluginBase implements Plugin
     /** @var parsecmd */
     private $parsecmd;
 
-    /** @var LogManager */
-    private $log_manager;
+    /** @var LogDispatcher */
+    private $log_dispatcher;
 
-    /** @var PunishmentManager */
-    private $punishment_manager;
+    /** @var PunishmentRegistry */
+    private $punishment_registry;
 
     public static function getInstance(): self
     {
@@ -62,48 +67,82 @@ final class Cucumber extends PluginBase implements Plugin
         $this->initEvents();
         $this->registerCommands();
 
+        if ($this->isDisabled()) return;
         $this->getServer()->getPluginManager()->registerEvents(new CucumberListener($this), $this);
     }
 
     public function onDisable(): void
     {
-        if ($this->punishment_manager) $this->getPunishmentManager()->close();
-
-        if ($this->connector) $this->getConnector()->close(); // last
+        if ($this->connector) $this->getConnector()->close();
     }
 
     private function initConfigs(): void
     {
-        @mkdir($this->getDataFolder());
-        $this->saveDefaultConfig();
+        if ($this->isDisabled()) return;
 
-        /** @var string $config_version */
-        $config_version = $this->getConfig()->get('version');
-        if (!$this->checkVersion($config_version, self::CONFIG_VERSION)) {
-            $this->fail('Outdated config.yml version! Try to delete cucumber/config.yml');
+        @mkdir($this->getDataFolder());
+
+        $emit_version_edit_warning = false;
+
+        try {
+            $config_migration_manager = new ConfigMigrationManager($this, 'config.yml');
+            $config_migration_manager->tryMigration(self::CONFIG_VERSION, 'old_config.yml');
+            $emit_version_edit_warning |= $config_migration_manager->hasMigrated();
+        } catch (\InvalidArgumentException $e) {
+            $this->saveResource('config.yml');
+            $emit_version_edit_warning |= true;
         }
+        $this->config_ = new Config($this->getDataFolder() . 'config.yml');
 
         foreach (self::SUPPORTED_LANGUAGES as $language) {
-            $this->saveResource("lang/$language.yml");
+            try {
+                $language_migration_manager = new ConfigMigrationManager($this, "lang/$language.yml");
+                $language_migration_manager->tryMigration(self::MESSAGES_VERSION, "lang/old_$language.yml");
+                $emit_version_edit_warning |= $language_migration_manager->hasMigrated();
+            } catch (\InvalidArgumentException $e) {
+                $this->saveResource("lang/$language.yml");
+                $emit_version_edit_warning |= true;
+            }
         }
 
         if (!isset(self::SUPPORTED_LANGUAGES[$language = $this->getConfig()->get('language')])) {
             $language_list = implode(', ', self::SUPPORTED_LANGUAGES);
             $this->fail("Unsupported language $language! Please pick one of the following: $language_list");
+            return;
         }
 
         $this->messages = new Config("{$this->getDataFolder()}lang/$language.yml");
 
-        $messages_version = $this->getMessage('version');
-        if (!$this->checkVersion($messages_version, self::MESSAGES_VERSION)) {
-            $this->fail("Outdated $language.yml version Try to delete cucumber/$language.yml");
+        if ($emit_version_edit_warning) {
+            $this->emitVersionEditWarning();
         }
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config_;
     }
 
     private function initDatabase(): void
     {
-        $this->connector = $connector = libasynql::create($this, $this->getConfig()->get('database'),
-            ['mysql' => 'mysql.sql']);
+        if ($this->isDisabled()) return;
+
+        try {
+            $this->connector = $connector = libasynql::create(
+                $this,
+                $this->getConfig()->get('database'),
+                ['mysql' => 'mysql.sql']
+            );
+        } catch (\Exception|\Error $e) {
+            $this->fail($e->getMessage());
+            return;
+        }
+
+        $db_migration_manager = new DbMigrationManager($this);
+        $db_migration_manager->tryMigration();
+        if ($db_migration_manager->hasMigrated()) {
+            $this->emitMigratedEditWarning();
+        }
 
         // other tables have a foreign key constraint on players so it must be first
         $connector->executeGeneric(Queries::CUCUMBER_INIT_PLAYERS);
@@ -111,29 +150,42 @@ final class Cucumber extends PluginBase implements Plugin
 
         $connector->executeGeneric(Queries::CUCUMBER_ADD_PLAYER, ['name' => 'CONSOLE', 'ip' => '127.0.0.1']);
 
-        $create_queries = [Queries::CUCUMBER_INIT_PUNISHMENTS_BANS, Queries::CUCUMBER_INIT_PUNISHMENTS_IP_BANS,
-            Queries::CUCUMBER_INIT_PUNISHMENTS_UBANS, Queries::CUCUMBER_INIT_PUNISHMENTS_MUTES];
+        $create_queries = [
+            Queries::CUCUMBER_INIT_PUNISHMENTS_BANS,
+            Queries::CUCUMBER_INIT_PUNISHMENTS_IP_BANS,
+            Queries::CUCUMBER_INIT_PUNISHMENTS_UBANS,
+            Queries::CUCUMBER_INIT_PUNISHMENTS_MUTES
+        ];
         foreach ($create_queries as $query) $connector->executeGeneric($query);
 
         $connector->waitAll();
     }
 
     /**
-     * Instantiate LogManager & push loggers defined
+     * Instantiate LogDispatcher & push loggers defined
      * under log.loggers to the logger stack
      * @return void
      */
     private function initLog(): void
     {
-        $this->log_manager = new LogManager($this);
-        // Loggers are defined in the config as
-        // [severity => [fqn, [constructor args]]]
-        // Cucumber instance is always the first arg,
-        // user-supplied ones are passed starting with the second arg
+        if ($this->isDisabled()) return;
+
+        $this->log_dispatcher = new LogDispatcher($this);
+        // Loggers are defined in the config as [severity => [fqn, [constructor args]]]
+        // LogDispatcher instance is always the first arg, user-supplied ones are passed starting with the second arg
         foreach ($this->getConfig()->getNested('log.loggers') as $severity => $loggers) {
+            try {
+                $severity = LogSeverity::fromString($severity);
+            } catch (CucumberException $exception) {
+                $this->getLogger()->warning(
+                    MessageFactory::colorize("&eUnknown logger severity &b$severity&e, defaulting to &blog")
+                );
+                $severity = LogSeverity::LOG();
+            }
+
             foreach ($loggers as $logger) {
-                $this->getLogManager()->addLogger(
-                    new $logger[0]($this->getLogManager(), ...($logger[1] ?? [])),
+                $this->getLogDispatcher()->pushLogger(
+                    new $logger[0]($this->getLogDispatcher(), ...($logger[1] ?? [])),
                     $severity
                 );
             }
@@ -141,18 +193,29 @@ final class Cucumber extends PluginBase implements Plugin
     }
 
     /**
-     * Instantiate PunishmentManager & load punishments
+     * Instantiate PunishmentRegistry & load punishments
      * @return void
      */
     private function initMod(): void
     {
-        $this->punishment_manager = new PunishmentManager($this);
+        if ($this->isDisabled()) return;
+
+        $this->punishment_registry = new PunishmentRegistry($this->getMessageConfig(), $this->getConnector());
         // Check for expired punishments every 5 mins
-        $this->getScheduler()->scheduleRepeatingTask(new ExpirationCheckTask($this), 300 * 20);
+        $this->getScheduler()->scheduleRepeatingTask(
+            new ExpirationCheckTask($this->getPunishmentRegistry(), $this->getMessageConfig()),
+            $this->getConfig()->getNested('task.expiration-task-period') * 20
+        );
+        $this->getScheduler()->scheduleRepeatingTask(
+            new DbSynchronizationTask($this->getPunishmentRegistry(), $this->getConnector()),
+            $this->getConfig()->getNested('task.db-sync-task-period') * 20
+        );
     }
 
     private function initEvents(): void
     {
+        if ($this->isDisabled()) return;
+
         $events = [
             'join' => ['join', 'JoinEvent'],
             'join-attempt' => ['join attempt', 'JoinAttemptEvent'],
@@ -163,17 +226,32 @@ final class Cucumber extends PluginBase implements Plugin
         ];
 
         foreach ($events as $type => $class) {
+            try {
+
+                $severity = $this->getConfig()->getNested("log.severities.$type", 'log');
+                $severity = LogSeverity::fromString($severity);
+            } catch (CucumberException $exception) {
+                /** @noinspection PhpUndefinedVariableInspection */
+                $this->getLogger()->warning(
+                    MessageFactory::colorize("&eUnknown logger severity &b$severity&e for event &b$type&e, defaulting to &blog")
+                );
+                $severity = LogSeverity::LOG();
+            }
+
             call_user_func(
                 ["\\adeynes\\cucumber\\event\\$class[1]", 'init'],
                 $class[0],
-                $this->getMessage("log.templates.$type")
+                $this->getMessage("log.templates.$type"),
+                $severity
             );
         }
     }
 
     private function registerCommands(): void
     {
-        $this->saveResource('commands.json');
+        if ($this->isDisabled()) return;
+
+        $this->saveResource('commands.json', true);
         $commands = new Config($this->getDataFolder() . 'commands.json', CONFIG::JSON);
         $this->parsecmd = parsecmd::new($this, $commands->getAll(), true);
     }
@@ -198,21 +276,14 @@ final class Cucumber extends PluginBase implements Plugin
         return $this->parsecmd;
     }
 
-    public function getLogManager(): LogManager
+    public function getLogDispatcher(): LogDispatcher
     {
-        return $this->log_manager;
+        return $this->log_dispatcher;
     }
 
-    public function getPunishmentManager(): PunishmentManager
+    public function getPunishmentRegistry(): PunishmentRegistry
     {
-        return $this->punishment_manager;
-    }
-
-    public function checkVersion(string $actual, string $minimum): bool
-    {
-        $actual = explode('.', $actual);
-        $minimum = explode('.', $minimum);
-        return $actual[0] === $minimum[0] && $actual[1] >= $minimum[1];
+        return $this->punishment_registry;
     }
 
     public function formatMessageFromConfig(string $path, array $data): string
@@ -226,27 +297,25 @@ final class Cucumber extends PluginBase implements Plugin
     }
 
     /**
-     * Logs the supplied message at the supplied severity level in the server's logger
-     * @param string $message
-     * @param string $severity The severity of the message (defined in SPL/LogLevel), default info
-     * @return void
-     */
-    public function log(string $message, string $severity = 'info'): void
-    {
-        $this->getServer()->getLogger()->{$severity}($message);
-    }
-
-    /**
      * Logs the supplied message and disables the plugin
      * @param string $message
      * @param string $severity The severity of the message (defined in SPL/LogLevel), default alert
      * @return void
-     * @throws \Exception To disable the plugin
      */
     public function fail(string $message, string $severity = 'alert'): void
     {
-        $this->log($message, $severity);
-        throw new \Exception($message);
+        $this->getLogger()->log($severity, $message);
+        $this->getServer()->getPluginManager()->disablePlugin($this);
+    }
+
+    public function emitVersionEditWarning(): void
+    {
+        $this->getLogger()->warning('Do not edit the "version" attribute in ANY of the config or lang files');
+    }
+
+    public function emitMigratedEditWarning(): void
+    {
+        $this->getLogger()->warning('Do not edit the "migrated" attribute in config.yml');
     }
 
     public function cancelTask(int $id)

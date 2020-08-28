@@ -11,9 +11,9 @@ use adeynes\cucumber\event\CommandEvent;
 use adeynes\cucumber\event\JoinAttemptEvent;
 use adeynes\cucumber\event\JoinEvent;
 use adeynes\cucumber\event\QuitEvent;
+use adeynes\cucumber\mod\Punishment;
 use adeynes\cucumber\utils\MessageFactory;
 use adeynes\cucumber\utils\Queries;
-use pocketmine\event\Event;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerCommandPreprocessEvent;
@@ -55,25 +55,26 @@ final class CucumberListener implements Listener
         $player = $ev->getPlayer();
         $message = $ev->getMessage();
 
-        if ($mute = $this->getPlugin()->getPunishmentManager()->isMuted($player)) {
+        if ($this->getPlugin()->getPunishmentRegistry()->isMuted($player, $mute)) {
+            /** @var Punishment $mute */
             $ev->setCancelled();
             $messages = $this->getPlugin()->getMessageConfig();
             $player->sendMessage(MessageFactory::fullFormat(
                 $messages->getNested('moderation.mute.chat-attempt') ?? $messages->getNested('moderation.mute.mute.message'),
-                $mute->getDataFormatted()
+                $mute->getFormatData()
             ));
             if ($this->log_chat) {
-                $this->callEvent(new ChatAttemptEvent($player, $message));
+                (new ChatAttemptEvent($player, $message))->call();
             }
         } elseif ($this->log_chat) {
-            $this->callEvent(new ChatEvent($player, $message));
+            (new ChatEvent($player, $message))->call();
         }
     }
 
     public function onCommandPreprocess(PlayerCommandPreprocessEvent $ev)
     {
         if (strpos(($command = $ev->getMessage()), '/') === 0 && $this->log_command) {
-            $this->callEvent(new CommandEvent($ev->getPlayer(), $command));
+            (new CommandEvent($ev->getPlayer(), $command))->call();
         }
     }
 
@@ -81,17 +82,18 @@ final class CucumberListener implements Listener
     public function onPreLogin(PlayerPreLoginEvent $ev)
     {
         $player = $ev->getPlayer();
-        $punishment_manager = $this->getPlugin()->getPunishmentManager();
-        $punishment_manager->checkUBan($player);
+        $punishment_registry = $this->getPlugin()->getPunishmentRegistry();
+        $punishment_registry->getUBanChecker()->checkFor($player);
 
-        if ($ban = $punishment_manager->isBanned($player)) {
+        if ($punishment_registry->isBanned($player, $ban)) {
+            /** @var Punishment $ban */
             $ev->setKickMessage(
-                $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban->getDataFormatted())
+                $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban->getFormatData())
             );
             $ev->setCancelled();
 
             if ($this->log_traffic) {
-                $this->callEvent(new JoinAttemptEvent($player));
+                (new JoinAttemptEvent($player))->call();
             }
         }
 
@@ -110,26 +112,21 @@ final class CucumberListener implements Listener
         }
 
         if ($this->log_traffic) {
-            $this->callEvent(new JoinEvent($player));
+            (new JoinEvent($player))->call();
         }
     }
 
     public function onQuit(PlayerQuitEvent $ev)
     {
         if ($this->log_traffic) {
-            $this->callEvent(new QuitEvent($ev->getPlayer()));
+            (new QuitEvent($ev->getPlayer()))->call();
         }
     }
 
     public function onCucumberEvent(CucumberEvent $ev)
     {
-        $log_manager = $this->getPlugin()->getLogManager();
-        $log_manager->log($log_manager->formatEventMessage($ev));
-    }
-
-    private function callEvent(Event $ev): void
-    {
-        $this->getPlugin()->getServer()->getPluginManager()->callEvent($ev);
+        $log_dispatcher = $this->getPlugin()->getLogDispatcher();
+        $log_dispatcher->log($log_dispatcher->formatEventMessage($ev), $ev->getSeverity());
     }
 
 }

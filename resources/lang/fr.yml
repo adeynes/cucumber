@@ -1,5 +1,5 @@
-# NE PAS CHANGER LA LIGNE SUIVANTE
-version: '2.1'
+# NE PAS MODIFIER LA LIGNE SUIVANTE
+version: '2.2'
 
 error:
   # %player%
@@ -9,49 +9,76 @@ error:
   # %severity%
   unknown-log-severity: "&cSeverité inexistante &b%severity%&c!"
   not-ingame: "&cIl faut utiliser cette commande dans le jeu!"
-  # %ip%
-  player-ip-ambiguity: "&b%ip% &cressemble à une IP, mais il y a aussi un joueur avec ce nom! Utilisez un des paramètres &b-player &cou &b-ip &cpour résoudre ce problème"
+  # %argument%
+  invalid-argument: "&b%argument% &cest un argument invalide!"
+  # %duration%
+  invalid-duration: "&b%duration% &cest une durée invalide!"
+  ban:
+    # %player%
+    already-banned: "&b%player% &cest déjà banni!"
+    # %player%
+    not-banned: "&b%player% &cn'est pas banni!"
+  ipban:
+    # %ip%
+    already-banned: "&cL'adresse IP &b%ip% &cest déjà bannie!"
+    # %ip%
+    not-banned: "&cL'adresse IP &b%ip% &cn'est pas bannie!"
+  uban:
+    # %ip%
+    already-banned: "&cL'adresse IP &b%ip% &cest déjà u-bannie!"
+  mute:
+    # %player%
+    already-muted: "&b%player% &cest déjà muté!"
+    # %player%
+    not-muted: "&b%player% &cn'est pas muté!"
 
 success:
   # %player% %message%
   rawtell: "&e[&bVOUS &r&e-> &b%player%&e] &7%message%"
-  # %message%
-  log: "&aVous avez loggé &7%message%&a!"
+  # %message% %severity%
+  log: "&aVous avez loggé &7%message% &aau niveau &b%severity%&a!"
   # %message%
   alert: '' # l'expéditeur recevra l'alerte
   # %player% %reason% %expiration%
   ban: "&aVous avez banni &b%player% &ajusqu'au &d%expiration%&a!"
   banlist:
-    # %count%
-    intro: "&e&lBans (&r&b%count%&e&l):"
-    # %player% %reason% %expiration% %moderator%
+    # %page% %count%
+    intro: "&e&lBans &r&7(&b%count%&7)&e&l:"
+    # %player% %reason% %expiration% %moderator% %time_created%
     list: "&b%player% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
   # %player%
   pardon: "&aVous avez annulé le ban de &b%player%&a!"
   # %ip% %reason% %expiration%
   ipban: "&aVous avez banni l'IP &b%ip% &ajusqu'au &d%expiration%&a!"
   ipbanlist:
-    # %count%
-    intro: "&e&lBans IP (&r&b%count%&e&l):"
-    # %ip% %reason% %expiration% %moderator%
+    # %page% %count%
+    intro: "&e&lIP Bans &r&7(&b%count%&7)&e&l:"
+    # %ip% %reason% %expiration% %moderator% %time_created%
     list: "&b%ip% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
   # %ip%
   ippardon: "&aVous avez annulé le ban de l'IP &b%ip%&a!"
-  # %ip% %reason% %expiration% (expiration sera toujours 2038-01-18 22:14:07 et ne sert à rien)
+  # %ip% %reason%
   uban: "&aVous avez banni tout joueur qui rejoint le serveur avec l'IP &b%ip%&a!"
   # %player% %reason% %expiration%
   mute: "&aVous avez désactivé le tchat de &b%player% &ajusqu'au &d%expiration%&a!"
   # %player%
   unmute: "&b%player% &apeut à nouveau tchatter!"
   mutelist:
-    # %count%
-    intro: "&e&lMuets (&r&b%count%&e&l):"
-    # %player% %reason% %expiration% %moderator%
+    # %page% %count%
+    intro: "&e&lMutes &r&7(&b%count%&7)&e&l:"
+    # %player% %reason% %expiration% %moderator% %time_created%
     list: "&b%player% &fa été banni du tchat par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
-  # %player% %ip%
-  ip: "&eL'IP de &b%player% &eest &b%ip%"
+  ip:
+    # %player% %ip%
+    ip: "&eL'IP de &b%player% &eest &b%ip%"
+    # %player% %ip% %alts%
+    # Pas besoin de couleur pour %alts%, les comptes connectés seront verts, les autres rouges, avec des virgules grises
+    alts: "&eLeurs autres comptes sont: %alts%"
   # %status%
   vanish: "&aVous avez changé votre statut de disparition à &b%status%&a!"
+  history:
+    # %player% %count%
+    intro: "&eHistorique des punitions de &b%player% &7(&b%count%&7)&e:"
 
 moderation:
   ban:
@@ -96,4 +123,4 @@ log:
     command: "%player%: %command%"
 
 # Symboles: https://secure.php.net/manual/fr/function.date.php
-time-format: d-m-Y H:i:s
+time-format: Y-m-d H:i:s

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\utils;
 
-interface HasData
+interface Formattable
 {
 
-    public function getData(): array;
+    public function getFormatData(): array;
 
 }

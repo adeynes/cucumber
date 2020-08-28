@@ -16,11 +16,44 @@
       "flags": {}
     },
 
+    "paginated": {
+      "arguments": {
+        "page": {
+          "length": 1,
+          "display": "Page",
+          "optional": true
+        }
+      },
+      "flags": {}
+    },
+
+    "paginated-allable": {
+      "arguments": {
+        "page": {
+          "length": 1,
+          "display": "Page",
+          "optional": true
+        }
+      },
+      "flags": {
+        "all": {
+          "length": 0,
+          "display": "All",
+          "aliases": ["a"]
+        }
+      }
+    },
+
     "player-punish": {
       "arguments": {
         "player": {
           "length": 1,
           "display": "Player",
+          "optional": false
+        },
+        "duration": {
+          "length": 1,
+          "display": "Duration (\"inf\" for permanent)",
           "optional": false
         },
         "reason": {
@@ -29,13 +62,7 @@
           "optional": true
         }
       },
-      "flags": {
-        "duration": {
-          "length": 1,
-          "display": "Duration",
-          "aliases": ["d"]
-        }
-      }
+      "flags": {}
     },
 
     "ip-punish": {
@@ -45,28 +72,18 @@
           "display": "Player/IP",
           "optional": false
         },
+        "duration": {
+          "length": 1,
+          "display": "Duration (\"inf\" for permanent)",
+          "optional": false
+        },
         "reason": {
           "length": -1,
           "display": "Reason",
           "optional": true
         }
       },
-      "flags": {
-        "player": {
-          "length": 0,
-          "display": "Player",
-          "aliases": ["p"]
-        },
-        "ip": {
-          "length": 0,
-          "display": "IP"
-        },
-        "duration": {
-          "length": 1,
-          "display": "Duration",
-          "aliases": ["d"]
-        }
-      }
+      "flags": {}
     },
 
     "ip-pardon": {
@@ -180,13 +197,13 @@
     "ban": {
       "blueprint": "player-punish",
       "class": "\\adeynes\\cucumber\\command\\BanCommand",
-      "usage": "/ban <player> [reason] [-duration|-d <duration>]"
+      "usage": "/ban <player> <duration>|inf [reason]"
     },
 
     "banlist": {
-      "blueprint": "blank",
+      "blueprint": "paginated-allable",
       "class": "\\adeynes\\cucumber\\command\\BanlistCommand",
-      "usage": "/banlist"
+      "usage": "/banlist [page]"
     },
 
     "pardon": {
@@ -199,13 +216,13 @@
     "ipban": {
       "blueprint": "ip-punish",
       "class": "\\adeynes\\cucumber\\command\\IpbanCommand",
-      "usage": "/ipban <target> [reason] [-duration|-d <duration>] [-player|-p] [-ip]"
+      "usage": "/ipban <player>|<ip> <duration>|inf [reason]"
     },
 
     "ipbanlist": {
-      "blueprint": "blank",
+      "blueprint": "paginated-allable",
       "class": "\\adeynes\\cucumber\\command\\IpbanlistCommand",
-      "usage": "/ipbanlist"
+      "usage": "/ipbanlist [page]"
     },
 
     "ippardon": {
@@ -229,32 +246,22 @@
             "optional": true
           }
         },
-        "flags": {
-          "player": {
-            "length": 0,
-            "display": "Player",
-            "aliases": ["p"]
-          },
-          "ip": {
-            "length": 0,
-            "display": "IP"
-          }
-        }
+        "flags": {}
       },
       "class": "\\adeynes\\cucumber\\command\\UbanCommand",
-      "usage": "/uban <target> [reason] [-player|-p] [-ip]"
+      "usage": "/uban <player>|<ip> [reason]"
     },
 
     "mute": {
       "blueprint": "player-punish",
       "class": "\\adeynes\\cucumber\\command\\MuteCommand",
-      "usage": "/mute <player> [reason] [-duration|-d <duration>]"
+      "usage": "/mute <player> <duration>|inf [reason]"
     },
 
     "mutelist": {
-      "blueprint": "blank",
+      "blueprint": "paginated-allable",
       "class": "\\adeynes\\cucumber\\command\\MutelistCommand",
-      "usage": "/mutelist"
+      "usage": "/mutelist [page]"
     },
 
     "unmute": {
@@ -273,6 +280,12 @@
       "blueprint": "blank",
       "class": "\\adeynes\\cucumber\\command\\VanishCommand",
       "usage": "/vanish"
+    },
+
+    "history": {
+      "blueprint": "one-player-argument",
+      "class": "\\adeynes\\cucumber\\command\\HistoryCommand",
+      "usage": "/history <player>"
     }
   }
 }
