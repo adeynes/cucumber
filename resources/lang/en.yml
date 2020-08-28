@@ -119,4 +119,4 @@ log:
     command: "%player%: %command%"
 
 # Symbols: https://secure.php.net/manual/en/function.date.php
-time-format: Y-m-d\TH:i:s
+time-format: Y-m-d H:i:s
