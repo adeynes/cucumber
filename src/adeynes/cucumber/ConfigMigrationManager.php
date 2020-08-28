@@ -47,7 +47,7 @@ class ConfigMigrationManager
     public function __construct(Cucumber $plugin, string $file)
     {
         if (!file_exists($plugin->getDataFolder() . $file)) {
-            throw new \InvalidArgumentException('File $file doesn\'t exist!');
+            throw new \InvalidArgumentException("File $file doesn\'t exist!");
         }
         $this->plugin = $plugin;
         $this->file = $file;
@@ -69,6 +69,9 @@ class ConfigMigrationManager
         $new_config = new Config($full_file);
 
         foreach (self::configArrayFlatten($new_config->getAll(), '') as $key => $value) {
+            if ($key === 'migrated') {
+                continue;
+            }
             if ($key === 'version') {
                 $new_config->set('version', $minimum_version);
                 continue;

@@ -82,13 +82,21 @@ final class Cucumber extends PluginBase
 
         @mkdir($this->getDataFolder());
 
-        $config_migration_manager = new ConfigMigrationManager($this, 'config.yml');
-        $config_migration_manager->tryMigration(self::CONFIG_VERSION, 'old_config.yml');
+        try {
+            $config_migration_manager = new ConfigMigrationManager($this, 'config.yml');
+            $config_migration_manager->tryMigration(self::CONFIG_VERSION, 'old_config.yml');
+        } catch (\InvalidArgumentException $e) {
+            $this->saveResource('config.yml');
+        }
         $this->config_ = new Config($this->getDataFolder() . 'config.yml');
 
         foreach (self::SUPPORTED_LANGUAGES as $language) {
-            $language_migration_manager = new ConfigMigrationManager($this, "lang/$language.yml");
-            $language_migration_manager->tryMigration(self::MESSAGES_VERSION, "lang/old_$language.yml");
+            try {
+                $language_migration_manager = new ConfigMigrationManager($this, "lang/$language.yml");
+                $language_migration_manager->tryMigration(self::MESSAGES_VERSION, "lang/old_$language.yml");
+            } catch (\InvalidArgumentException $e) {
+                $this->saveResource("lang/$language.yml");
+            }
         }
 
         if (!isset(self::SUPPORTED_LANGUAGES[$language = $this->getConfig()->get('language')])) {
