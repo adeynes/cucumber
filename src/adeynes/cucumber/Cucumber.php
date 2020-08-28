@@ -162,8 +162,6 @@ final class Cucumber extends PluginBase
                 $severity = LogSeverity::LOG();
             }
 
-            var_dump($loggers);
-
             foreach ($loggers as $logger) {
                 $this->getLogDispatcher()->pushLogger(
                     new $logger[0]($this->getLogDispatcher(), ...($logger[1] ?? [])),
