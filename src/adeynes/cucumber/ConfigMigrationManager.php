@@ -69,6 +69,9 @@ class ConfigMigrationManager
         $new_config = new Config($full_file);
 
         foreach (self::configArrayFlatten($new_config->getAll(), '') as $key => $value) {
+            if ($key === 'migrated') {
+                continue;
+            }
             if ($key === 'version') {
                 $new_config->set('version', $minimum_version);
                 continue;
