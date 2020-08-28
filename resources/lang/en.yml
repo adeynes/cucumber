@@ -13,8 +13,6 @@ error:
   invalid-argument: "&b%argument% &cis an invalid argument!"
   # %duration%
   invalid-duration: "&b%duration% &cis an invalid duration!"
-  # %ip%
-  player-ip-ambiguity: "&b%ip% &cresembles an IP, but there is also a player by that name! Please set one of &b-player &cor &b-ip &cto resolve this ambiguity"
   ban:
     # %player%
     already-banned: "&b%player% &cis already banned!"

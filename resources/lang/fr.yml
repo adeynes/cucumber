@@ -9,8 +9,6 @@ error:
   # %severity%
   unknown-log-severity: "&cSeverité inexistante &b%severity%&c!"
   not-ingame: "&cIl faut utiliser cette commande dans le jeu!"
-  # %ip%
-  player-ip-ambiguity: "&b%ip% &cressemble à une IP, mais il y a aussi un joueur avec ce nom! Utilisez un des paramètres &b-player &cou &b-ip &cpour résoudre ce problème"
 
 success:
   # %player% %message%
