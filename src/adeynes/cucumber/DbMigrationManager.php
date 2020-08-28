@@ -14,6 +14,9 @@ final class DbMigrationManager
     /** @var bool */
     private $is_migrated;
 
+    /** @var bool */
+    private $has_migrated = false;
+
     public function __construct(Cucumber $plugin)
     {
         $this->plugin = $plugin;
@@ -32,6 +35,11 @@ final class DbMigrationManager
         $this->plugin->getConfig()->save();
     }
 
+    public function hasMigrated(): bool
+    {
+        return $this->has_migrated;
+    }
+
     public function tryMigration(): void
     {
         if ($this->isMigrated()) return;
@@ -39,6 +47,7 @@ final class DbMigrationManager
         $this->plugin->getLogger()->notice('cucumber\'s database has not been upgraded to support 2.0 on this system. Proceeding with the migration...');
 
         $this->migrate();
+        $this->has_migrated = true;
     }
 
     private function migrate(): void {

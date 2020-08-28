@@ -82,11 +82,15 @@ final class Cucumber extends PluginBase
 
         @mkdir($this->getDataFolder());
 
+        $emit_version_edit_warning = false;
+
         try {
             $config_migration_manager = new ConfigMigrationManager($this, 'config.yml');
             $config_migration_manager->tryMigration(self::CONFIG_VERSION, 'old_config.yml');
+            $emit_version_edit_warning |= $config_migration_manager->hasMigrated();
         } catch (\InvalidArgumentException $e) {
             $this->saveResource('config.yml');
+            $emit_version_edit_warning |= true;
         }
         $this->config_ = new Config($this->getDataFolder() . 'config.yml');
 
@@ -94,8 +98,10 @@ final class Cucumber extends PluginBase
             try {
                 $language_migration_manager = new ConfigMigrationManager($this, "lang/$language.yml");
                 $language_migration_manager->tryMigration(self::MESSAGES_VERSION, "lang/old_$language.yml");
+                $emit_version_edit_warning |= $language_migration_manager->hasMigrated();
             } catch (\InvalidArgumentException $e) {
                 $this->saveResource("lang/$language.yml");
+                $emit_version_edit_warning |= true;
             }
         }
 
@@ -106,6 +112,10 @@ final class Cucumber extends PluginBase
         }
 
         $this->messages = new Config("{$this->getDataFolder()}lang/$language.yml");
+
+        if ($emit_version_edit_warning) {
+            $this->emitVersionEditWarning();
+        }
     }
 
     public function getConfig(): Config
@@ -130,6 +140,9 @@ final class Cucumber extends PluginBase
 
         $db_migration_manager = new DbMigrationManager($this);
         $db_migration_manager->tryMigration();
+        if ($db_migration_manager->hasMigrated()) {
+            $this->emitMigratedEditWarning();
+        }
 
         // other tables have a foreign key constraint on players so it must be first
         $connector->executeGeneric(Queries::CUCUMBER_INIT_PLAYERS);
@@ -293,6 +306,16 @@ final class Cucumber extends PluginBase
     {
         $this->getLogger()->log($severity, $message);
         $this->getServer()->getPluginManager()->disablePlugin($this);
+    }
+
+    public function emitVersionEditWarning(): void
+    {
+        $this->getLogger()->warning('Do not edit the "version" attribute in ANY of the config or lang files');
+    }
+
+    public function emitMigratedEditWarning(): void
+    {
+        $this->getLogger()->warning('Do not edit the "migrated" attribute in config.yml');
     }
 
     public function cancelTask(int $id)

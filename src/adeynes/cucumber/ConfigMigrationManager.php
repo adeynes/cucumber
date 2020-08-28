@@ -44,6 +44,9 @@ class ConfigMigrationManager
     /** @var string */
     private $file;
 
+    /** @var bool */
+    private $has_migrated = false;
+
     public function __construct(Cucumber $plugin, string $file)
     {
         if (!file_exists($plugin->getDataFolder() . $file)) {
@@ -51,6 +54,11 @@ class ConfigMigrationManager
         }
         $this->plugin = $plugin;
         $this->file = $file;
+    }
+
+    public function hasMigrated(): bool
+    {
+        return $this->has_migrated;
     }
 
     public function tryMigration(string $minimum_version, ?string $archive_file): void
@@ -86,6 +94,8 @@ class ConfigMigrationManager
         }
 
         $new_config->save();
+
+        $this->has_migrated = true;
     }
 
 }
