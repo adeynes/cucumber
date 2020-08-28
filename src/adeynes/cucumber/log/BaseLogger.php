@@ -40,4 +40,9 @@ class BaseLogger implements Logger
         $this->submit_log_messages_async_task->addMessage($message);
     }
 
+    public function logNow(): void
+    {
+        $this->submit_log_messages_async_task->onRun(0);
+    }
+
 }

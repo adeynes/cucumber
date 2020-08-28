@@ -43,6 +43,16 @@ final class LogDispatcher
         $this->time_format = $this->getPlugin()->getMessage('time-format') ?? 'Y-m-d\TH:i:s';
     }
 
+    public function onDisable(): void
+    {
+        foreach ($this->loggers as $loggers) {
+            foreach ($loggers as $logger) {
+                /** @var Logger $logger */
+                $logger->logNow();
+            }
+        }
+    }
+
     public function getPlugin(): Cucumber
     {
         return $this->plugin;

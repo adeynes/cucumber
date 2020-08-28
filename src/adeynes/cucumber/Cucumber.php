@@ -73,6 +73,7 @@ final class Cucumber extends PluginBase
 
     public function onDisable(): void
     {
+        $this->getLogDispatcher()->onDisable();
         $this->getConnector()->close();
     }
 
