@@ -57,7 +57,7 @@ success:
     list: "&b%ip% &fwas banned by &9%moderator% &funtil &d%expiration% &ffor &7%reason%"
   # %ip%
   ippardon: "&aYou have successfully unbanned IP &b%ip%&a!"
-  # %ip% %reason% %expiration% (expiration will always be 2038-01-18T22:14:07 and is useless)
+  # %ip% %reason%
   uban: "&aYou have successfully banned any player who joins with IP &b%ip%&a!"
   # %player% %reason% %expiration%
   mute: "&aYou have successully muted &b%player% &auntil &d%expiration%&a!"
@@ -73,7 +73,7 @@ success:
   # %status%
   vanish: "&aYou have successfully toggled your vanish status to &b%status%&a!"
   history:
-    # %count%
+    # %player% %count%
     intro: "&b%player%&e's punishment history &7(&b%count%&7)&e:"
 
 moderation:
