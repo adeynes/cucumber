@@ -17,12 +17,7 @@ final class DbMigrationManager
     public function __construct(Cucumber $plugin)
     {
         $this->plugin = $plugin;
-        $this->setMigrated($this->getPlugin()->getConfig()->get('migrated'));
-    }
-
-    public function getPlugin(): Cucumber
-    {
-        return $this->plugin;
+        $this->setMigrated($plugin->getConfig()->get('migrated'));
     }
 
     public function isMigrated(): bool
@@ -33,15 +28,15 @@ final class DbMigrationManager
     private function setMigrated(bool $is_migrated): void
     {
         $this->is_migrated = $is_migrated;
-        $this->getPlugin()->getConfig()->set('migrated', true);
-        $this->getPlugin()->getConfig()->save();
+        $this->plugin->getConfig()->set('migrated', true);
+        $this->plugin->getConfig()->save();
     }
 
     public function tryMigration(): void
     {
         if ($this->isMigrated()) return;
 
-        $this->getPlugin()->getLogger()->notice('cucumber\'s database has not been upgraded to support 2.0 on this system. Proceeding with the migration...');
+        $this->plugin->getLogger()->notice('cucumber\'s database has not been upgraded to support 2.0 on this system. Proceeding with the migration...');
 
         $this->migrate();
     }
@@ -74,10 +69,10 @@ final class DbMigrationManager
             ]
         ];
 
-        $connector = $this->getPlugin()->getConnector();
+        $connector = $this->plugin->getConnector();
 
         foreach ($queries as $group => $group_queries) {
-            $this->getPlugin()->getLogger()->notice("Proceeding with $group migration...");
+            $this->plugin->getLogger()->notice("Proceeding with $group migration...");
             foreach ($group_queries as $query) {
                 $connector->executeGeneric($query);
                 $connector->waitAll();

@@ -30,6 +30,9 @@ final class Cucumber extends PluginBase
     /** @var Cucumber */
     private static $instance;
 
+    /** @var Config We need to override PocketMine's config: it is private and we can't have it run saveDefaultConfig() */
+    private $config_;
+
     /** @var Config */
     private $messages;
 
@@ -78,17 +81,14 @@ final class Cucumber extends PluginBase
         if ($this->isDisabled()) return;
 
         @mkdir($this->getDataFolder());
-        $this->saveDefaultConfig();
 
-        /** @var string $config_version */
-        $config_version = $this->getConfig()->get('version');
-        if (!$this->checkVersion($config_version, self::CONFIG_VERSION)) {
-            $this->fail('Outdated config.yml version! Try to delete cucumber/config.yml');
-            return;
-        }
+        $config_migration_manager = new ConfigMigrationManager($this, 'config.yml');
+        $config_migration_manager->tryMigration(self::CONFIG_VERSION, 'old_config.yml');
+        $this->config_ = new Config($this->getDataFolder() . 'config.yml');
 
         foreach (self::SUPPORTED_LANGUAGES as $language) {
-            $this->saveResource("lang/$language.yml");
+            $language_migration_manager = new ConfigMigrationManager($this, "lang/$language.yml");
+            $language_migration_manager->tryMigration(self::MESSAGES_VERSION, "lang/old_$language.yml");
         }
 
         if (!isset(self::SUPPORTED_LANGUAGES[$language = $this->getConfig()->get('language')])) {
@@ -98,12 +98,11 @@ final class Cucumber extends PluginBase
         }
 
         $this->messages = new Config("{$this->getDataFolder()}lang/$language.yml");
+    }
 
-        $messages_version = $this->getMessage('version');
-        if (!$this->checkVersion($messages_version, self::MESSAGES_VERSION)) {
-            $this->fail("Outdated $language.yml version Try to delete cucumber/$language.yml");
-            return;
-        }
+    public function getConfig(): Config
+    {
+        return $this->config_;
     }
 
     private function initDatabase(): void
@@ -162,6 +161,8 @@ final class Cucumber extends PluginBase
                 );
                 $severity = LogSeverity::LOG();
             }
+
+            var_dump($loggers);
 
             foreach ($loggers as $logger) {
                 $this->getLogDispatcher()->pushLogger(
@@ -264,13 +265,6 @@ final class Cucumber extends PluginBase
     public function getPunishmentRegistry(): PunishmentRegistry
     {
         return $this->punishment_registry;
-    }
-
-    public function checkVersion(string $actual, string $minimum): bool
-    {
-        $actual = explode('.', $actual);
-        $minimum = explode('.', $minimum);
-        return $actual[0] === $minimum[0] && $actual[1] >= $minimum[1];
     }
 
     public function formatMessageFromConfig(string $path, array $data): string
