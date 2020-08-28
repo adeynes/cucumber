@@ -68,8 +68,12 @@ success:
     intro: "&e&lMutes &r&7(&b%count%&7)&e&l:"
     # %player% %reason% %expiration% %moderator% %time_created%
     list: "&b%player% &fwas muted by &9%moderator% &funtil &d%expiration% &ffor &7%reason%"
-  # %player% %ip%
-  ip: "&b%player%&e's IP is &b%ip%"
+  ip:
+    # %player% %ip%
+    ip: "&b%player%&e's IP is &b%ip%"
+    # %player% %ip% %alts%
+    # No need for a color for %alts%, online accounts will be green, others red, with a gray commas
+    alts: "&eTheir alts are: %alts%"
   # %status%
   vanish: "&aYou have successfully toggled your vanish status to &b%status%&a!"
   history:

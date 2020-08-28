@@ -159,6 +159,10 @@ ON DUPLICATE KEY UPDATE ip = :ip, last_join = UNIX_TIMESTAMP();
 -- #        :name string
 SELECT * FROM cucumber_players WHERE name = :name;
 -- #      }
+-- #      {by-ip
+-- #        :ip string
+SELECT * FROM cucumber_players WHERE ip = :ip;
+-- #      }
 -- #    }
 -- #    {punishments
 -- #      {bans

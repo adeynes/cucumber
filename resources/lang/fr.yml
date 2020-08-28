@@ -68,8 +68,12 @@ success:
     intro: "&e&lMutes &r&7(&b%count%&7)&e&l:"
     # %player% %reason% %expiration% %moderator% %time_created%
     list: "&b%player% &fa été banni du tchat par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
-  # %player% %ip%
-  ip: "&eL'IP de &b%player% &eest &b%ip%"
+  ip:
+    # %player% %ip%
+    ip: "&eL'IP de &b%player% &eest &b%ip%"
+    # %player% %ip% %alts%
+    # Pas besoin de couleur pour %alts%, les comptes connectés seront verts, les autres rouges, avec des virgules grises
+    alts: "&eLeurs autres comptes sont: %alts%"
   # %status%
   vanish: "&aVous avez changé votre statut de disparition à &b%status%&a!"
   history:
