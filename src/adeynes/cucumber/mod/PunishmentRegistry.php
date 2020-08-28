@@ -164,7 +164,7 @@ final class PunishmentRegistry
             throw new CucumberException($this->getRawErrorMessage('ipban.already-banned'), ['ip' => $ip]);
         }
 
-        $this->bans[$ip] = $ip_ban;
+        $this->ip_bans[$ip] = $ip_ban;
     }
 
     /**

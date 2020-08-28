@@ -73,7 +73,7 @@ final class Cucumber extends PluginBase
 
     public function onDisable(): void
     {
-        if ($this->connector) $this->getConnector()->close();
+        $this->getConnector()->close();
     }
 
     private function initConfigs(): void
@@ -226,14 +226,13 @@ final class Cucumber extends PluginBase
         ];
 
         foreach ($events as $type => $class) {
+            $severity_str = $this->getConfig()->getNested("log.severities.$type", 'log');
             try {
-
-                $severity = $this->getConfig()->getNested("log.severities.$type", 'log');
-                $severity = LogSeverity::fromString($severity);
+                $severity = LogSeverity::fromString($severity_str);
             } catch (CucumberException $exception) {
                 /** @noinspection PhpUndefinedVariableInspection */
                 $this->getLogger()->warning(
-                    MessageFactory::colorize("&eUnknown logger severity &b$severity&e for event &b$type&e, defaulting to &blog")
+                    MessageFactory::colorize("&eUnknown logger severity &b$severity_str&e for event &b$type&e, defaulting to &blog")
                 );
                 $severity = LogSeverity::LOG();
             }
