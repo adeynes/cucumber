@@ -61,8 +61,11 @@ class ConfigMigrationManager
         $version = $old_config->get('version', null);
         if (self::checkVersion($version, $minimum_version)) return;
 
+        $this->plugin->getLogger()->notice("Migrating {$this->file} to $minimum_version...");
+
         if ($archive_file !== null) {
             rename($full_file, $this->plugin->getDataFolder() . $archive_file);
+            $this->plugin->getLogger()->info("You will find your old file in $archive_file");
         }
 
         $this->plugin->saveResource($this->file);
