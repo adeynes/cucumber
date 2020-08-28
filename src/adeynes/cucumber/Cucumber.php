@@ -251,7 +251,7 @@ final class Cucumber extends PluginBase
     {
         if ($this->isDisabled()) return;
 
-        $this->saveResource('commands.json');
+        $this->saveResource('commands.json', true);
         $commands = new Config($this->getDataFolder() . 'commands.json', CONFIG::JSON);
         $this->parsecmd = parsecmd::new($this, $commands->getAll(), true);
     }
