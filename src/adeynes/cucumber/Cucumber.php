@@ -45,9 +45,6 @@ final class Cucumber extends PluginBase
     /** @var PunishmentRegistry */
     private $punishment_registry;
 
-    /** @var MigrationManager */
-    private $migration_manager;
-
     public static function getInstance(): self
     {
         return self::$instance;
@@ -124,8 +121,8 @@ final class Cucumber extends PluginBase
             return;
         }
 
-        $this->migration_manager = new MigrationManager($this);
-        $this->getMigrationManager()->tryMigration();
+        $db_migration_manager = new DbMigrationManager($this);
+        $db_migration_manager->tryMigration();
 
         // other tables have a foreign key constraint on players so it must be first
         $connector->executeGeneric(Queries::CUCUMBER_INIT_PLAYERS);
@@ -267,16 +264,6 @@ final class Cucumber extends PluginBase
     public function getPunishmentRegistry(): PunishmentRegistry
     {
         return $this->punishment_registry;
-    }
-
-    private function getMigrationManager(): MigrationManager
-    {
-        return $this->migration_manager;
-    }
-
-    public function isMigrated(): bool
-    {
-        return $this->getMigrationManager()->isMigrated();
     }
 
     public function checkVersion(string $actual, string $minimum): bool

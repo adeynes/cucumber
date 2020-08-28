@@ -5,7 +5,7 @@ namespace adeynes\cucumber;
 
 use adeynes\cucumber\utils\Queries;
 
-final class MigrationManager
+final class DbMigrationManager
 {
 
     /** @var Cucumber */
