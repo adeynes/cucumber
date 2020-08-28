@@ -47,7 +47,7 @@ class ConfigMigrationManager
     public function __construct(Cucumber $plugin, string $file)
     {
         if (!file_exists($plugin->getDataFolder() . $file)) {
-            throw new \InvalidArgumentException('File $file doesn\'t exist!');
+            throw new \InvalidArgumentException("File $file doesn\'t exist!");
         }
         $this->plugin = $plugin;
         $this->file = $file;
