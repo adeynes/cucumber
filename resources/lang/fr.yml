@@ -1,5 +1,5 @@
 # NE PAS MODIFIER LA LIGNE SUIVANTE
-version: '2.2'
+version: '3.0'
 
 error:
   # %player%
