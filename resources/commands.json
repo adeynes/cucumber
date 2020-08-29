@@ -203,7 +203,7 @@
     "banlist": {
       "blueprint": "paginated-allable",
       "class": "\\adeynes\\cucumber\\command\\BanlistCommand",
-      "usage": "/banlist [page]"
+      "usage": "/banlist [page] [-all|-a]"
     },
 
     "pardon": {
@@ -222,7 +222,7 @@
     "ipbanlist": {
       "blueprint": "paginated-allable",
       "class": "\\adeynes\\cucumber\\command\\IpbanlistCommand",
-      "usage": "/ipbanlist [page]"
+      "usage": "/ipbanlist [page] [-all|-a]"
     },
 
     "ippardon": {
@@ -261,7 +261,7 @@
     "mutelist": {
       "blueprint": "paginated-allable",
       "class": "\\adeynes\\cucumber\\command\\MutelistCommand",
-      "usage": "/mutelist [page]"
+      "usage": "/mutelist [page] [-all|-a]"
     },
 
     "unmute": {
