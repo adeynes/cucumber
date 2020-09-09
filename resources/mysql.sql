@@ -56,6 +56,18 @@ CREATE TABLE IF NOT EXISTS cucumber_mutes (
     FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
 );
 -- #      }
+-- #      {warnings
+CREATE TABLE IF NOT EXISTS cucumber_warnings (
+    id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    player_id INT(7) UNSIGNED NOT NULL,
+    reason VARCHAR(500) DEFAULT NULL,
+    expiration INT UNSIGNED,
+    moderator VARCHAR(32) NOT NULL,
+    time_created INT UNSIGNED NOT NULL,
+    FOREIGN KEY (player_id) REFERENCES cucumber_players(id),
+    FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
+);
+-- #      }
 -- #    }
 -- #  }
 -- #  {migrate
@@ -262,6 +274,44 @@ INNER JOIN cucumber_players ON cucumber_mutes.player_id = cucumber_players.id
 WHERE cucumber_players.name = :player;
 -- #        }
 -- #      }
+-- #      {warnings
+-- #        {all
+SELECT cucumber_warnings.*, cucumber_players.*, cucumber_players.name AS player_name
+FROM cucumber_warnings
+INNER JOIN cucumber_players ON cucumber_warnings.player_id = cucumber_players.id;
+-- #        }
+-- #        {current
+SELECT cucumber_warnings.*, cucumber_players.*, cucumber_players.name AS player_name
+FROM cucumber_warnings
+INNER JOIN cucumber_players ON cucumber_warnings.player_id = cucumber_players.id
+WHERE cucumber_warnings.expiration > UNIX_TIMESTAMP() OR cucumber_warnings.expiration IS NULL;
+-- #        }
+-- #        {limited
+-- #          :from int
+-- #          :limit int
+-- #          :all bool false
+SELECT cucumber_warnings.*, cucumber_players.*, cucumber_players.name AS player_name
+FROM cucumber_warnings
+INNER JOIN cucumber_players ON cucumber_warnings.player_id = cucumber_players.id
+WHERE cucumber_warnings.expiration > UNIX_TIMESTAMP() Or cucumber_warnings.expiration IS NULL OR :all
+ORDER BY cucumber_warnings.time_created DESC
+LIMIT :from, :limit;
+-- #        }
+-- #        {count
+SELECT COUNT(*) AS count FROM cucumber_warnings;
+-- #        }
+-- #        {by-player
+-- #          :player string
+-- #          :all bool false
+SELECT cucumber_warnings.*, cucumber_players.*, cucumber_players.name AS player_name
+FROM cucumber_warnings
+INNER JOIN cucumber_players ON cucumber_warnings.player_id = cucumber_players.id
+WHERE
+    (cucumber_players.name = :player)
+    AND
+    (cucumber_warnings.expiration > UNIX_TIMESTAMP() OR cucumber_warnings.expiration IS NULL OR :all);
+-- #        }
+-- #      }
 -- #    }
 -- #  }
 -- #  {punish
@@ -321,6 +371,20 @@ WHERE player_id IN (
         SELECT id FROM cucumber_players WHERE name = :player
     ) AS a
 );
+-- #    }
+-- #    {warn
+-- #      :player string
+-- #      :reason string
+-- #      :expiration ?int
+-- #      :moderator string
+INSERT INTO cucumber_warnings (player_id, reason, expiration, moderator, time_created)
+    SELECT id, :reason, :expiration, :moderator, UNIX_TIMESTAMP()
+    FROM cucumber_players
+    WHERE name = :player;
+-- #    }
+-- #    {delwarn
+-- #      :id int
+DELETE FROM cucumber_warnings WHERE id = :id;
 -- #    }
 -- #  }
 -- #}
