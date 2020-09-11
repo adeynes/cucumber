@@ -179,12 +179,20 @@ SELECT * FROM cucumber_players WHERE ip = :ip;
 -- #    {punishments
 -- #      {bans
 -- #        {all
-SELECT cucumber_bans.*, cucumber_players.*, cucumber_players.name AS player_name
+SELECT cucumber_bans.*,
+       cucumber_players.*,
+       cucumber_bans.id AS ban_id,
+       cucumber_players.id AS player_id,
+       cucumber_players.name AS player_name
 FROM cucumber_bans
 INNER JOIN cucumber_players ON cucumber_bans.player_id = cucumber_players.id;
 -- #        }
 -- #        {current
-SELECT cucumber_bans.*, cucumber_players.*, cucumber_players.name AS player_name
+SELECT cucumber_bans.*,
+       cucumber_players.*,
+       cucumber_bans.id AS ban_id,
+       cucumber_players.id AS player_id,
+       cucumber_players.name AS player_name
 FROM cucumber_bans
 INNER JOIN cucumber_players ON cucumber_bans.player_id = cucumber_players.id
 WHERE cucumber_bans.expiration > UNIX_TIMESTAMP() OR cucumber_bans.expiration IS NULL;
@@ -193,7 +201,11 @@ WHERE cucumber_bans.expiration > UNIX_TIMESTAMP() OR cucumber_bans.expiration IS
 -- #          :from int
 -- #          :limit int
 -- #          :all bool false
-SELECT cucumber_bans.*, cucumber_players.*, cucumber_players.name AS player_name
+SELECT cucumber_bans.*,
+       cucumber_players.*,
+       cucumber_bans.id AS ban_id,
+       cucumber_players.id AS player_id,
+       cucumber_players.name AS player_name
 FROM cucumber_bans
 INNER JOIN cucumber_players ON cucumber_bans.player_id = cucumber_players.id
 WHERE cucumber_bans.expiration > UNIX_TIMESTAMP() OR cucumber_bans.expiration IS NULL OR :all
@@ -205,7 +217,11 @@ SELECT COUNT(*) AS count FROM cucumber_bans;
 -- #        }
 -- #        {by-player
 -- #          :player string
-SELECT cucumber_bans.*, cucumber_players.*, cucumber_players.name AS player_name
+SELECT cucumber_bans.*,
+       cucumber_players.*,
+       cucumber_bans.id AS ban_id,
+       cucumber_players.id AS player_id,
+       cucumber_players.name AS player_name
 FROM cucumber_bans
 INNER JOIN cucumber_players ON cucumber_bans.player_id = cucumber_players.id
 WHERE cucumber_players.name = :player;
@@ -242,12 +258,20 @@ SELECT * FROM cucumber_ubans;
 -- #      }
 -- #      {mutes
 -- #        {all
-SELECT cucumber_mutes.*, cucumber_players.*, cucumber_players.name AS player_name
+SELECT cucumber_mutes.*,
+       cucumber_players.*,
+       cucumber_mutes.id AS mute_id,
+       cucumber_players.id AS player_id,
+       cucumber_players.name AS player_name
 FROM cucumber_mutes
 INNER JOIN cucumber_players ON cucumber_mutes.player_id = cucumber_players.id;
 -- #        }
 -- #        {current
-SELECT cucumber_mutes.*, cucumber_players.*, cucumber_players.name AS player_name
+SELECT cucumber_mutes.*,
+       cucumber_players.*,
+       cucumber_mutes.id AS mute_id,
+       cucumber_players.id AS player_id,
+       cucumber_players.name AS player_name
 FROM cucumber_mutes
 INNER JOIN cucumber_players ON cucumber_mutes.player_id = cucumber_players.id
 WHERE cucumber_mutes.expiration > UNIX_TIMESTAMP() OR cucumber_mutes.expiration IS NULL;
@@ -256,7 +280,11 @@ WHERE cucumber_mutes.expiration > UNIX_TIMESTAMP() OR cucumber_mutes.expiration 
 -- #          :from int
 -- #          :limit int
 -- #          :all bool false
-SELECT cucumber_mutes.*, cucumber_players.*, cucumber_players.name AS player_name
+SELECT cucumber_mutes.*,
+       cucumber_players.*,
+       cucumber_mutes.id AS mute_id,
+       cucumber_players.id AS player_id,
+       cucumber_players.name AS player_name
 FROM cucumber_mutes
 INNER JOIN cucumber_players ON cucumber_mutes.player_id = cucumber_players.id
 WHERE cucumber_mutes.expiration > UNIX_TIMESTAMP() OR cucumber_mutes.expiration IS NULL OR :all
@@ -268,7 +296,11 @@ SELECT COUNT(*) AS count FROM cucumber_mutes;
 -- #        }
 -- #        {by-player
 -- #          :player string
-SELECT cucumber_mutes.*, cucumber_players.*, cucumber_players.name AS player_name
+SELECT cucumber_mutes.*,
+       cucumber_players.*,
+       cucumber_mutes.id AS mute_id,
+       cucumber_players.id AS player_id,
+       cucumber_players.name AS player_name
 FROM cucumber_mutes
 INNER JOIN cucumber_players ON cucumber_mutes.player_id = cucumber_players.id
 WHERE cucumber_players.name = :player;
@@ -276,12 +308,20 @@ WHERE cucumber_players.name = :player;
 -- #      }
 -- #      {warnings
 -- #        {all
-SELECT cucumber_warnings.*, cucumber_players.*, cucumber_players.name AS player_name
+SELECT cucumber_warnings.*,
+       cucumber_players.*,
+       cucumber_warnings.id AS warning_id,
+       cucumber_players.id AS player_id,
+       cucumber_players.name AS player_name
 FROM cucumber_warnings
 INNER JOIN cucumber_players ON cucumber_warnings.player_id = cucumber_players.id;
 -- #        }
 -- #        {current
-SELECT cucumber_warnings.*, cucumber_players.*, cucumber_players.name AS player_name
+SELECT cucumber_warnings.*,
+       cucumber_players.*,
+       cucumber_warnings.id AS warning_id,
+       cucumber_players.id AS player_id,
+       cucumber_players.name AS player_name
 FROM cucumber_warnings
 INNER JOIN cucumber_players ON cucumber_warnings.player_id = cucumber_players.id
 WHERE cucumber_warnings.expiration > UNIX_TIMESTAMP() OR cucumber_warnings.expiration IS NULL;
@@ -290,7 +330,11 @@ WHERE cucumber_warnings.expiration > UNIX_TIMESTAMP() OR cucumber_warnings.expir
 -- #          :from int
 -- #          :limit int
 -- #          :all bool false
-SELECT cucumber_warnings.*, cucumber_players.*, cucumber_players.name AS player_name
+SELECT cucumber_warnings.*,
+       cucumber_players.*,
+       cucumber_warnings.id AS warning_id,
+       cucumber_players.id AS player_id,
+       cucumber_players.name AS player_name
 FROM cucumber_warnings
 INNER JOIN cucumber_players ON cucumber_warnings.player_id = cucumber_players.id
 WHERE cucumber_warnings.expiration > UNIX_TIMESTAMP() Or cucumber_warnings.expiration IS NULL OR :all
@@ -300,16 +344,46 @@ LIMIT :from, :limit;
 -- #        {count
 SELECT COUNT(*) AS count FROM cucumber_warnings;
 -- #        }
+-- #        {by-id
+-- #          :id int
+SELECT cucumber_warnings.*,
+       cucumber_players.*,
+       cucumber_warnings.id AS warning_id,
+       cucumber_players.id AS player_id,
+       cucumber_players.name AS player_name
+FROM cucumber_warnings
+INNER JOIN cucumber_players ON cucumber_warnings.player_id = cucumber_players.id
+WHERE cucumber_warnings.id = :id;
+-- #        }
 -- #        {by-player
 -- #          :player string
 -- #          :all bool false
-SELECT cucumber_warnings.*, cucumber_players.*, cucumber_players.name AS player_name
+SELECT cucumber_warnings.*,
+       cucumber_players.*,
+       cucumber_warnings.id AS warning_id,
+       cucumber_players.id AS player_id,
+       cucumber_players.name AS player_name
 FROM cucumber_warnings
 INNER JOIN cucumber_players ON cucumber_warnings.player_id = cucumber_players.id
 WHERE
     (cucumber_players.name = :player)
     AND
-    (cucumber_warnings.expiration > UNIX_TIMESTAMP() OR cucumber_warnings.expiration IS NULL OR :all);
+    (cucumber_warnings.expiration > UNIX_TIMESTAMP() OR cucumber_warnings.expiration IS NULL OR :all)
+ORDER BY cucumber_warnings.time_created DESC;
+-- #        }
+-- #        {latest
+-- #          :player string
+-- #          :moderator string
+SELECT cucumber_warnings.*,
+       cucumber_players.*,
+       cucumber_warnings.id AS warning_id,
+       cucumber_players.id AS player_id,
+       cucumber_players.name AS player_name
+FROM cucumber_warnings
+INNER JOIN cucumber_players ON cucumber_warnings.player_id = cucumber_players.id
+WHERE cucumber_players.name = :player AND cucumber_warnings.moderator = :moderator
+ORDER BY cucumber_warnings.time_created DESC
+LIMIT 0, 1;
 -- #        }
 -- #      }
 -- #    }

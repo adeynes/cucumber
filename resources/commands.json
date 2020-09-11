@@ -270,6 +270,42 @@
       "usage": "/unmute <player>"
     },
 
+    "warn": {
+      "blueprint": "player-punish",
+      "class": "\\adeynes\\cucumber\\command\\WarnCommand",
+      "usage": "/warn <player> <duration>|inf [reason]"
+    },
+
+    "warnings": {
+      "blueprint": "one-player-argument",
+      "class": "\\adeynes\\cucumber\\command\\WarningsCommand",
+      "usage": "/warn <player> <duration>|inf [reason]",
+      "aliases": ["warns"]
+    },
+
+    "mywarnings": {
+      "blueprint": "blank",
+      "class": "\\adeynes\\cucumber\\command\\MywarningsCommand",
+      "usage": "/mywarnings",
+      "aliases": ["mywarns"]
+    },
+
+    "delwarn": {
+      "blueprint": {
+        "arguments": {
+          "id": {
+            "length": 1,
+            "display": "ID",
+            "optional": false
+          }
+        },
+        "flags": {}
+      },
+      "class": "\\adeynes\\cucumber\\command\\DelwarnCommand",
+      "usage": "/delwarn <id>",
+      "aliases": ["deletewarn", "unwarn"]
+    },
+
     "ip": {
       "blueprint": "one-player-argument",
       "class": "\\adeynes\\cucumber\\command\\IpCommand",

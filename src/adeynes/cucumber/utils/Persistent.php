@@ -8,6 +8,6 @@ use poggit\libasynql\DataConnector;
 interface Persistent
 {
 
-    public function save(DataConnector $connector): void;
+    public function save(DataConnector $connector, ?callable $onSuccess = null): void;
 
 }

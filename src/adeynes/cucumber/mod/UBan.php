@@ -25,11 +25,12 @@ class UBan extends IpPunishment
         ];
     }
 
-    public function save(DataConnector $connector): void
+    public function save(DataConnector $connector, ?callable $onSuccess = null): void
     {
         $connector->executeInsert(
             Queries::CUCUMBER_PUNISH_UBAN,
-            $this->getRawData()
+            $this->getRawData(),
+            $onSuccess
         );
     }
 

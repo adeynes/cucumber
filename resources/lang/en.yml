@@ -1,5 +1,5 @@
 # DO NOT EDIT THE FOLLOWING LINE
-version: '3.0'
+version: '3.1'
 
 error:
   # %player%
@@ -31,6 +31,9 @@ error:
     already-muted: "&b%player% &cis already muted!"
     # %player%
     not-muted: "&b%player% &cis not muted!"
+  warning:
+    # %id%
+    id-does-not-exist: "&cWarn &b%id% &cdoesn't exist!"
 
 success:
   # %player% %message%
@@ -60,7 +63,7 @@ success:
   # %ip% %reason%
   uban: "&aYou have successfully banned any player who joins with IP &b%ip%&a!"
   # %player% %reason% %expiration%
-  mute: "&aYou have successully muted &b%player% &auntil &d%expiration%&a!"
+  mute: "&aYou have successfully muted &b%player% &auntil &d%expiration%&a!"
   # %player%
   unmute: "&aYou have successfully unmuted &b%player%&a!"
   mutelist:
@@ -68,6 +71,20 @@ success:
     intro: "&e&lMutes &r&7(&b%count%&7)&e&l:"
     # %player% %reason% %expiration% %moderator% %time_created%
     list: "&b%player% &fwas muted by &9%moderator% &funtil &d%expiration% &ffor &7%reason%"
+  # %id% %player% %reason% %expiration%
+  warn: "&aYou have successfully warned &b%player% &auntil &d%expiration%&a! &7Warning ID: &c%id%"
+  warnings:
+    # %player% %count%
+    intro: "&b%player%&e's warnings &7(&b%count%&7)&e:"
+    # %id% %player% %reason% %expiration% %moderator% %time_created%
+    list: "&c%id%&7: &fWarned by &9%moderator% &funtil &d%expiration% &ffor &7%reason%"
+  mywarnings:
+    # %player% %count%
+    intro: "&eYour warnings &7(&b%count%&7)&e:"
+    # %id% %player% %reason% %expiration% %moderator% %time_created%
+    list: "&fYou were warned by &9%moderator% &funtil &d%expiration% &ffor &7%reason%"
+  # %id% %player%
+  delwarn: "&aYou have successfully deleted warning &c%id% &abelonging to &b%player%&a!"
   ip:
     # %player% %ip%
     ip: "&b%player%&e's IP is &b%ip%"
@@ -104,6 +121,12 @@ moderation:
     # The message sent to players if they try to chat while muted
     # %moderator% %reason% %expiration%
     chat-attempt: "&cYou are muted until &d%expiration%&c!"
+
+  warning:
+    # %id% %moderator% %reason% %expiration%
+    message: "&eYou have been warned by &b%moderator% &euntil &b%expiration%&e.\n&7Reason: &f%reason%"
+    # The reason that will be displayed if none is provided by the moderator
+    default-reason: "You have broken a rule"
 
 log:
   templates:

@@ -65,6 +65,23 @@ permissions:
             description: "Allows for the use of /ipbanlist"
             default: op
 
+      cucumber.warn:
+        description: "Warning-related commands"
+        default: op
+        children:
+          cucumber.command.warn:
+            description: "Allows for the use of /warn"
+            default: op
+          cucumber.command.warnings:
+            description: "Allows for the use of /warnings"
+            default: op
+          cucumber.command.mywarnings:
+            description: "Allows for the use of /mywarnings"
+            default: true
+          cucumber.command.delwarn:
+            description: "Allows for the use of /delwarn"
+            default: op
+
       cucumber.command.ip:
         description: "Allows for the use of /ip"
         default: op

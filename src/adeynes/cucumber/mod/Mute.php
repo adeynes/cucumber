@@ -38,11 +38,12 @@ class Mute extends PlayerPunishment
         ];
     }
 
-    public function save(DataConnector $connector): void
+    public function save(DataConnector $connector, ?callable $onSuccess = null): void
     {
         $connector->executeInsert(
             Queries::CUCUMBER_PUNISH_MUTE,
-            $this->getRawData()
+            $this->getRawData(),
+            $onSuccess
         );
     }
 
