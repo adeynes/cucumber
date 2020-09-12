@@ -176,6 +176,11 @@ class HistoryCommand extends CucumberCommand
                         {
                             return $this->warning->getFormatData() + ['id' => strval($this->id)];
                         }
+
+                        public function getMessagesPath(): string
+                        {
+                            return $this->warning->getMessagesPath();
+                        }
                     };
                 }
 
