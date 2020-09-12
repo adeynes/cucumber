@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\mod;
 
+use adeynes\cucumber\utils\Persistent;
 use adeynes\cucumber\utils\Queries;
 use poggit\libasynql\DataConnector;
 
-class Ban extends PlayerPunishment
+class Ban extends PlayerPunishment implements Persistent
 {
 
     use Expirable;
@@ -37,6 +38,11 @@ class Ban extends PlayerPunishment
             'moderator' => $this->getModerator(),
             'time_created' => $this->getTimeOfCreationFormatted()
         ];
+    }
+
+    public function getMessagesPath(): string
+    {
+        return 'success.banlist.list';
     }
 
     public function save(DataConnector $connector, ?callable $onSuccess = null): void

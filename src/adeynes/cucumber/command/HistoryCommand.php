@@ -7,7 +7,10 @@ use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\mod\Ban;
 use adeynes\cucumber\mod\IpBan;
 use adeynes\cucumber\mod\Mute;
-use adeynes\cucumber\mod\SimplePunishment;
+use adeynes\cucumber\mod\Punishment;
+use adeynes\cucumber\mod\Warning;
+use adeynes\cucumber\utils\Formattable;
+use adeynes\cucumber\utils\HasTimeOfCreation;
 use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
 use adeynes\parsecmd\command\ParsedCommand;
@@ -15,12 +18,6 @@ use pocketmine\command\CommandSender;
 
 class HistoryCommand extends CucumberCommand
 {
-
-    protected const PUNISHMENT_LIST_PATHS = [
-        Ban::class => 'success.banlist.list',
-        IpBan::class => 'success.ipbanlist.list',
-        Mute::class => 'success.mutelist.list'
-    ];
 
     public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
     {
@@ -40,7 +37,7 @@ class HistoryCommand extends CucumberCommand
 
         $processAndSendHistory = function (array $player_rows) use ($sender) {
             $player = $player_rows[0];
-            /** @var SimplePunishment[] $history */
+            /** @var Formattable[]&HasTimeOfCreation[] $history */
             $history = [];
 
             $this->addBansToHistory(
@@ -54,8 +51,14 @@ class HistoryCommand extends CucumberCommand
                             $this->addMutesToHistory(
                                 $player['name'],
                                 $history,
-                                function (array $history) use ($player, $sender) {
-                                    $this->showHistory($sender, $history, $player['name']);
+                                function (array &$history) use ($player, $sender) {
+                                    $this->addWarningsToHistory(
+                                        $player['name'],
+                                        $history,
+                                        function (array $history) use ($player, $sender) {
+                                            $this->showHistory($sender, $history, $player['name']);
+                                        }
+                                    );
                                 }
                             );
                         }
@@ -71,13 +74,15 @@ class HistoryCommand extends CucumberCommand
 
     /**
      * @param CommandSender $sender
-     * @param SimplePunishment[] $history
+     * @param Formattable[]&HasTimeOfCreation[] $history
      * @param string $player_name
      */
     protected function showHistory(CommandSender $sender, array $history, string $player_name) {
         usort(
             $history,
-            function (SimplePunishment $a, SimplePunishment $b) {
+            function ($a, $b) {
+                /** @var Formattable&HasTimeOfCreation $a */
+                /** @var Formattable&HasTimeOfCreation $b */
                 return ($a->getTimeOfCreation() <=> $b->getTimeOfCreation()) * -1; // desc order
             }
         );
@@ -90,7 +95,7 @@ class HistoryCommand extends CucumberCommand
         $lines = [];
         foreach ($history as $punishment) {
             $lines[] = $this->getPlugin()->formatMessageFromConfig(
-                self::PUNISHMENT_LIST_PATHS[get_class($punishment)],
+                $punishment->getMessagesPath(),
                 $punishment->getFormatData()
             );
         }
@@ -140,6 +145,47 @@ class HistoryCommand extends CucumberCommand
                 if (!is_null($next)) $next($history);
             }
         );
+    }
+
+    protected function addWarningsToHistory(string $player, array &$history, ?callable $next): void
+    {
+        $this->getPlugin()->getConnector()->executeSelect(
+            Queries::CUCUMBER_GET_PUNISHMENTS_WARNINGS_BY_PLAYER,
+            ['player' => $player, 'all' => true],
+            function (array $rows) use (&$history, $next) {
+                foreach ($rows as $row) {
+                    $history[] = new class($row['warning_id'], Warning::from($row)) implements Formattable, HasTimeOfCreation {
+                        /** @var int */
+                        private $id;
+
+                        /** @var Warning */
+                        private $warning;
+
+                        public function __construct(int $id, Warning $warning)
+                        {
+                            $this->id = $id;
+                            $this->warning = $warning;
+                        }
+
+                        public function getTimeOfCreation(): int
+                        {
+                            return $this->warning->getTimeOfCreation();
+                        }
+
+                        public function getFormatData(): array
+                        {
+                            return $this->warning->getFormatData() + ['id' => strval($this->id)];
+                        }
+                    };
+                }
+
+                if (!is_null($next)) $next($history);
+            }
+        );
+    }
+
+    protected function formatPunishment(Punishment $punishment) {
+
     }
 
 }

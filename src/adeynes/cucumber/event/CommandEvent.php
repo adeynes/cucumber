@@ -42,4 +42,9 @@ class CommandEvent extends CucumberPlayerEvent
         return parent::getFormatData() + ['command' => $this->getCommand()];
     }
 
+    public function getMessagesPath(): string
+    {
+        return 'log.command';
+    }
+
 }

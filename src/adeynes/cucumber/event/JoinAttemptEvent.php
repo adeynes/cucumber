@@ -17,4 +17,9 @@ class JoinAttemptEvent extends JoinEvent
     /** @var LogSeverity */
     protected static $severity;
 
+    public function getMessagesPath(): string
+    {
+        return 'log.join-attempt';
+    }
+
 }

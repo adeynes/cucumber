@@ -17,4 +17,9 @@ class ChatAttemptEvent extends ChatEvent
     /** @var LogSeverity */
     protected static $severity;
 
+    public function getMessagesPath(): string
+    {
+        return 'log.chat-attempt';
+    }
+
 }

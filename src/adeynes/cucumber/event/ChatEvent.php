@@ -37,4 +37,9 @@ class ChatEvent extends CucumberPlayerEvent
         return parent::getFormatData() + ['message' => $this->getMessage()];
     }
 
+    public function getMessagesPath(): string
+    {
+        return 'log.chat';
+    }
+
 }

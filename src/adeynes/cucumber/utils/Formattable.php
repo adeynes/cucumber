@@ -8,4 +8,6 @@ interface Formattable
 
     public function getFormatData(): array;
 
+    public function getMessagesPath(): string;
+
 }

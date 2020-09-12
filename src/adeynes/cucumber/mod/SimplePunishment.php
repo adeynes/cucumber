@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace adeynes\cucumber\mod;
 
 use adeynes\cucumber\Cucumber;
+use adeynes\cucumber\utils\HasTimeOfCreation;
 
-abstract class SimplePunishment implements Punishment
+abstract class SimplePunishment implements Punishment, HasTimeOfCreation
 {
 
     /** @var string */
