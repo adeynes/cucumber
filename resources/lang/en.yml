@@ -72,19 +72,19 @@ success:
     # %player% %reason% %expiration% %moderator% %time_created%
     list: "&b%player% &fwas muted by &9%moderator% &funtil &d%expiration% &ffor &7%reason%"
   # %id% %player% %reason% %expiration%
-  warn: "&aYou have successfully warned &b%player% &auntil &d%expiration%&a! &7Warning ID: &c%id%"
+  warn: "&aYou have successfully warned &b%player% &auntil &d%expiration%&a! &7Warning ID: &6%id%"
   warnings:
     # %player% %count%
     intro: "&b%player%&e's warnings &7(&b%count%&7)&e:"
     # %id% %player% %reason% %expiration% %moderator% %time_created%
-    list: "&c%id%&7: &fWarned by &9%moderator% &funtil &d%expiration% &ffor &7%reason%"
+    list: "&6%id%&7: &fWarned by &9%moderator% &funtil &d%expiration% &ffor &7%reason%"
   mywarnings:
     # %player% %count%
     intro: "&eYour warnings &7(&b%count%&7)&e:"
     # %id% %player% %reason% %expiration% %moderator% %time_created%
     list: "&fYou were warned by &9%moderator% &funtil &d%expiration% &ffor &7%reason%"
   # %id% %player%
-  delwarn: "&aYou have successfully deleted warning &c%id% &abelonging to &b%player%&a!"
+  delwarn: "&aYou have successfully deleted warning &6%id% &abelonging to &b%player%&a!"
   ip:
     # %player% %ip%
     ip: "&b%player%&e's IP is &b%ip%"
