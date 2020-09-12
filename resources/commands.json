@@ -327,7 +327,7 @@
       },
       "class": "\\adeynes\\cucumber\\command\\DelwarnCommand",
       "usage": "/delwarn <id>",
-      "aliases": ["deletewarn", "unwarn"]
+      "aliases": ["deletewarn", "deletewarning", "unwarn"]
     },
 
     "ip": {

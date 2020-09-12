@@ -46,11 +46,10 @@ class WarnCommand extends CucumberCommand
 
         $warn = function () use ($sender, $target_name, $reason, $expiration) {
             $warning = new Warning($target_name, $reason, $expiration, $sender->getName(), time());
-            $warning_data = $warning->getFormatData();
             $warning->save(
                 $this->getPlugin()->getConnector(),
-                function (int $insert_id, int $affected_rows) use ($sender, $target_name, $reason, $expiration, $warning_data) {
-                    $warning_data += ['id' => $insert_id];
+                function (int $insert_id, int $affected_rows) use ($sender, $target_name, $reason, $expiration, $warning) {
+                    $warning_data = $warning->getFormatData() + ['id' => strval($insert_id)];
 
                     if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
                         $this->getPlugin()->formatAndSend($target, 'moderation.warning.message', $warning_data);

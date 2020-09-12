@@ -33,6 +33,7 @@ class Mute extends PlayerPunishment
             'player' => $this->getPlayer(),
             'reason' => $this->getReason(),
             'expiration' => $this->getExpirationFormatted(),
+            'expired' => $this->getExpiredFormatted(),
             'moderator' => $this->getModerator(),
             'time_created' => $this->getTimeOfCreationFormatted()
         ];

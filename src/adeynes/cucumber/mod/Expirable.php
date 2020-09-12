@@ -27,4 +27,9 @@ trait Expirable
         return $this->getExpiration() === null ? false : time() > $this->getExpiration();
     }
 
+    public function getExpiredFormatted(): string
+    {
+        return $this->isExpired() ? '&cexpired': '&aactive';
+    }
+
 }

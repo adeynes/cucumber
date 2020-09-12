@@ -155,7 +155,8 @@ final class Cucumber extends PluginBase
             Queries::CUCUMBER_INIT_PUNISHMENTS_BANS,
             Queries::CUCUMBER_INIT_PUNISHMENTS_IP_BANS,
             Queries::CUCUMBER_INIT_PUNISHMENTS_UBANS,
-            Queries::CUCUMBER_INIT_PUNISHMENTS_MUTES
+            Queries::CUCUMBER_INIT_PUNISHMENTS_MUTES,
+            Queries::CUCUMBER_INIT_PUNISHMENTS_WARNINGS
         ];
         foreach ($create_queries as $query) $connector->executeGeneric($query);
 

@@ -33,6 +33,7 @@ class IpBan extends IpPunishment
             'ip' => $this->getIp(),
             'reason' => $this->getReason(),
             'expiration' => $this->getExpirationFormatted(),
+            'expired' => $this->getExpiredFormatted(),
             'moderator' => $this->getModerator(),
             'time_created' => $this->getTimeOfCreationFormatted()
         ];
