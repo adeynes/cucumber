@@ -3,18 +3,18 @@
 -- #  {init
 -- #    {players
 CREATE TABLE IF NOT EXISTS cucumber_players (
-    id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(32) UNIQUE NOT NULL,
-    ip VARCHAR(20) NOT NULL,
-    first_join INT(11) UNSIGNED NOT NULL,
-    last_join INT(11) UNSIGNED NOT NULL
+    ip VARCHAR(39) NOT NULL,
+    first_join INT UNSIGNED NOT NULL,
+    last_join INT UNSIGNED NOT NULL
 );
 -- #    }
 -- #    {punishments
 -- #      {bans
 CREATE TABLE IF NOT EXISTS cucumber_bans (
-    id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    player_id INT(7) UNSIGNED UNIQUE NOT NULL,
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    player_id INT UNSIGNED NOT NULL,
     reason VARCHAR(500) DEFAULT NULL,
     expiration INT UNSIGNED,
     moderator VARCHAR(32) NOT NULL,
@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS cucumber_bans (
 -- #      }
 -- #      {ip-bans
 CREATE TABLE IF NOT EXISTS cucumber_ip_bans (
-    id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    ip VARCHAR(20) UNIQUE NOT NULL,
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    ip VARCHAR(39) NOT NULL,
     reason VARCHAR(500) DEFAULT NULL,
     expiration INT UNSIGNED,
     moderator VARCHAR(32) NOT NULL,
@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS cucumber_ip_bans (
 -- #      }
 -- #      {ubans
 CREATE TABLE IF NOT EXISTS cucumber_ubans (
-    id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    ip VARCHAR(20) UNIQUE NOT NULL,
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    ip VARCHAR(39) UNIQUE NOT NULL,
     reason VARCHAR(500) DEFAULT NULL,
     moderator VARCHAR(32) NOT NULL,
     time_created INT UNSIGNED NOT NULL,
@@ -46,8 +46,8 @@ CREATE TABLE IF NOT EXISTS cucumber_ubans (
 -- #      }
 -- #      {mutes
 CREATE TABLE IF NOT EXISTS cucumber_mutes (
-    id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    player_id INT(7) UNSIGNED UNIQUE NOT NULL,
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    player_id INT UNSIGNED NOT NULL,
     reason VARCHAR(500) DEFAULT NULL,
     expiration INT UNSIGNED,
     moderator VARCHAR(32) NOT NULL,
@@ -58,8 +58,8 @@ CREATE TABLE IF NOT EXISTS cucumber_mutes (
 -- #      }
 -- #      {warnings
 CREATE TABLE IF NOT EXISTS cucumber_warnings (
-    id INT(7) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    player_id INT(7) UNSIGNED NOT NULL,
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    player_id INT UNSIGNED NOT NULL,
     reason VARCHAR(500) DEFAULT NULL,
     expiration INT UNSIGNED,
     moderator VARCHAR(32) NOT NULL,
@@ -88,7 +88,11 @@ RENAME TABLE players TO cucumber_players;
 -- #        }
 -- #        {alter-modify
 ALTER TABLE cucumber_players
-    MODIFY COLUMN name VARCHAR(32) UNIQUE NOT NULL;
+    MODIFY COLUMN id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    MODIFY COLUMN name VARCHAR(32) UNIQUE NOT NULL,
+    MODIFY COLUMN ip VARCHAR(39) NOT NULL,
+    MODIFY COLUMN first_join INT UNSIGNED NOT NULL,
+    MODIFY COLUMN last_join INT UNSIGNED NOT NULL;
 -- #        }
 -- #      }
 -- #      {bans
@@ -99,11 +103,12 @@ RENAME TABLE bans TO cucumber_bans;
 -- #        {alter-change
 # noinspection SqlResolve
 ALTER TABLE cucumber_bans
-    CHANGE COLUMN player player_id INT(7) UNSIGNED NOT NULL,
+    CHANGE COLUMN player player_id INT UNSIGNED NOT NULL,
     ADD COLUMN time_created INT UNSIGNED NOT NULL AFTER moderator;
 -- #        }
 -- #        {alter-modify
 ALTER TABLE cucumber_bans
+    MODIFY COLUMN id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     MODIFY COLUMN expiration INT UNSIGNED,
     MODIFY COLUMN moderator VARCHAR(32) NOT NULL;
 -- #        }
@@ -119,6 +124,8 @@ ALTER TABLE cucumber_ip_bans
 -- #        }
 -- #        {alter-modify
 ALTER TABLE cucumber_ip_bans
+    MODIFY COLUMN id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    MODIFY COLUMN ip VARCHAR(39) NOT NULL,
     MODIFY COLUMN expiration INT UNSIGNED,
     MODIFY COLUMN moderator VARCHAR(32) NOT NULL;
 -- #        }
@@ -134,6 +141,8 @@ ALTER TABLE cucumber_ubans
 -- #        }
 -- #        {alter-modify
 ALTER TABLE cucumber_ubans
+    MODIFY COLUMN id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    MODIFY COLUMN ip VARCHAR(39) UNIQUE NOT NULL,
     MODIFY COLUMN moderator VARCHAR(32) NOT NULL;
 -- #        }
 -- #      }
@@ -145,11 +154,12 @@ RENAME TABLE mutes TO cucumber_mutes;
 -- #        {alter-change
 # noinspection SqlResolve
 ALTER TABLE cucumber_mutes
-    CHANGE COLUMN player player_id INT(7) UNSIGNED NOT NULL,
+    CHANGE COLUMN player player_id INT UNSIGNED NOT NULL,
     ADD COLUMN time_created INT UNSIGNED NOT NULL AFTER moderator;
 -- #        }
 -- #        {alter-modify
 ALTER TABLE cucumber_mutes
+    MODIFY COLUMN id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     MODIFY COLUMN expiration INT UNSIGNED,
     MODIFY COLUMN moderator VARCHAR(32) NOT NULL;
 -- #        }
