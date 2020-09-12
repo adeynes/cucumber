@@ -38,7 +38,7 @@
       "flags": {
         "all": {
           "length": 0,
-          "display": "All",
+          "display": "Show all?",
           "aliases": ["a"]
         }
       }
@@ -277,16 +277,40 @@
     },
 
     "warnings": {
-      "blueprint": "one-player-argument",
+      "blueprint": {
+        "arguments": {
+          "player": {
+            "length": 1,
+            "display": "Player",
+            "optional": false
+          }
+        },
+        "flags": {
+          "all": {
+            "length": 0,
+            "display": "Show all?",
+            "aliases": ["a"]
+          }
+        }
+      },
       "class": "\\adeynes\\cucumber\\command\\WarningsCommand",
-      "usage": "/warn <player> <duration>|inf [reason]",
+      "usage": "/warnings <player> [-all|-a]",
       "aliases": ["warns"]
     },
 
     "mywarnings": {
-      "blueprint": "blank",
+      "blueprint": {
+        "arguments": {},
+        "flags": {
+          "all": {
+            "length": 0,
+            "display": "Show all?",
+            "aliases": ["a"]
+          }
+        }
+      },
       "class": "\\adeynes\\cucumber\\command\\MywarningsCommand",
-      "usage": "/mywarnings",
+      "usage": "/mywarnings [-all|-a]",
       "aliases": ["mywarns"]
     },
 

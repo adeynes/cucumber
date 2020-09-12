@@ -55,4 +55,5 @@ class BanlistCommand extends PunishmentListCommand
         );
         $sender->sendMessage($page);
     }
+
 }

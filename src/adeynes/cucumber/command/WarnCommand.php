@@ -5,7 +5,6 @@ namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\mod\Warning;
-use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
 use adeynes\parsecmd\command\CommandParser;
@@ -56,7 +55,7 @@ class WarnCommand extends CucumberCommand
                     if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
                         $this->getPlugin()->formatAndSend($target, 'moderation.warning.message', $warning_data);
                     }
-                    
+
                     $this->getPlugin()->formatAndSend($sender, 'success.warn', $warning_data);
                 }
             );
