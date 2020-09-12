@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\mod;
 
+use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\utils\Persistent;
 use adeynes\cucumber\utils\Queries;
 use poggit\libasynql\DataConnector;
@@ -21,7 +22,7 @@ class UBan extends IpPunishment implements Persistent
             'ip' => $this->getIp(),
             'reason' => $this->getReason(),
             'expiration' => 'the Big Crunch',
-            'expired' => '&aactive',
+            'expired' => Cucumber::getInstance()->getMessage('moderation.active'),
             'moderator' => $this->getModerator(),
             'time_created' => $this->getTimeOfCreationFormatted()
         ];

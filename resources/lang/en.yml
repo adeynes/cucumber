@@ -48,7 +48,7 @@ success:
     # %page% %count%
     intro: "&e&lBans &r&7(&b%count%&7)&e&l:"
     # %player% %reason% %expiration% %moderator% %time_created% %expired%
-    # %expired% shows as "&aactive" if active, "&cexpired" if expired
+    # %expired% gets replaced with moderation.active or moderation.expired
     list: "&b%player% &fwas banned by &9%moderator% &funtil &d%expiration% &ffor &7%reason% &f(%expired%&f)"
   # %player%
   pardon: "&aYou have successfully unbanned &b%player%&a!"
@@ -58,7 +58,7 @@ success:
     # %page% %count%
     intro: "&e&lIP Bans &r&7(&b%count%&7)&e&l:"
     # %ip% %reason% %expiration% %moderator% %time_created% %expired%
-    # %expired% shows as "&aactive" if active, "&cexpired" if expired
+    # %expired% gets replaced with moderation.active or moderation.expired
     list: "&b%ip% &fwas banned by &9%moderator% &funtil &d%expiration% &ffor &7%reason% &f(%expired%&f)"
   # %ip%
   ippardon: "&aYou have successfully unbanned IP &b%ip%&a!"
@@ -72,7 +72,7 @@ success:
     # %page% %count%
     intro: "&e&lMutes &r&7(&b%count%&7)&e&l:"
     # %player% %reason% %expiration% %moderator% %time_created% %expired%
-    # %expired% shows as "&aactive" if active, "&cexpired" if expired
+    # %expired% gets replaced with moderation.active or moderation.expired
     list: "&b%player% &fwas muted by &9%moderator% &funtil &d%expiration% &ffor &7%reason% &f(%expired%&f)"
   # %id% %player% %reason% %expiration%
   warn: "&aYou have successfully warned &b%player% &auntil &d%expiration%&a! &7Warning ID: &6%id%"
@@ -80,13 +80,13 @@ success:
     # %player% %count%
     intro: "&b%player%&e's warnings &7(&b%count%&7)&e:"
     # %id% %player% %reason% %expiration% %moderator% %time_created% %expired%
-    # %expired% shows as "&aactive" if active, "&cexpired" if expired
+    # %expired% gets replaced with moderation.active or moderation.expired
     list: "&6%id%&7: &fWarned by &9%moderator% &funtil &d%expiration% &ffor &7%reason% &f(%expired%&f)"
   mywarnings:
     # %player% %count%
     intro: "&eYour warnings &7(&b%count%&7)&e:"
     # %id% %player% %reason% %expiration% %moderator% %time_created% %expired%
-    # %expired% shows as "&aactive" if active, "&cexpired" if expired
+    # %expired% gets replaced with moderation.active or moderation.expired
     list: "&fYou were warned by &9%moderator% &funtil &d%expiration% &ffor &7%reason% &f(%expired%&f)"
   # %id% %player%
   delwarn: "&aYou have successfully deleted warning &6%id% &abelonging to &b%player%&a!"
@@ -132,6 +132,10 @@ moderation:
     message: "&eYou have been warned by &b%moderator% &euntil &b%expiration%&e.\n&7Reason: &f%reason%"
     # The reason that will be displayed if none is provided by the moderator
     default-reason: "You have broken a rule"
+
+  # These replace the %expired% tag
+  active: "&aactive"
+  expired: "&cexpired"
 
 log:
   templates:

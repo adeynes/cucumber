@@ -29,7 +29,7 @@ trait Expirable
 
     public function getExpiredFormatted(): string
     {
-        return $this->isExpired() ? '&cexpired': '&aactive';
+        return Cucumber::getInstance()->getMessage($this->isExpired() ? 'moderation.expired' : 'moderation.active');
     }
 
 }
