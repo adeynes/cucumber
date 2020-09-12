@@ -33,7 +33,7 @@ error:
     not-muted: "&b%player% &cis not muted!"
   warning:
     # %id%
-    id-does-not-exist: "&cWarn &b%id% &cdoesn't exist!"
+    does-not-exist: "&cWarning &b%id% &cdoesn't exist!"
 
 success:
   # %player% %message%
