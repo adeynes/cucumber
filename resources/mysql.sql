@@ -404,7 +404,7 @@ LIMIT 0, 1;
 -- #      :reason string
 -- #      :expiration ?int
 -- #      :moderator string
-REPLACE INTO cucumber_bans (player_id, reason, expiration, moderator, time_created)
+INSERT INTO cucumber_bans (player_id, reason, expiration, moderator, time_created)
     SELECT id, :reason, :expiration, :moderator, UNIX_TIMESTAMP()
     FROM cucumber_players
     WHERE name = :player;
@@ -423,7 +423,7 @@ WHERE player_id IN (
 -- #      :reason string
 -- #      :expiration ?int
 -- #      :moderator string
-REPLACE INTO cucumber_ip_bans (ip, reason, expiration, moderator, time_created)
+INSERT INTO cucumber_ip_bans (ip, reason, expiration, moderator, time_created)
 VALUES (:ip, :reason, :expiration, :moderator, UNIX_TIMESTAMP());
 -- #    }
 -- #    {ip-unban
@@ -442,7 +442,7 @@ VALUES (:ip, :reason, :moderator, UNIX_TIMESTAMP());
 -- #      :reason string
 -- #      :expiration ?int
 -- #      :moderator string
-REPLACE INTO cucumber_mutes (player_id, reason, expiration, moderator, time_created)
+INSERT INTO cucumber_mutes (player_id, reason, expiration, moderator, time_created)
     SELECT id, :reason, :expiration, :moderator, UNIX_TIMESTAMP()
     FROM cucumber_players
     WHERE name = :player;
