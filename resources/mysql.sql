@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS cucumber_ip_bans (
 -- #      {ubans
 CREATE TABLE IF NOT EXISTS cucumber_ubans (
     id INT UNSIGNED AUTO_INCREMENT,
-    ip VARCHAR(39) UNIQUE NOT NULL,
+    ip VARCHAR(39) NOT NULL,
     reason VARCHAR(500) DEFAULT NULL,
     moderator VARCHAR(32) NOT NULL,
     time_created INT UNSIGNED NOT NULL,

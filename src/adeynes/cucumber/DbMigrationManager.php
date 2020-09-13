@@ -75,10 +75,10 @@ final class DbMigrationManager
                 }
                 $column_name = array_keys($rows[0])[0];
                 $tables = array_column($rows, $column_name);
-
                 $transfer = count(array_intersect($tables, self::VERSION_1_TABLES)) === count(self::VERSION_1_TABLES);
             }
         );
+        $connector->waitAll();
 
         $queries = [
             'player' => [
