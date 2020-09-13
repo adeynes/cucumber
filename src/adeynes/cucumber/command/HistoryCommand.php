@@ -189,8 +189,4 @@ class HistoryCommand extends CucumberCommand
         );
     }
 
-    protected function formatPunishment(Punishment $punishment) {
-
-    }
-
 }
