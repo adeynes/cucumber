@@ -1,71 +1,98 @@
 -- #!mysql
 -- #{cucumber
+-- #  {meta
+-- #    {init
+CREATE TABLE IF NOT EXISTS cucumber_meta (
+    id TINYINT UNSIGNED PRIMARY KEY,
+    db_version TINYINT UNSIGNED NOT NULL DEFAULT 1
+);
+-- #    }
+-- #    {get-version
+-- #      :id int 1
+SELECT db_version FROM cucumber_meta WHERE id = :id;
+-- #    }
+-- #    {set-version
+-- #      :id int 1
+-- #      :version int
+INSERT INTO cucumber_meta (id, db_version)
+VALUES (:id, :version)
+ON DUPLICATE KEY UPDATE db_version = :version;
+-- #    }
+-- #  }
 -- #  {init
 -- #    {players
 CREATE TABLE IF NOT EXISTS cucumber_players (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(32) UNIQUE NOT NULL,
+    id INT UNSIGNED AUTO_INCREMENT,
+    name VARCHAR(32) NOT NULL,
     ip VARCHAR(39) NOT NULL,
     first_join INT UNSIGNED NOT NULL,
-    last_join INT UNSIGNED NOT NULL
+    last_join INT UNSIGNED NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY `name` (name)
 );
 -- #    }
 -- #    {punishments
 -- #      {bans
 CREATE TABLE IF NOT EXISTS cucumber_bans (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id INT UNSIGNED AUTO_INCREMENT,
     player_id INT UNSIGNED NOT NULL,
     reason VARCHAR(500) DEFAULT NULL,
     expiration INT UNSIGNED,
     moderator VARCHAR(32) NOT NULL,
     time_created INT UNSIGNED NOT NULL,
-    FOREIGN KEY (player_id) REFERENCES cucumber_players(id),
-    FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
+    PRIMARY KEY (id),
+    FOREIGN KEY `fk__cucumber_bans__player_id__cucumber_players__id` (player_id) REFERENCES cucumber_players(id),
+    FOREIGN KEY `fk__cucumber_bans__moderator__cucumber_players__name` (moderator) REFERENCES cucumber_players(name)
 );
 -- #      }
 -- #      {ip-bans
 CREATE TABLE IF NOT EXISTS cucumber_ip_bans (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id INT UNSIGNED AUTO_INCREMENT,
     ip VARCHAR(39) NOT NULL,
     reason VARCHAR(500) DEFAULT NULL,
     expiration INT UNSIGNED,
     moderator VARCHAR(32) NOT NULL,
     time_created INT UNSIGNED NOT NULL,
-    FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
+    PRIMARY KEY (id),
+    FOREIGN KEY `fk__cucumber_ip_bans__moderator__cucumber_players__name` (moderator) REFERENCES cucumber_players(name)
 );
 -- #      }
 -- #      {ubans
 CREATE TABLE IF NOT EXISTS cucumber_ubans (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id INT UNSIGNED AUTO_INCREMENT,
     ip VARCHAR(39) UNIQUE NOT NULL,
     reason VARCHAR(500) DEFAULT NULL,
     moderator VARCHAR(32) NOT NULL,
     time_created INT UNSIGNED NOT NULL,
-    FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
+    PRIMARY KEY (id),
+    UNIQUE KEY `ip` (ip),
+    FOREIGN KEY `fk__cucumber_ubans__moderator__cucumber_players__name` (moderator) REFERENCES cucumber_players(name)
 );
 -- #      }
 -- #      {mutes
 CREATE TABLE IF NOT EXISTS cucumber_mutes (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id INT UNSIGNED AUTO_INCREMENT,
     player_id INT UNSIGNED NOT NULL,
     reason VARCHAR(500) DEFAULT NULL,
     expiration INT UNSIGNED,
     moderator VARCHAR(32) NOT NULL,
     time_created INT UNSIGNED NOT NULL,
-    FOREIGN KEY (player_id) REFERENCES cucumber_players(id),
-    FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
+    PRIMARY KEY (id),
+    FOREIGN KEY `fk__cucumber_mutes__player_id__cucumber_players__id` (player_id) REFERENCES cucumber_players(id),
+    FOREIGN KEY `fk__cucumber_mutes__moderator__cucumber_players__name` (moderator) REFERENCES cucumber_players(name)
 );
 -- #      }
 -- #      {warnings
 CREATE TABLE IF NOT EXISTS cucumber_warnings (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id INT UNSIGNED AUTO_INCREMENT,
     player_id INT UNSIGNED NOT NULL,
     reason VARCHAR(500) DEFAULT NULL,
     expiration INT UNSIGNED,
     moderator VARCHAR(32) NOT NULL,
     time_created INT UNSIGNED NOT NULL,
-    FOREIGN KEY (player_id) REFERENCES cucumber_players(id),
-    FOREIGN KEY (moderator) REFERENCES cucumber_players(name)
+    PRIMARY KEY (id),
+    FOREIGN KEY `fk__cucumber_warnings__player_id__cucumber_players__id` (player_id) REFERENCES cucumber_players(id),
+    FOREIGN KEY `fk__cucumber_warnings__moderator__cucumber_players__name` (moderator) REFERENCES cucumber_players(name)
 );
 -- #      }
 -- #    }
@@ -80,89 +107,26 @@ SHOW TABLES;
 SHOW COLUMNS FROM :table;
 -- #      }
 -- #    }
--- #    {tables
+-- #    {transfer
 -- #      {players
--- #        {rename
-# noinspection SqlResolve
-RENAME TABLE players TO cucumber_players;
--- #        }
--- #        {alter-modify
-ALTER TABLE cucumber_players
-    MODIFY COLUMN id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    MODIFY COLUMN name VARCHAR(32) UNIQUE NOT NULL,
-    MODIFY COLUMN ip VARCHAR(39) NOT NULL,
-    MODIFY COLUMN first_join INT UNSIGNED NOT NULL,
-    MODIFY COLUMN last_join INT UNSIGNED NOT NULL;
--- #        }
+INSERT INTO cucumber_players (id, name, ip, first_join, last_join)
+SELECT id, name, ip, first_join, last_join FROM players;
 -- #      }
 -- #      {bans
--- #        {rename
-# noinspection SqlResolve
-RENAME TABLE bans TO cucumber_bans;
--- #        }
--- #        {alter-change
-# noinspection SqlResolve
-ALTER TABLE cucumber_bans
-    CHANGE COLUMN player player_id INT UNSIGNED NOT NULL,
-    ADD COLUMN time_created INT UNSIGNED NOT NULL AFTER moderator;
--- #        }
--- #        {alter-modify
-ALTER TABLE cucumber_bans
-    MODIFY COLUMN id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    MODIFY COLUMN expiration INT UNSIGNED,
-    MODIFY COLUMN moderator VARCHAR(32) NOT NULL;
--- #        }
+INSERT INTO cucumber_bans (id, player_id, reason, expiration, moderator, time_created)
+SELECT id, player, reason, expiration, moderator, UNIX_TIMESTAMP() FROM bans;
 -- #      }
 -- #      {ip-bans
--- #        {rename
-# noinspection SqlResolve
-RENAME TABLE ip_bans TO cucumber_ip_bans;
--- #        }
--- #        {alter-change
-ALTER TABLE cucumber_ip_bans
-    ADD COLUMN time_created INT UNSIGNED NOT NULL AFTER moderator;
--- #        }
--- #        {alter-modify
-ALTER TABLE cucumber_ip_bans
-    MODIFY COLUMN id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    MODIFY COLUMN ip VARCHAR(39) NOT NULL,
-    MODIFY COLUMN expiration INT UNSIGNED,
-    MODIFY COLUMN moderator VARCHAR(32) NOT NULL;
--- #        }
+INSERT INTO cucumber_ip_bans (id, ip, reason, expiration, moderator, time_created)
+SELECT id, ip, reason, expiration, moderator, UNIX_TIMESTAMP() FROM ip_bans;
 -- #      }
 -- #      {ubans
--- #        {rename
-# noinspection SqlResolve
-RENAME TABLE ubans TO cucumber_ubans;
--- #        }
--- #        {alter-change
-ALTER TABLE cucumber_ubans
-    ADD COLUMN time_created INT UNSIGNED NOT NULL AFTER moderator;
--- #        }
--- #        {alter-modify
-ALTER TABLE cucumber_ubans
-    MODIFY COLUMN id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    MODIFY COLUMN ip VARCHAR(39) UNIQUE NOT NULL,
-    MODIFY COLUMN moderator VARCHAR(32) NOT NULL;
--- #        }
+INSERT INTO cucumber_ubans (id, ip, reason, moderator, time_created)
+SELECT id, ip, reason, moderator, UNIX_TIMESTAMP() FROM ubans;
 -- #      }
 -- #      {mutes
--- #        {rename
-# noinspection SqlResolve
-RENAME TABLE mutes TO cucumber_mutes;
--- #        }
--- #        {alter-change
-# noinspection SqlResolve
-ALTER TABLE cucumber_mutes
-    CHANGE COLUMN player player_id INT UNSIGNED NOT NULL,
-    ADD COLUMN time_created INT UNSIGNED NOT NULL AFTER moderator;
--- #        }
--- #        {alter-modify
-ALTER TABLE cucumber_mutes
-    MODIFY COLUMN id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    MODIFY COLUMN expiration INT UNSIGNED,
-    MODIFY COLUMN moderator VARCHAR(32) NOT NULL;
--- #        }
+INSERT INTO cucumber_mutes (id, player_id, reason, expiration, moderator, time_created)
+SELECT id, player, reason, expiration, moderator, UNIX_TIMESTAMP() FROM mutes;
 -- #      }
 -- #    }
 -- #  }

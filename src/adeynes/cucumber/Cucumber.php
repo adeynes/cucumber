@@ -21,6 +21,8 @@ use poggit\libasynql\libasynql;
 final class Cucumber extends PluginBase
 {
 
+    public const DB_VERSION = 2;
+
     private const CONFIG_VERSION = '3.0';
 
     private const MESSAGES_VERSION = '3.1';
@@ -139,27 +141,16 @@ final class Cucumber extends PluginBase
             return;
         }
 
+        $connector->executeGeneric(Queries::CUCUMBER_META_INIT);
+        $connector->waitAll();
+
         $db_migration_manager = new DbMigrationManager($this);
         $db_migration_manager->tryMigration();
         if ($db_migration_manager->hasMigrated()) {
-            $this->emitMigratedEditWarning();
+            $this->emitMetaTableEditWarnings();
         }
 
-        // other tables have a foreign key constraint on players so it must be first
-        $connector->executeGeneric(Queries::CUCUMBER_INIT_PLAYERS);
-        $connector->waitAll();
-
         $connector->executeGeneric(Queries::CUCUMBER_ADD_PLAYER, ['name' => 'CONSOLE', 'ip' => '127.0.0.1']);
-
-        $create_queries = [
-            Queries::CUCUMBER_INIT_PUNISHMENTS_BANS,
-            Queries::CUCUMBER_INIT_PUNISHMENTS_IP_BANS,
-            Queries::CUCUMBER_INIT_PUNISHMENTS_UBANS,
-            Queries::CUCUMBER_INIT_PUNISHMENTS_MUTES,
-            Queries::CUCUMBER_INIT_PUNISHMENTS_WARNINGS
-        ];
-        foreach ($create_queries as $query) $connector->executeGeneric($query);
-
         $connector->waitAll();
     }
 
@@ -314,9 +305,9 @@ final class Cucumber extends PluginBase
         $this->getLogger()->warning('Do not edit the "version" attribute in ANY of the config or lang files');
     }
 
-    public function emitMigratedEditWarning(): void
+    public function emitMetaTableEditWarnings(): void
     {
-        $this->getLogger()->warning('Do not edit the "migrated" attribute in config.yml');
+        $this->getLogger()->warning('Do not edit the cucumber_meta table');
     }
 
     public function cancelTask(int $id)

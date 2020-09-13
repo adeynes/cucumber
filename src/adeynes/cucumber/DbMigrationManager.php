@@ -8,11 +8,10 @@ use adeynes\cucumber\utils\Queries;
 final class DbMigrationManager
 {
 
+    private const VERSION_1_TABLES = ['players', 'bans', 'ip_bans', 'ubans', 'mutes'];
+
     /** @var Cucumber */
     private $plugin;
-
-    /** @var bool */
-    private $is_migrated;
 
     /** @var bool */
     private $has_migrated = false;
@@ -20,19 +19,32 @@ final class DbMigrationManager
     public function __construct(Cucumber $plugin)
     {
         $this->plugin = $plugin;
-        $this->setMigrated($plugin->getConfig()->get('migrated'));
     }
 
     public function isMigrated(): bool
     {
-        return $this->is_migrated;
+        $is_migrated = false;
+        $this->plugin->getConnector()->executeSelect(
+            Queries::CUCUMBER_META_GET_VERSION,
+            [],
+            function (array $rows) use (&$is_migrated) {
+                if (count($rows) === 0) {
+                    $is_migrated = false;
+                    return;
+                }
+                $is_migrated = $rows[0]['db_version'] === Cucumber::DB_VERSION;
+            }
+        );
+        $this->plugin->getConnector()->waitAll();
+        return $is_migrated;
     }
 
-    private function setMigrated(bool $is_migrated): void
+    private function setMigrated(int $new_version): void
     {
-        $this->is_migrated = $is_migrated;
-        $this->plugin->getConfig()->set('migrated', true);
-        $this->plugin->getConfig()->save();
+        $this->plugin->getConnector()->executeInsert(
+            Queries::CUCUMBER_META_SET_VERSION,
+            ['version' => $new_version]
+        );
     }
 
     public function hasMigrated(): bool
@@ -51,44 +63,59 @@ final class DbMigrationManager
     }
 
     private function migrate(): void {
+        $connector = $this->plugin->getConnector();
+        $transfer = false;
+        $connector->executeSelect(
+            Queries::CUCUMBER_MIGRATE_GET_TABLES,
+            [],
+            function (array $rows) use (&$transfer) {
+                if (count($rows) === 0) {
+                    $transfer = true;
+                    return;
+                }
+                $column_name = array_keys($rows[0])[0];
+                $tables = array_column($rows, $column_name);
+
+                $transfer = count(array_intersect($tables, self::VERSION_1_TABLES)) === count(self::VERSION_1_TABLES);
+            }
+        );
+
         $queries = [
             'player' => [
-                Queries::CUCUMBER_MIGRATE_TABLES_PLAYERS_RENAME,
-                Queries::CUCUMBER_MIGRATE_TABLES_PLAYERS_ALTER_MODIFY
+                Queries::CUCUMBER_INIT_PLAYERS => true,
+                Queries::CUCUMBER_MIGRATE_TRANSFER_PLAYERS => $transfer
             ],
             'ban' => [
-                Queries::CUCUMBER_MIGRATE_TABLES_BANS_RENAME,
-                Queries::CUCUMBER_MIGRATE_TABLES_BANS_ALTER_CHANGE,
-                Queries::CUCUMBER_MIGRATE_TABLES_BANS_ALTER_MODIFY
+                Queries::CUCUMBER_INIT_PUNISHMENTS_BANS => true,
+                Queries::CUCUMBER_MIGRATE_TRANSFER_BANS => $transfer
             ],
             'ip-ban' => [
-                Queries::CUCUMBER_MIGRATE_TABLES_IP_BANS_RENAME,
-                Queries::CUCUMBER_MIGRATE_TABLES_IP_BANS_ALTER_CHANGE,
-                Queries::CUCUMBER_MIGRATE_TABLES_IP_BANS_ALTER_MODIFY
+                Queries::CUCUMBER_INIT_PUNISHMENTS_IP_BANS => true,
+                Queries::CUCUMBER_MIGRATE_TRANSFER_IP_BANS => $transfer
             ],
             'uban' => [
-                Queries::CUCUMBER_MIGRATE_TABLES_UBANS_RENAME,
-                Queries::CUCUMBER_MIGRATE_TABLES_UBANS_ALTER_CHANGE,
-                Queries::CUCUMBER_MIGRATE_TABLES_UBANS_ALTER_MODIFY
+                Queries::CUCUMBER_INIT_PUNISHMENTS_UBANS => true,
+                Queries::CUCUMBER_MIGRATE_TRANSFER_UBANS => $transfer
             ],
             'mute' => [
-                Queries::CUCUMBER_MIGRATE_TABLES_MUTES_RENAME,
-                Queries::CUCUMBER_MIGRATE_TABLES_MUTES_ALTER_CHANGE,
-                Queries::CUCUMBER_MIGRATE_TABLES_MUTES_ALTER_MODIFY
+                Queries::CUCUMBER_INIT_PUNISHMENTS_MUTES => true,
+                Queries::CUCUMBER_MIGRATE_TRANSFER_MUTES => $transfer
+            ],
+            'warnings' => [
+                Queries::CUCUMBER_INIT_PUNISHMENTS_WARNINGS => true
             ]
         ];
 
-        $connector = $this->plugin->getConnector();
-
         foreach ($queries as $group => $group_queries) {
             $this->plugin->getLogger()->notice("Proceeding with $group migration...");
-            foreach ($group_queries as $query) {
+            foreach ($group_queries as $query => $do) {
+                if (!$do) continue;
                 $connector->executeGeneric($query);
                 $connector->waitAll();
             }
         }
 
-        $this->setMigrated(true);
+        $this->setMigrated(Cucumber::DB_VERSION);
     }
 
 }
