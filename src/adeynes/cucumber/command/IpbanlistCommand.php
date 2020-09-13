@@ -24,14 +24,19 @@ class IpbanlistCommand extends PunishmentListCommand
         );
     }
 
-    public function isAllable(): bool
+    protected function isAllable(): bool
     {
         return true;
     }
 
-    public function getSelectQuery(): string
+    protected function getSelectQuery(): string
     {
         return Queries::CUCUMBER_GET_PUNISHMENTS_IP_BANS_LIMITED;
+    }
+
+    protected function getCountQuery(): string
+    {
+        return Queries::CUCUMBER_GET_PUNISHMENTS_IP_BANS_COUNT;
     }
 
     /**
@@ -45,11 +50,11 @@ class IpbanlistCommand extends PunishmentListCommand
         );
     }
 
-    protected function sendList(CommandSender $sender, array $ip_bans, int $page_number): void {
+    protected function sendList(CommandSender $sender, array $ip_bans, int $count, int $page_number): void {
         $page = trim(
             $this->getPlugin()->formatMessageFromConfig(
                 'success.ipbanlist.intro',
-                ['page' => strval($page_number), 'count' => strval(count($ip_bans))]
+                ['page' => strval($page_number), 'count' => strval($count)]
             ) . PHP_EOL .
             implode(PHP_EOL, array_map([$this, 'makeIpBanInfoLine'], $ip_bans))
         );

@@ -24,14 +24,19 @@ class MutelistCommand extends PunishmentListCommand
         );
     }
 
-    public function isAllable(): bool
+    protected function isAllable(): bool
     {
         return true;
     }
 
-    public function getSelectQuery(): string
+    protected function getSelectQuery(): string
     {
         return Queries::CUCUMBER_GET_PUNISHMENTS_MUTES_LIMITED;
+    }
+
+    protected function getCountQuery(): string
+    {
+        return Queries::CUCUMBER_GET_PUNISHMENTS_MUTES_COUNT;
     }
 
     /**
@@ -45,11 +50,11 @@ class MutelistCommand extends PunishmentListCommand
         );
     }
 
-    protected function sendList(CommandSender $sender, array $mutes, int $page_number): void {
+    protected function sendList(CommandSender $sender, array $mutes, int $count, int $page_number): void {
         $page = trim(
             $this->getPlugin()->formatMessageFromConfig(
                 'success.mutelist.intro',
-                ['page' => strval($page_number), 'count' => strval(count($mutes))]
+                ['page' => strval($page_number), 'count' => strval($count)]
             ) . PHP_EOL .
             implode(PHP_EOL, array_map([$this, 'makeMuteInfoLine'], $mutes))
         );

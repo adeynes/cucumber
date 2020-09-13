@@ -24,7 +24,7 @@ class BanlistCommand extends PunishmentListCommand
         );
     }
 
-    public function isAllable(): bool
+    protected function isAllable(): bool
     {
         return true;
     }
@@ -32,6 +32,11 @@ class BanlistCommand extends PunishmentListCommand
     protected function getSelectQuery(): string
     {
         return Queries::CUCUMBER_GET_PUNISHMENTS_BANS_LIMITED;
+    }
+
+    protected function getCountQuery(): string
+    {
+        return Queries::CUCUMBER_GET_PUNISHMENTS_BANS_COUNT;
     }
 
     /**
@@ -45,11 +50,11 @@ class BanlistCommand extends PunishmentListCommand
         );
     }
 
-    protected function sendList(CommandSender $sender, array $bans, int $page_number): void {
+    protected function sendList(CommandSender $sender, array $bans, int $count, int $page_number): void {
         $page = trim(
             $this->getPlugin()->formatMessageFromConfig(
                 'success.banlist.intro',
-                ['page' => strval($page_number), 'count' => strval(count($bans))]
+                ['page' => strval($page_number), 'count' => strval($count)]
             ) . PHP_EOL .
             implode(PHP_EOL, array_map([$this, 'makeBanInfoLine'], $bans))
         );

@@ -187,7 +187,9 @@ ORDER BY cucumber_bans.time_created DESC
 LIMIT :from, :limit;
 -- #        }
 -- #        {count
-SELECT COUNT(*) AS count FROM cucumber_bans;
+-- #          :all bool false
+SELECT COUNT(*) AS count FROM cucumber_bans
+WHERE expiration > UNIX_TIMESTAMP() OR expiration IS NULL OR :all;
 -- #        }
 -- #        {by-player
 -- #          :player string
@@ -219,7 +221,9 @@ ORDER BY time_created DESC
 LIMIT :from, :limit;
 -- #        }
 -- #        {count
-SELECT COUNT(*) AS count FROM cucumber_ip_bans;
+-- #          :all bool false
+SELECT COUNT(*) AS count FROM cucumber_ip_bans
+WHERE expiration > UNIX_TIMESTAMP() OR expiration IS NULL OR :all;
 -- #        }
 -- #        {by-ip
 -- #          :ip string
@@ -266,7 +270,9 @@ ORDER BY cucumber_mutes.time_created DESC
 LIMIT :from, :limit;
 -- #        }
 -- #        {count
-SELECT COUNT(*) AS count FROM cucumber_mutes;
+-- #          :all bool false
+SELECT COUNT(*) AS count FROM cucumber_mutes
+WHERE expiration > UNIX_TIMESTAMP() OR expiration IS NULL OR :all;
 -- #        }
 -- #        {by-player
 -- #          :player string
@@ -316,7 +322,9 @@ ORDER BY cucumber_warnings.time_created DESC
 LIMIT :from, :limit;
 -- #        }
 -- #        {count
-SELECT COUNT(*) AS count FROM cucumber_warnings;
+-- #          :all bool false
+SELECT COUNT(*) AS count FROM cucumber_warnings
+WHERE expiration > UNIX_TIMESTAMP() OR expiration IS NULL OR :all;
 -- #        }
 -- #        {by-id
 -- #          :id int
