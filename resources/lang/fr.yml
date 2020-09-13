@@ -81,7 +81,7 @@ success:
     intro: "&eAvertissements de &b%player% &7(&b%count%&7)&e:"
     # %id% %player% %reason% %expiration% %moderator% %time_created% %expired%
     # %expired% est remplacé par moderation.active ou moderation.expired
-    list: "&6%id%&7: &fAverti par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason% &f(%expired%&f)"
+    list: "&fAverti par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason% &f(%expired%&f) &7(numéro &6%id%&7)"
   mywarnings:
     # %player% %count%
     intro: "&eVos avertissements &7(&b%count%&7)&e:"
