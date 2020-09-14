@@ -4,11 +4,22 @@ declare(strict_types=1);
 namespace adeynes\cucumber;
 
 use adeynes\cucumber\utils\Queries;
+use poggit\libasynql\SqlError;
 
 final class DbMigrationManager
 {
 
     private const VERSION_1_TABLES = ['players', 'bans', 'ip_bans', 'ubans', 'mutes'];
+
+    private const VERSION_2_TABLES = [
+        'cucumber_meta',
+        'cucumber_players',
+        'cucumber_bans',
+        'cucumber_ip_bans',
+        'cucumber_ubans',
+        'cucumber_mutes',
+        'cucumber_warnings'
+    ];
 
     /** @var Cucumber */
     private $plugin;
@@ -52,6 +63,40 @@ final class DbMigrationManager
         return $this->has_migrated;
     }
 
+    private function hasTables(array $tables): bool
+    {
+        $has_tables = false;
+        $connector = $this->plugin->getConnector();
+        $connector->executeSelect(
+            Queries::CUCUMBER_MIGRATE_GET_TABLES,
+            [],
+            function (array $rows) use ($tables, &$has_tables) {
+                if (count($rows) === 0) {
+                    $has_tables = true;
+                    return;
+                }
+                $column_name = array_keys($rows[0])[0];
+                $current_tables = array_column($rows, $column_name);
+                $has_tables = count(array_intersect($current_tables, $tables)) === count($tables);
+            }
+        );
+        $connector->waitAll();
+        return $has_tables;
+    }
+
+    private function hasV1Tables(): bool
+    {
+        return $this->hasTables(self::VERSION_1_TABLES);
+    }
+
+    private function hasV2Tables(): bool
+    {
+        return $this->hasTables(self::VERSION_2_TABLES);
+    }
+
+    /**
+     * @throws SqlError|\Error
+     */
     public function tryMigration(): void
     {
         if ($this->isMigrated()) return;
@@ -64,21 +109,7 @@ final class DbMigrationManager
 
     private function migrate(): void {
         $connector = $this->plugin->getConnector();
-        $transfer = false;
-        $connector->executeSelect(
-            Queries::CUCUMBER_MIGRATE_GET_TABLES,
-            [],
-            function (array $rows) use (&$transfer) {
-                if (count($rows) === 0) {
-                    $transfer = true;
-                    return;
-                }
-                $column_name = array_keys($rows[0])[0];
-                $tables = array_column($rows, $column_name);
-                $transfer = count(array_intersect($tables, self::VERSION_1_TABLES)) === count(self::VERSION_1_TABLES);
-            }
-        );
-        $connector->waitAll();
+        $transfer = $this->hasV1Tables();
 
         $queries = [
             'player' => [
@@ -110,9 +141,24 @@ final class DbMigrationManager
             $this->plugin->getLogger()->notice("Proceeding with $group migration...");
             foreach ($group_queries as $query => $do) {
                 if (!$do) continue;
-                $connector->executeGeneric($query);
+                $error = null;
+                $connector->executeGeneric(
+                    $query,
+                    [],
+                    null,
+                    function (SqlError $error_) use (&$error) {
+                        $error = $error_;
+                    }
+                );
                 $connector->waitAll();
+                if ($error instanceof SqlError) {
+                    throw $error;
+                }
             }
+        }
+
+        if (!$this->hasV2Tables()) {
+            throw new \Error('The database is migration is reported as having gone well, but the tables are not correctly built');
         }
 
         $this->setMigrated(Cucumber::DB_VERSION);

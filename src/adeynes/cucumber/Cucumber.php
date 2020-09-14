@@ -17,6 +17,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use poggit\libasynql\DataConnector;
 use poggit\libasynql\libasynql;
+use poggit\libasynql\SqlError;
 
 final class Cucumber extends PluginBase
 {
@@ -141,13 +142,31 @@ final class Cucumber extends PluginBase
             return;
         }
 
-        $connector->executeGeneric(Queries::CUCUMBER_META_INIT);
+        $error = null;
+        $connector->executeGeneric(
+            Queries::CUCUMBER_META_INIT,
+            [],
+            null,
+            function (SqlError $error_) use (&$error) {
+                $error = $error_;
+            }
+        );
         $connector->waitAll();
 
+        if ($error !== null) {
+            $this->fail($error->getMessage());
+            return;
+        }
+
         $db_migration_manager = new DbMigrationManager($this);
-        $db_migration_manager->tryMigration();
-        if ($db_migration_manager->hasMigrated()) {
-            $this->emitMetaTableEditWarnings();
+        try {
+            $db_migration_manager->tryMigration();
+            if ($db_migration_manager->hasMigrated()) {
+                $this->emitMetaTableEditWarnings();
+            }
+        } catch (\Exception|\Error $e) {
+            $this->fail($e->getMessage());
+            return;
         }
 
         $connector->executeGeneric(Queries::CUCUMBER_ADD_PLAYER, ['name' => 'CONSOLE', 'ip' => '127.0.0.1']);
@@ -223,7 +242,6 @@ final class Cucumber extends PluginBase
             try {
                 $severity = LogSeverity::fromString($severity_str);
             } catch (CucumberException $exception) {
-                /** @noinspection PhpUndefinedVariableInspection */
                 $this->getLogger()->warning(
                     MessageFactory::colorize("&eUnknown logger severity &b$severity_str&e for event &b$type&e, defaulting to &blog")
                 );
