@@ -86,19 +86,30 @@ class HistoryCommand extends CucumberCommand
             }
         );
 
-        $this->getPlugin()->formatAndSend(
-            $sender,
-            'success.history.intro',
-            ['player' => $player_name, 'count' => strval(count($history))]
+        $this->getPlugin()->getConnector()->executeSelect(
+            Queries::CUCUMBER_GET_PLAYER_BY_NAME,
+            ['name' => $player_name],
+            function (array $rows) use ($sender, $history, $player_name) {
+                $this->getPlugin()->formatAndSend(
+                    $sender,
+                    'success.history.intro',
+                    [
+                        'player' => $player_name,
+                        'count' => strval(count($history)),
+                        'first_joined' => date($this->getPlugin()->getMessage('time-format'), $rows[0]['first_join']),
+                        'last_joined' => date($this->getPlugin()->getMessage('time-format'), $rows[0]['last_join'])
+                    ]
+                );
+                $lines = [];
+                foreach ($history as $punishment) {
+                    $lines[] = $this->getPlugin()->formatMessageFromConfig(
+                        $punishment->getMessagesPath(),
+                        $punishment->getFormatData()
+                    );
+                }
+                $sender->sendMessage(implode(PHP_EOL, $lines));
+            }
         );
-        $lines = [];
-        foreach ($history as $punishment) {
-            $lines[] = $this->getPlugin()->formatMessageFromConfig(
-                $punishment->getMessagesPath(),
-                $punishment->getFormatData()
-            );
-        }
-        $sender->sendMessage(implode(PHP_EOL, $lines));
     }
 
     protected function addBansToHistory(string $player, array &$history, ?callable $next): void

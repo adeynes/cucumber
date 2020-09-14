@@ -99,8 +99,8 @@ success:
   # %status%
   vanish: "&aVous avez changé votre statut de disparition à &b%status%&a!"
   history:
-    # %player% %count%
-    intro: "&eHistorique des punitions de &b%player% &7(&b%count%&7)&e:"
+    # %player% %count% %first_joined% %last_joined%
+    intro: "&eHistorique des punitions de &b%player% &7(&b%count%&7)&e:\n&7A joué pour la première fois &b%first_joined%\n&7A joué pour la dernière fois &b%last_joined%"
 
 moderation:
   ban:

@@ -99,8 +99,8 @@ success:
   # %status%
   vanish: "&aYou have successfully toggled your vanish status to &b%status%&a!"
   history:
-    # %player% %count%
-    intro: "&b%player%&e's punishment history &7(&b%count%&7)&e:"
+    # %player% %count% %first_joined% %last_joined%
+    intro: "&b%player%&e's punishment history &7(&b%count%&7)&e:\n&7First joined &b%first_joined%\n&7Last joined &b%last_joined%"
 
 moderation:
   ban:
