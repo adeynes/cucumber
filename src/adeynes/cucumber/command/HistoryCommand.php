@@ -7,7 +7,6 @@ use adeynes\cucumber\Cucumber;
 use adeynes\cucumber\mod\Ban;
 use adeynes\cucumber\mod\IpBan;
 use adeynes\cucumber\mod\Mute;
-use adeynes\cucumber\mod\Punishment;
 use adeynes\cucumber\mod\Warning;
 use adeynes\cucumber\utils\Formattable;
 use adeynes\cucumber\utils\HasTimeOfCreation;

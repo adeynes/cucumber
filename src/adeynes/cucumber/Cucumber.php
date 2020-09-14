@@ -76,8 +76,8 @@ final class Cucumber extends PluginBase
 
     public function onDisable(): void
     {
-        $this->getLogDispatcher()->onDisable();
-        $this->getConnector()->close();
+        if ($this->log_dispatcher instanceof LogDispatcher) $this->log_dispatcher->onDisable();
+        if ($this->connector instanceof DataConnector) $this->connector->close();
     }
 
     private function initConfigs(): void
@@ -137,7 +137,7 @@ final class Cucumber extends PluginBase
                 $this->getConfig()->get('database'),
                 ['mysql' => 'mysql.sql']
             );
-        } catch (\Exception|\Error $e) {
+        } catch (\Error $e) {
             $this->fail($e->getMessage());
             return;
         }

@@ -95,7 +95,7 @@ final class DbMigrationManager
     }
 
     /**
-     * @throws SqlError|\Error
+     * @throws \Error
      */
     public function tryMigration(): void
     {
@@ -142,23 +142,12 @@ final class DbMigrationManager
             foreach ($group_queries as $query => $do) {
                 if (!$do) continue;
                 $error = null;
-                $connector->executeGeneric(
-                    $query,
-                    [],
-                    null,
-                    function (SqlError $error_) use (&$error) {
-                        $error = $error_;
-                    }
-                );
-                $connector->waitAll();
-                if ($error instanceof SqlError) {
-                    throw $error;
-                }
+                $connector->executeGeneric($query);
             }
         }
 
         if (!$this->hasV2Tables()) {
-            throw new \Error('The database is migration is reported as having gone well, but the tables are not correctly built');
+            throw new \Error('All the tables could not be correctly built');
         }
 
         $this->setMigrated(Cucumber::DB_VERSION);
