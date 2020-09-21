@@ -21,7 +21,7 @@ abstract class CucumberPlayerEvent extends CucumberEvent
         return $this->player;
     }
 
-    public function getData(): array
+    public function getFormatData(): array
     {
         return ['player' => $this->getPlayer()->getName()];
     }

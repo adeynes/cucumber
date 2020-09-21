@@ -1,5 +1,5 @@
-# NE PAS CHANGER LA LIGNE SUIVANTE
-version: '2.1'
+# NE PAS MODIFIER LA LIGNE SUIVANTE
+version: '3.0'
 
 error:
   # %player%
@@ -9,49 +9,98 @@ error:
   # %severity%
   unknown-log-severity: "&cSeverité inexistante &b%severity%&c!"
   not-ingame: "&cIl faut utiliser cette commande dans le jeu!"
-  # %ip%
-  player-ip-ambiguity: "&b%ip% &cressemble à une IP, mais il y a aussi un joueur avec ce nom! Utilisez un des paramètres &b-player &cou &b-ip &cpour résoudre ce problème"
+  # %argument%
+  invalid-argument: "&b%argument% &cest un argument invalide!"
+  # %duration%
+  invalid-duration: "&b%duration% &cest une durée invalide!"
+  ban:
+    # %player%
+    already-banned: "&b%player% &cest déjà banni!"
+    # %player%
+    not-banned: "&b%player% &cn'est pas banni!"
+  ipban:
+    # %ip%
+    already-banned: "&cL'adresse IP &b%ip% &cest déjà bannie!"
+    # %ip%
+    not-banned: "&cL'adresse IP &b%ip% &cn'est pas bannie!"
+  uban:
+    # %ip%
+    already-banned: "&cL'adresse IP &b%ip% &cest déjà u-bannie!"
+  mute:
+    # %player%
+    already-muted: "&b%player% &cest déjà muté!"
+    # %player%
+    not-muted: "&b%player% &cn'est pas muté!"
+  warning:
+    # %id%
+    does-not-exist: "&cL'avertissement numéro &b%id% &cn'existe pas!"
 
 success:
   # %player% %message%
   rawtell: "&e[&bVOUS &r&e-> &b%player%&e] &7%message%"
-  # %message%
-  log: "&aVous avez loggé &7%message%&a!"
+  # %message% %severity%
+  log: "&aVous avez loggé &7%message% &aau niveau &b%severity%&a!"
   # %message%
   alert: '' # l'expéditeur recevra l'alerte
   # %player% %reason% %expiration%
   ban: "&aVous avez banni &b%player% &ajusqu'au &d%expiration%&a!"
   banlist:
-    # %count%
-    intro: "&e&lBans (&r&b%count%&e&l):"
-    # %player% %reason% %expiration% %moderator%
-    list: "&b%player% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
+    # %page% %count%
+    intro: "&e&lBans &r&7(&b%count%&7, page &b%page%&7)&e&l:"
+    # %player% %reason% %expiration% %moderator% %time_created% %expired%
+    # %expired% est remplacé par moderation.active ou moderation.expired
+    list: "&b%player% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason% &f(%expired&f)"
   # %player%
   pardon: "&aVous avez annulé le ban de &b%player%&a!"
   # %ip% %reason% %expiration%
   ipban: "&aVous avez banni l'IP &b%ip% &ajusqu'au &d%expiration%&a!"
   ipbanlist:
-    # %count%
-    intro: "&e&lBans IP (&r&b%count%&e&l):"
-    # %ip% %reason% %expiration% %moderator%
-    list: "&b%ip% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
+    # %page% %count%
+    intro: "&e&lIP Bans &r&7(&b%count%&7, page &b%page%&7)&e&l:"
+    # %ip% %reason% %expiration% %moderator% %time_created% %expired%
+    # %expired% est remplacé par moderation.active ou moderation.expired
+    list: "&b%ip% &fa été banni par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason% &f(%expired%&f)"
   # %ip%
   ippardon: "&aVous avez annulé le ban de l'IP &b%ip%&a!"
-  # %ip% %reason% %expiration% (expiration sera toujours 2038-01-18 22:14:07 et ne sert à rien)
+  # %ip% %reason%
   uban: "&aVous avez banni tout joueur qui rejoint le serveur avec l'IP &b%ip%&a!"
   # %player% %reason% %expiration%
   mute: "&aVous avez désactivé le tchat de &b%player% &ajusqu'au &d%expiration%&a!"
   # %player%
   unmute: "&b%player% &apeut à nouveau tchatter!"
   mutelist:
-    # %count%
-    intro: "&e&lMuets (&r&b%count%&e&l):"
-    # %player% %reason% %expiration% %moderator%
-    list: "&b%player% &fa été banni du tchat par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason%\n"
-  # %player% %ip%
-  ip: "&eL'IP de &b%player% &eest &b%ip%"
+    # %page% %count%
+    intro: "&e&lMutes &r&7(&b%count%&7, page &b%page%&7)&e&l:"
+    # %player% %reason% %expiration% %moderator% %time_created% %expired%
+    # %expired% est remplacé par moderation.active ou moderation.expired
+    list: "&b%player% &fa été banni du tchat par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason% &f(%expired%&f)"
+  # %id% %player% %reason% %expiration%
+  warn: "&aVous avez averti &b%player% &ajusqu'au &d%expiration%&a! &7Numéro de l'avertissement: &6%id%"
+  warnings:
+    # %player% %count%
+    intro: "&eAvertissements de &b%player% &7(&b%count%&7)&e:"
+    # %id% %player% %reason% %expiration% %moderator% %time_created% %expired%
+    # %expired% est remplacé par moderation.active ou moderation.expired
+    list: "&fAverti par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason% &f(%expired%&f) &7(numéro &6%id%&7)"
+  mywarnings:
+    # %player% %count%
+    intro: "&eVos avertissements &7(&b%count%&7)&e:"
+    # %id% %player% %reason% %expiration% %moderator% %time_created% %expired%
+    # %expired% est remplacé par moderation.active ou moderation.expired
+    list: "&fVous avez été averti par &9%moderator% &fjusqu'au &d%expiration% &fpour &7%reason% &f(%expired%&f)"
+  # %id% %player%
+  delwarn: "&aVous avez effacé l'avertissement numéro &6%id% &aappartenant à &b%player%&a!"
+  ip:
+    # %player% %ip%
+    ip: "&eL'IP de &b%player% &eest &b%ip%"
+    # %player% %ip% %alts%
+    # Pas besoin de couleur pour %alts%, les comptes connectés seront verts, les autres rouges, avec des virgules grises
+    alts: "&eLeurs autres comptes sont: %alts%"
   # %status%
   vanish: "&aVous avez changé votre statut de disparition à &b%status%&a!"
+  history:
+    # %player% %count% %first_joined% %last_joined%
+    intro: "&eHistorique des punitions de &b%player% &7(&b%count%&7)&e:\n&7A joué pour la première fois &b%first_joined%\n&7A joué pour la dernière fois &b%last_joined%"
 
 moderation:
   ban:
@@ -67,7 +116,7 @@ moderation:
       # %moderator% %reason% %expiration%
       message: "&eVous avez été banni du tchat par &b%moderator% &ejusqu'au &b%expiration%&e.\n&7Raison: &f%reason%"
       # La raison qui sera utilisée si aucune n'est fournie par le moderateur
-      default-reason: "Vous avez enfreint les règles de ce serveur"
+      default-reason: "Vous avez enfreint une règle"
     unmute:
       # The message that will be sent to the player (if they are online) when they are manually unmuted
       # %moderator%
@@ -77,6 +126,19 @@ moderation:
     # Le message envoyé aux joueurs qui essayent de tchatter alors qu'ils sont bannis du tchat
     # %moderator% %reason% %expiration%
     chat-attempt: "&cVous êtes banni du tchat jusqu'au &d%expiration%&c!"
+
+  warning:
+    # %id% %moderator% %reason% %expiration%
+    message: "&eVous avez été averti par &b%moderator% &ejusqu'au &b%expiration%&e.\n&7Raison: &f%reason%"
+    # La raison qui sera utilisée si aucune n'est fournie par le moderateur
+    default-reason: "Vous avez enfreint une règle"
+
+  # L'expiration affichée si la punition n'expire pas
+  no-expiration: "Big Crunch"
+
+  # Les valeurs ci-dessous remplacent %expired%
+  active: "&aactif"
+  expired: "&cexpiré"
 
 log:
   templates:
@@ -96,4 +158,4 @@ log:
     command: "%player%: %command%"
 
 # Symboles: https://secure.php.net/manual/fr/function.date.php
-time-format: d-m-Y H:i:s
+time-format: H:i:s \l\e d M Y

@@ -13,4 +13,6 @@ interface Logger
      */
     public function log(string $message);
 
+    public function logNow(): void;
+
 }

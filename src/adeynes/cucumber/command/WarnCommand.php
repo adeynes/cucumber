@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
-use adeynes\cucumber\mod\Mute;
-use adeynes\cucumber\utils\CucumberException;
+use adeynes\cucumber\mod\Warning;
 use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
 use adeynes\parsecmd\command\CommandParser;
@@ -13,7 +12,7 @@ use adeynes\parsecmd\command\ParsedCommand;
 use InvalidArgumentException;
 use pocketmine\command\CommandSender;
 
-class MuteCommand extends CucumberCommand
+class WarnCommand extends CucumberCommand
 {
 
     public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
@@ -21,10 +20,10 @@ class MuteCommand extends CucumberCommand
         parent::__construct(
             $plugin,
             $blueprint,
-            'mute',
-            'cucumber.command.mute',
-            'Mute a player',
-            '/mute <player> <duration>|inf [reason]'
+            'warn',
+            'cucumber.command.warn',
+            'Warn a player',
+            '/warn <player> <duration>|inf [reason]'
         );
     }
 
@@ -33,7 +32,7 @@ class MuteCommand extends CucumberCommand
         [$target_name, $duration, $reason] = $command->get(['player', 'duration', 'reason']);
         $target_name = strtolower($target_name);
         if ($reason === null) {
-            $reason = $this->getPlugin()->getMessage('moderation.mute.mute.default-reason');
+            $reason = $this->getPlugin()->getMessage('moderation.warning.default-reason');
         }
         if (in_array($duration, self::PERMANENT_DURATION_STRINGS)) {
             $expiration = null;
@@ -46,26 +45,23 @@ class MuteCommand extends CucumberCommand
             }
         }
 
-        $mute = function () use ($sender, $target_name, $reason, $expiration) {
-            try {
-                $mute = new Mute($target_name, $reason, $expiration, $sender->getName(), time());
-                $mute_data = $mute->getFormatData();
-                $this->getPlugin()->getPunishmentRegistry()->addMute($mute);
-                $mute->save($this->getPlugin()->getConnector());
+        $warn = function () use ($sender, $target_name, $reason, $expiration) {
+            $warning = new Warning($target_name, $reason, $expiration, $sender->getName(), time());
+            $warning->save(
+                $this->getPlugin()->getConnector(),
+                function (int $insert_id, int $affected_rows) use ($sender, $target_name, $warning) {
+                    $warning_data = $warning->getFormatData() + ['id' => strval($insert_id)];
 
-                if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
-                    $this->getPlugin()->formatAndSend($target, 'moderation.mute.mute.message', $mute_data);
+                    if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
+                        $this->getPlugin()->formatAndSend($target, 'moderation.warning.message', $warning_data);
+                    }
+
+                    $this->getPlugin()->formatAndSend($sender, 'success.warn', $warning_data);
                 }
-
-                $this->getPlugin()->formatAndSend($sender, 'success.mute', $mute_data);
-                return true;
-            } catch(CucumberException $exception) {
-                $sender->sendMessage($exception->getMessage());
-                return false;
-            }
+            );
         };
 
-        $this->doIfTargetExists($mute, $sender, $target_name);
+        $this->doIfTargetExists($warn, $sender, $target_name);
         return true;
     }
 

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\mod;
 
-use adeynes\cucumber\utils\HasData;
+use adeynes\cucumber\utils\Formattable;
 
-interface Punishment extends HasData
+interface Punishment extends Formattable
 {
 
 }

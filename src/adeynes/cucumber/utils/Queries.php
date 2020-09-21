@@ -11,152 +11,424 @@ namespace adeynes\cucumber\utils;
 
 interface Queries
 {
-    
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:64
-     *
-     * <h3>Variables</h3>
-     * - <code>:name</code> string, required in mysql.sql
-     * - <code>:ip</code> string, required in mysql.sql
-     */
-    public const CUCUMBER_ADD_PLAYER = "cucumber.add.player";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:71
-     *
-     * <h3>Variables</h3>
-     * - <code>:name</code> string, required in mysql.sql
-     */
-    public const CUCUMBER_GET_PLAYER_BY_NAME = "cucumber.get.player.by-name";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:140
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:name</code> string, required in mysql.sql
+	 * - <code>:ip</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_ADD_PLAYER = "cucumber.add.player";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:78
-     */
-    public const CUCUMBER_GET_PUNISHMENTS_BANS = "cucumber.get.punishments.bans";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:151
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:ip</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_GET_PLAYER_BY_IP = "cucumber.get.player.by-ip";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:81
-     */
-    public const CUCUMBER_GET_PUNISHMENTS_IP_BANS = "cucumber.get.punishments.ip-bans";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:147
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:name</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_GET_PLAYER_BY_NAME = "cucumber.get.player.by-name";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:89
-     */
-    public const CUCUMBER_GET_PUNISHMENTS_MUTES = "cucumber.get.punishments.mutes";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:163
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_BANS_ALL = "cucumber.get.punishments.bans.all";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:84
-     */
-    public const CUCUMBER_GET_PUNISHMENTS_UBANS = "cucumber.get.punishments.ubans";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:204
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:player</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_BANS_BY_PLAYER = "cucumber.get.punishments.bans.by-player";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:12
-     */
-    public const CUCUMBER_INIT_PLAYERS = "cucumber.init.players";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:193
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:all</code> bool, optional in mysql.sql
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_BANS_COUNT = "cucumber.get.punishments.bans.count";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:24
-     */
-    public const CUCUMBER_INIT_PUNISHMENTS_BANS = "cucumber.init.punishments.bans";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:173
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_BANS_CURRENT = "cucumber.get.punishments.bans.current";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:34
-     */
-    public const CUCUMBER_INIT_PUNISHMENTS_IP_BANS = "cucumber.init.punishments.ip-bans";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:188
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:limit</code> int, required in mysql.sql
+	 * - <code>:from</code> int, required in mysql.sql
+	 * - <code>:all</code> bool, optional in mysql.sql
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_BANS_LIMITED = "cucumber.get.punishments.bans.limited";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:54
-     */
-    public const CUCUMBER_INIT_PUNISHMENTS_MUTES = "cucumber.init.punishments.mutes";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:209
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_IP_BANS_ALL = "cucumber.get.punishments.ip-bans.all";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:43
-     */
-    public const CUCUMBER_INIT_PUNISHMENTS_UBANS = "cucumber.init.punishments.ubans";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:232
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:ip</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_IP_BANS_BY_IP = "cucumber.get.punishments.ip-bans.by-ip";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:100
-     *
-     * <h3>Variables</h3>
-     * - <code>:expiration</code> int, required in mysql.sql
-     * - <code>:moderator</code> string, required in mysql.sql
-     * - <code>:reason</code> string, required in mysql.sql
-     * - <code>:name</code> string, required in mysql.sql
-     */
-    public const CUCUMBER_PUNISH_BAN = "cucumber.punish.ban";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:227
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:all</code> bool, optional in mysql.sql
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_IP_BANS_COUNT = "cucumber.get.punishments.ip-bans.count";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:117
-     *
-     * <h3>Variables</h3>
-     * - <code>:expiration</code> int, required in mysql.sql
-     * - <code>:moderator</code> string, required in mysql.sql
-     * - <code>:reason</code> string, required in mysql.sql
-     * - <code>:ip</code> string, required in mysql.sql
-     */
-    public const CUCUMBER_PUNISH_IP_BAN = "cucumber.punish.ip-ban";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:213
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_IP_BANS_CURRENT = "cucumber.get.punishments.ip-bans.current";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:121
-     *
-     * <h3>Variables</h3>
-     * - <code>:ip</code> string, required in mysql.sql
-     */
-    public const CUCUMBER_PUNISH_IP_UNBAN = "cucumber.punish.ip-unban";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:222
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:limit</code> int, required in mysql.sql
+	 * - <code>:from</code> int, required in mysql.sql
+	 * - <code>:all</code> bool, optional in mysql.sql
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_IP_BANS_LIMITED = "cucumber.get.punishments.ip-bans.limited";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:136
-     *
-     * <h3>Variables</h3>
-     * - <code>:expiration</code> int, required in mysql.sql
-     * - <code>:moderator</code> string, required in mysql.sql
-     * - <code>:reason</code> string, required in mysql.sql
-     * - <code>:name</code> string, required in mysql.sql
-     */
-    public const CUCUMBER_PUNISH_MUTE = "cucumber.punish.mute";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:246
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_MUTES_ALL = "cucumber.get.punishments.mutes.all";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:128
-     *
-     * <h3>Variables</h3>
-     * - <code>:moderator</code> string, required in mysql.sql
-     * - <code>:reason</code> string, required in mysql.sql
-     * - <code>:ip</code> string, required in mysql.sql
-     */
-    public const CUCUMBER_PUNISH_UBAN = "cucumber.punish.uban";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:287
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:player</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_MUTES_BY_PLAYER = "cucumber.get.punishments.mutes.by-player";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:109
-     *
-     * <h3>Variables</h3>
-     * - <code>:name</code> string, required in mysql.sql
-     */
-    public const CUCUMBER_PUNISH_UNBAN = "cucumber.punish.unban";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:276
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:all</code> bool, optional in mysql.sql
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_MUTES_COUNT = "cucumber.get.punishments.mutes.count";
 
-    /**
-     * <h4>Declared in:</h4>
-     * - /home/alexis/pmmp/plugins/dev-cucumber/resources/mysql.sql:145
-     *
-     * <h3>Variables</h3>
-     * - <code>:name</code> string, required in mysql.sql
-     */
-    public const CUCUMBER_PUNISH_UNMUTE = "cucumber.punish.unmute";
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:256
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_MUTES_CURRENT = "cucumber.get.punishments.mutes.current";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:271
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:limit</code> int, required in mysql.sql
+	 * - <code>:from</code> int, required in mysql.sql
+	 * - <code>:all</code> bool, optional in mysql.sql
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_MUTES_LIMITED = "cucumber.get.punishments.mutes.limited";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:236
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_UBANS = "cucumber.get.punishments.ubans";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:298
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_WARNINGS_ALL = "cucumber.get.punishments.warnings.all";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:339
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:id</code> int, required in mysql.sql
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_WARNINGS_BY_ID = "cucumber.get.punishments.warnings.by-id";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:355
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:player</code> string, required in mysql.sql
+	 * - <code>:all</code> bool, optional in mysql.sql
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_WARNINGS_BY_PLAYER = "cucumber.get.punishments.warnings.by-player";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:328
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:all</code> bool, optional in mysql.sql
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_WARNINGS_COUNT = "cucumber.get.punishments.warnings.count";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:308
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_WARNINGS_CURRENT = "cucumber.get.punishments.warnings.current";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:369
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:moderator</code> string, required in mysql.sql
+	 * - <code>:player</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_WARNINGS_LATEST = "cucumber.get.punishments.warnings.latest";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:323
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:limit</code> int, required in mysql.sql
+	 * - <code>:from</code> int, required in mysql.sql
+	 * - <code>:all</code> bool, optional in mysql.sql
+	 */
+	public const CUCUMBER_GET_PUNISHMENTS_WARNINGS_LIMITED = "cucumber.get.punishments.warnings.limited";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:33
+	 */
+	public const CUCUMBER_INIT_PLAYERS = "cucumber.init.players";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:47
+	 */
+	public const CUCUMBER_INIT_PUNISHMENTS_BANS = "cucumber.init.punishments.bans";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:59
+	 */
+	public const CUCUMBER_INIT_PUNISHMENTS_IP_BANS = "cucumber.init.punishments.ip-bans";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:84
+	 */
+	public const CUCUMBER_INIT_PUNISHMENTS_MUTES = "cucumber.init.punishments.mutes";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:71
+	 */
+	public const CUCUMBER_INIT_PUNISHMENTS_UBANS = "cucumber.init.punishments.ubans";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:97
+	 */
+	public const CUCUMBER_INIT_PUNISHMENTS_WARNINGS = "cucumber.init.punishments.warnings";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:13
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:id</code> int, optional in mysql.sql
+	 */
+	public const CUCUMBER_META_GET_VERSION = "cucumber.meta.get-version";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:9
+	 */
+	public const CUCUMBER_META_INIT = "cucumber.meta.init";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:20
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:version</code> int, required in mysql.sql
+	 * - <code>:id</code> int, optional in mysql.sql
+	 */
+	public const CUCUMBER_META_SET_VERSION = "cucumber.meta.set-version";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:108
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:table</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_MIGRATE_GET_COLUMNS_FROM_TABLE = "cucumber.migrate.get.columns-from-table";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:104
+	 */
+	public const CUCUMBER_MIGRATE_GET_TABLES = "cucumber.migrate.get.tables";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:118
+	 */
+	public const CUCUMBER_MIGRATE_TRANSFER_BANS = "cucumber.migrate.transfer.bans";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:122
+	 */
+	public const CUCUMBER_MIGRATE_TRANSFER_IP_BANS = "cucumber.migrate.transfer.ip-bans";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:130
+	 */
+	public const CUCUMBER_MIGRATE_TRANSFER_MUTES = "cucumber.migrate.transfer.mutes";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:114
+	 */
+	public const CUCUMBER_MIGRATE_TRANSFER_PLAYERS = "cucumber.migrate.transfer.players";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:126
+	 */
+	public const CUCUMBER_MIGRATE_TRANSFER_UBANS = "cucumber.migrate.transfer.ubans";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:383
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:expiration</code> null|int, required in mysql.sql
+	 * - <code>:moderator</code> string, required in mysql.sql
+	 * - <code>:player</code> string, required in mysql.sql
+	 * - <code>:reason</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_PUNISH_BAN = "cucumber.punish.ban";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:444
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:id</code> int, required in mysql.sql
+	 */
+	public const CUCUMBER_PUNISH_DELWARN = "cucumber.punish.delwarn";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:400
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:expiration</code> null|int, required in mysql.sql
+	 * - <code>:moderator</code> string, required in mysql.sql
+	 * - <code>:reason</code> string, required in mysql.sql
+	 * - <code>:ip</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_PUNISH_IP_BAN = "cucumber.punish.ip-ban";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:404
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:ip</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_PUNISH_IP_UNBAN = "cucumber.punish.ip-unban";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:421
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:expiration</code> null|int, required in mysql.sql
+	 * - <code>:moderator</code> string, required in mysql.sql
+	 * - <code>:player</code> string, required in mysql.sql
+	 * - <code>:reason</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_PUNISH_MUTE = "cucumber.punish.mute";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:411
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:moderator</code> string, required in mysql.sql
+	 * - <code>:reason</code> string, required in mysql.sql
+	 * - <code>:ip</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_PUNISH_UBAN = "cucumber.punish.uban";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:392
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:player</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_PUNISH_UNBAN = "cucumber.punish.unban";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:430
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:player</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_PUNISH_UNMUTE = "cucumber.punish.unmute";
+
+	/**
+	 * <h4>Declared in:</h4>
+	 * - /home/alexis/my-server/plugins/cucumber/resources/mysql.sql:440
+	 *
+	 * <h3>Variables</h3>
+	 * - <code>:expiration</code> null|int, required in mysql.sql
+	 * - <code>:moderator</code> string, required in mysql.sql
+	 * - <code>:player</code> string, required in mysql.sql
+	 * - <code>:reason</code> string, required in mysql.sql
+	 */
+	public const CUCUMBER_PUNISH_WARN = "cucumber.punish.warn";
 
 }

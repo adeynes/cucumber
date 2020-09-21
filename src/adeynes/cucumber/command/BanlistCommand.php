@@ -4,11 +4,12 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
+use adeynes\cucumber\mod\Ban;
+use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
-use adeynes\parsecmd\command\ParsedCommand;
 use pocketmine\command\CommandSender;
 
-class BanlistCommand extends CucumberCommand
+class BanlistCommand extends PunishmentListCommand
 {
 
     public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
@@ -19,23 +20,45 @@ class BanlistCommand extends CucumberCommand
             'banlist',
             'cucumber.command.banlist',
             'See the list of bans',
-            '/banlist'
+            '/banlist [page] [-all|-a]'
         );
     }
 
-    public function _execute(CommandSender $sender, ParsedCommand $command): bool
+    protected function isAllable(): bool
     {
-        $message = '';
-        $bans = $this->getPlugin()->getPunishmentManager()->getBans();
-        foreach ($bans as $player => $ban) {
-            $data = $ban->getDataFormatted() + ['player' => $player];
-            $message .= $this->getPlugin()->formatMessageFromConfig('success.banlist.list', $data);
-        }
-
-        $this->getPlugin()->formatAndSend($sender, 'success.banlist.intro', ['count' => count($bans)]);
-        $sender->sendMessage(trim($message));
-
         return true;
+    }
+
+    protected function getSelectQuery(): string
+    {
+        return Queries::CUCUMBER_GET_PUNISHMENTS_BANS_LIMITED;
+    }
+
+    protected function getCountQuery(): string
+    {
+        return Queries::CUCUMBER_GET_PUNISHMENTS_BANS_COUNT;
+    }
+
+    /**
+     * @param array $ban_row The database representation of a ban
+     * @return string
+     */
+    protected function makeBanInfoLine(array $ban_row): string {
+        return $this->getPlugin()->formatMessageFromConfig(
+            'success.banlist.list',
+            Ban::from($ban_row)->getFormatData()
+        );
+    }
+
+    protected function sendList(CommandSender $sender, array $bans, int $count, int $page_number): void {
+        $page = trim(
+            $this->getPlugin()->formatMessageFromConfig(
+                'success.banlist.intro',
+                ['page' => strval($page_number), 'count' => strval($count)]
+            ) . PHP_EOL .
+            implode(PHP_EOL, array_map([$this, 'makeBanInfoLine'], $bans))
+        );
+        $sender->sendMessage($page);
     }
 
 }

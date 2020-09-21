@@ -8,7 +8,7 @@ use adeynes\cucumber\event\CucumberEvent;
 use adeynes\cucumber\utils\ds\Stack;
 use adeynes\cucumber\utils\MessageFactory;
 
-final class LogManager
+final class LogDispatcher
 {
 
     /** @var Cucumber */
@@ -33,14 +33,24 @@ final class LogManager
         @mkdir($this->getDirectory());
 
         $this->loggers = [];
-        foreach (LogSeverities::SEVERITIES as $severity) {
-            $this->loggers[$severity] = new Stack;
+        foreach (LogSeverity::values() as $severity) {
+            $this->loggers[$severity->getValue()] = new Stack;
         }
-        // highest severities first, but can't use Stack bc need associative
+        // Highest severities first, but can't use Stack because we need associative
         $this->loggers = array_reverse($this->loggers, true);
 
         $this->global_template = $this->getPlugin()->getMessage('log.templates.global');
         $this->time_format = $this->getPlugin()->getMessage('time-format') ?? 'Y-m-d\TH:i:s';
+    }
+
+    public function onDisable(): void
+    {
+        foreach ($this->loggers as $loggers) {
+            foreach ($loggers as $logger) {
+                /** @var Logger $logger */
+                $logger->logNow();
+            }
+        }
     }
 
     public function getPlugin(): Cucumber
@@ -53,35 +63,35 @@ final class LogManager
         return $this->getPlugin()->getDataFolder() . $this->dir;
     }
 
-    public function log(string $message, int $severity = LogSeverities::LOG): void
+    public function log(string $message, LogSeverity $severity = null): void
     {
+        if (is_null($severity)) $severity = LogSeverity::LOG();
+
         foreach ($this->loggers as $current_severity => $loggers) {
-            if ($severity < $current_severity) continue;
+            // Don't log to higher severities
+            if ($severity->getValue() < $current_severity) continue;
 
             /** @var Logger $logger */
             foreach ($loggers as $logger) {
-                if ($logger->log($message) === false) break 2;
+                $logger->log($message);
             }
         }
     }
 
-    /**
-     * Pushes a logger to the top of the logger stack
-     * @param Logger $logger
-     * @param string $severity The log level that the logger
-     * handles, must be one of the constant names in LogSeverities
-     * @return LogManager For chaining
-     */
-    public function addLogger(Logger $logger, string $severity): self
+    public function pushLogger(Logger $logger, LogSeverity $severity): self
     {
-        if (!isset(LogSeverities::SEVERITIES[$severity])) {
+        /*
+        try {
+            $severity = LogSeverity::fromString($severity);
+        } catch (CucumberException $exception) {
             $this->getPlugin()->log(
                 MessageFactory::colorize("&eUnknown logger severity &b$severity&e, defaulting to &blog")
             );
-            $severity = 'log';
+            $severity = LogSeverity::LOG();
         }
+        */
 
-        $this->loggers[LogSeverities::SEVERITIES[$severity]]->push($logger);
+        $this->loggers[$severity->getValue()]->push($logger);
 
         return $this;
     }
@@ -98,7 +108,7 @@ final class LogManager
     {
         return MessageFactory::format(
             $this->global_template,
-            $this->generateGlobalTemplateData($ev->getTemplate(), $ev->getType(), $ev->getData())
+            $this->generateGlobalTemplateData($ev->getTemplate(), $ev->getType(), $ev->getFormatData())
         );
     }
 

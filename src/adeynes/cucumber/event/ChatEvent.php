@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\event;
 
+use adeynes\cucumber\log\LogSeverity;
 use pocketmine\Player;
 
 class ChatEvent extends CucumberPlayerEvent
@@ -13,6 +14,9 @@ class ChatEvent extends CucumberPlayerEvent
 
     /** @var string */
     protected static $template;
+
+    /** @var LogSeverity */
+    protected static $severity;
 
     /** @var string */
     protected $message;
@@ -28,9 +32,14 @@ class ChatEvent extends CucumberPlayerEvent
         return $this->message;
     }
 
-    public function getData(): array
+    public function getFormatData(): array
     {
-        return parent::getData() + ['message' => $this->getMessage()];
+        return parent::getFormatData() + ['message' => $this->getMessage()];
+    }
+
+    public function getMessagesPath(): string
+    {
+        return 'log.chat';
     }
 
 }

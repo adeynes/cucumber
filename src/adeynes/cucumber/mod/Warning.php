@@ -7,14 +7,14 @@ use adeynes\cucumber\utils\Persistent;
 use adeynes\cucumber\utils\Queries;
 use poggit\libasynql\DataConnector;
 
-class Ban extends PlayerPunishment implements Persistent
+class Warning extends PlayerPunishment implements Persistent
 {
 
     use Expirable;
 
-    public static function from(array $row): Ban
+    public static function from(array $row): Warning
     {
-        return new Ban($row['name'], $row['reason'], $row['expiration'], $row['moderator'], $row['time_created']);
+        return new Warning($row['name'], $row['reason'], $row['expiration'], $row['moderator'], $row['time_created']);
     }
 
     public function __construct(string $player, string $reason, ?int $expiration, string $moderator, int $time_created)
@@ -42,13 +42,13 @@ class Ban extends PlayerPunishment implements Persistent
 
     public function getMessagesPath(): string
     {
-        return 'success.banlist.list';
+        return 'success.warnings.list';
     }
 
     public function save(DataConnector $connector, ?callable $onSuccess = null): void
     {
         $connector->executeInsert(
-            Queries::CUCUMBER_PUNISH_BAN,
+            Queries::CUCUMBER_PUNISH_WARN,
             $this->getRawData(),
             $onSuccess
         );

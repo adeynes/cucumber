@@ -16,7 +16,7 @@ class VanishCommand extends CucumberCommand
     protected const STATUSES = [true => 'on', false => 'off'];
 
     /**
-     * @var Player[]
+     * @var bool[]
      */
     protected static $vanished = [];
 

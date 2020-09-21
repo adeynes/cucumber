@@ -4,11 +4,13 @@ declare(strict_types=1);
 namespace adeynes\cucumber\command;
 
 use adeynes\cucumber\Cucumber;
+use adeynes\cucumber\mod\Ban;
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
 use adeynes\parsecmd\command\CommandParser;
 use adeynes\parsecmd\command\ParsedCommand;
+use InvalidArgumentException;
 use pocketmine\command\CommandSender;
 
 class BanCommand extends CucumberCommand
@@ -22,24 +24,34 @@ class BanCommand extends CucumberCommand
             'ban',
             'cucumber.command.ban',
             'Ban a player by name',
-            '/ban <player> [reason] [-d <duration>]'
+            '/ban <player> <duration>|inf [reason]'
         );
     }
 
     public function _execute(CommandSender $sender, ParsedCommand $command): bool
     {
-        [$target_name, $reason] = $command->get(['player', 'reason']);
+        [$target_name, $duration, $reason] = $command->get(['player', 'duration', 'reason']);
         $target_name = strtolower($target_name);
-        if ($reason === '') $reason = null;
-        $duration = $command->getFlag('duration');
-        $expiration = $duration ? CommandParser::parseDuration($duration) : null;
+        if ($reason === null) {
+            $reason = $this->getPlugin()->getMessage('moderation.ban.default-reason');
+        }
+        if (in_array($duration, self::PERMANENT_DURATION_STRINGS)) {
+            $expiration = null;
+        } else {
+            try {
+                $expiration = $duration ? CommandParser::parseDuration($duration) : null;
+            } catch (InvalidArgumentException $exception) {
+                $this->getPlugin()->formatAndSend($sender, 'error.invalid-duration', ['duration' => $duration]);
+                return false;
+            }
+        }
 
         $ban = function () use ($sender, $target_name, $reason, $expiration) {
             try {
-                $ban_data = $this->getPlugin()->getPunishmentManager()
-                    ->ban($target_name, $reason, $expiration, $sender->getName())
-                    ->getDataFormatted();
-                $ban_data = $ban_data + ['player' => $target_name];
+                $ban = new Ban($target_name, $reason, $expiration, $sender->getName(), time());
+                $ban_data = $ban->getFormatData();
+                $this->getPlugin()->getPunishmentRegistry()->addBan($ban);
+                $ban->save($this->getPlugin()->getConnector());
 
                 if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {
                     $target->kick(

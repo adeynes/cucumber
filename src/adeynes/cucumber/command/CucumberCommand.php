@@ -12,6 +12,8 @@ use pocketmine\plugin\Plugin;
 abstract class CucumberCommand extends Command
 {
 
+    public const PERMANENT_DURATION_STRINGS = ["inf", "infinite", "perm", "permanent", "-1"];
+
     /**
      * @return Cucumber
      */

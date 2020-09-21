@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\utils\ds;
 
-class Stack implements \Iterator, \Countable
+use Countable;
+use Iterator;
+
+class Stack implements Iterator, Countable
 {
 
     /** @var array */

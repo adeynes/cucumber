@@ -3,33 +3,51 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\task;
 
+use adeynes\cucumber\mod\PunishmentRegistry;
 use adeynes\cucumber\utils\CucumberPlayer;
+use adeynes\cucumber\utils\MessageFactory;
+use pocketmine\scheduler\Task;
+use pocketmine\utils\Config;
 
-class ExpirationCheckTask extends CucumberTask
+class ExpirationCheckTask extends Task
 {
+
+    /** @var PunishmentRegistry */
+    protected $punishment_registry;
+
+    /** @var Config */
+    protected $message_config;
+
+    public function __construct(PunishmentRegistry $punishment_registry, Config $message_config)
+    {
+        $this->punishment_registry = $punishment_registry;
+        $this->message_config = $message_config;
+    }
 
     public function onRun(int $tick): void
     {
-        $punishment_manager = $this->getPlugin()->getPunishmentManager();
-
-        // It's nasty & hacky if I have an array of getters and iterate over it
-        foreach ($punishment_manager->getBans() as $name => $ban) {
+        foreach ($this->punishment_registry->getBans() as $name => $ban) {
             if ($ban->isExpired()) {
-                $punishment_manager->unban($name);
+                /** @noinspection PhpUnhandledExceptionInspection */
+                $this->punishment_registry->removeBan($name);
             }
         }
 
-        foreach ($punishment_manager->getIpBans() as $ip => $ip_ban) {
+        foreach ($this->punishment_registry->getIpBans() as $ip => $ip_ban) {
             if ($ip_ban->isExpired()) {
-                $punishment_manager->ipUnban($ip);
+                /** @noinspection PhpUnhandledExceptionInspection */
+                $this->punishment_registry->removeIpBan($ip);
             }
         }
 
-        foreach ($punishment_manager->getMutes() as $name => $mute) {
+        foreach ($this->punishment_registry->getMutes() as $name => $mute) {
             if ($mute->isExpired()) {
-                $punishment_manager->unmute($name);
+                /** @noinspection PhpUnhandledExceptionInspection */
+                $this->punishment_registry->removeMute($name);
                 if ($player = CucumberPlayer::getOnlinePlayer($name)) {
-                    $this->getPlugin()->formatAndSend($player, 'moderation.mute.unmute.auto');
+                    $player->sendMessage(MessageFactory::colorize(
+                        $this->message_config->getNested('moderation.mute.unmute.auto')
+                    ));
                 }
             }
         }
