@@ -9,6 +9,7 @@ use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
 use adeynes\parsecmd\command\CommandParser;
 use adeynes\parsecmd\command\ParsedCommand;
+use InvalidArgumentException;
 use pocketmine\command\CommandSender;
 
 class WarnCommand extends CucumberCommand
@@ -38,7 +39,7 @@ class WarnCommand extends CucumberCommand
         } else {
             try {
                 $expiration = $duration ? CommandParser::parseDuration($duration) : null;
-            } catch (\InvalidArgumentException $exception) {
+            } catch (InvalidArgumentException $exception) {
                 $this->getPlugin()->formatAndSend($sender, 'error.invalid-duration', ['duration' => $duration]);
                 return false;
             }
@@ -48,7 +49,7 @@ class WarnCommand extends CucumberCommand
             $warning = new Warning($target_name, $reason, $expiration, $sender->getName(), time());
             $warning->save(
                 $this->getPlugin()->getConnector(),
-                function (int $insert_id, int $affected_rows) use ($sender, $target_name, $reason, $expiration, $warning) {
+                function (int $insert_id, int $affected_rows) use ($sender, $target_name, $warning) {
                     $warning_data = $warning->getFormatData() + ['id' => strval($insert_id)];
 
                     if ($target = CucumberPlayer::getOnlinePlayer($target_name)) {

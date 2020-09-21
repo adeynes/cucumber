@@ -12,6 +12,9 @@ use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\MessageFactory;
 use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\parsecmd;
+use Error;
+use Exception;
+use InvalidArgumentException;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
@@ -92,7 +95,7 @@ final class Cucumber extends PluginBase
             $config_migration_manager = new ConfigMigrationManager($this, 'config.yml');
             $config_migration_manager->tryMigration(self::CONFIG_VERSION, 'old_config.yml');
             $emit_version_edit_warning |= $config_migration_manager->hasMigrated();
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $this->saveResource('config.yml');
             $emit_version_edit_warning |= true;
         }
@@ -103,7 +106,7 @@ final class Cucumber extends PluginBase
                 $language_migration_manager = new ConfigMigrationManager($this, "lang/$language.yml");
                 $language_migration_manager->tryMigration(self::MESSAGES_VERSION, "lang/old_$language.yml");
                 $emit_version_edit_warning |= $language_migration_manager->hasMigrated();
-            } catch (\InvalidArgumentException $e) {
+            } catch (InvalidArgumentException $e) {
                 $this->saveResource("lang/$language.yml");
                 $emit_version_edit_warning |= true;
             }
@@ -137,7 +140,7 @@ final class Cucumber extends PluginBase
                 $this->getConfig()->get('database'),
                 ['mysql' => 'mysql.sql']
             );
-        } catch (\Error $e) {
+        } catch (Error $e) {
             $this->fail($e->getMessage());
             return;
         }
@@ -164,7 +167,7 @@ final class Cucumber extends PluginBase
             if ($db_migration_manager->hasMigrated()) {
                 $this->emitMetaTableEditWarnings();
             }
-        } catch (\Exception|\Error $e) {
+        } catch (Exception|Error $e) {
             $this->fail($e->getMessage());
             return;
         }

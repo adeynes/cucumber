@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\utils;
 
+use Exception;
 
-
-class CucumberException extends \Exception
+class CucumberException extends Exception
 {
 
     /**

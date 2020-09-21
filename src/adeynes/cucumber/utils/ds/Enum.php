@@ -6,12 +6,18 @@ declare(strict_types=1);
  */
 namespace adeynes\cucumber\utils\ds;
 
+use BadMethodCallException;
+use JsonSerializable;
+use ReflectionClass;
+use UnexpectedValueException;
+use function get_called_class;
+
 /**
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
  * @author Daniel Costa <danielcosta@gmail.com>
  * @author Mirosław Filip <mirfilip@gmail.com>
  */
-abstract class Enum implements \JsonSerializable
+abstract class Enum implements JsonSerializable
 {
 
     protected $value;
@@ -21,7 +27,7 @@ abstract class Enum implements \JsonSerializable
     public function __construct($value)
     {
         if (!static::isValid($value)) {
-            throw new \UnexpectedValueException("Value '$value' is not part of the enum " . \get_called_class());
+            throw new UnexpectedValueException("Value '$value' is not part of the enum " . get_called_class());
         }
         $this->value = $value;
     }
@@ -69,7 +75,7 @@ abstract class Enum implements \JsonSerializable
         $class = get_called_class();
         if (!isset(static::$cache[$class])) {
             /** @noinspection PhpUnhandledExceptionInspection */
-            $reflection = new \ReflectionClass($class);
+            $reflection = new ReflectionClass($class);
             static::$cache[$class] = $reflection->getConstants();
         }
 
@@ -97,15 +103,15 @@ abstract class Enum implements \JsonSerializable
      * @param string $name
      * @param mixed $arguments
      * @return static
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      */
-    public static function __callStatic($name, $arguments)
+    public static function __callStatic(string $name, $arguments)
     {
         $array = static::toArray();
         if (isset($array[$name])) {
             return new static($array[$name]);
         }
-        throw new \BadMethodCallException("No static method or enum constant '$name' in class " . get_called_class());
+        throw new BadMethodCallException("No static method or enum constant '$name' in class " . get_called_class());
     }
 
     public function jsonSerialize()

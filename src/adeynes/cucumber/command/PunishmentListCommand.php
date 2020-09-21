@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\command;
 
-use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\command\ParsedCommand;
 use pocketmine\command\CommandSender;
 

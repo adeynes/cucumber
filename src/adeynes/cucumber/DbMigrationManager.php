@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace adeynes\cucumber;
 
 use adeynes\cucumber\utils\Queries;
-use poggit\libasynql\SqlError;
+use Error;
 
 final class DbMigrationManager
 {
@@ -95,7 +95,7 @@ final class DbMigrationManager
     }
 
     /**
-     * @throws \Error
+     * @throws Error
      */
     public function tryMigration(): void
     {
@@ -147,7 +147,7 @@ final class DbMigrationManager
         }
 
         if (!$this->hasV2Tables()) {
-            throw new \Error('All the tables could not be correctly built');
+            throw new Error('All the tables could not be correctly built');
         }
 
         $this->setMigrated(Cucumber::DB_VERSION);

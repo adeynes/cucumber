@@ -10,6 +10,7 @@ use adeynes\cucumber\utils\CucumberPlayer;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
 use adeynes\parsecmd\command\CommandParser;
 use adeynes\parsecmd\command\ParsedCommand;
+use InvalidArgumentException;
 use pocketmine\command\CommandSender;
 
 class BanCommand extends CucumberCommand
@@ -39,7 +40,7 @@ class BanCommand extends CucumberCommand
         } else {
             try {
                 $expiration = $duration ? CommandParser::parseDuration($duration) : null;
-            } catch (\InvalidArgumentException $exception) {
+            } catch (InvalidArgumentException $exception) {
                 $this->getPlugin()->formatAndSend($sender, 'error.invalid-duration', ['duration' => $duration]);
                 return false;
             }
