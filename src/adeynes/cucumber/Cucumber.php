@@ -26,7 +26,7 @@ final class Cucumber extends PluginBase
 
     private const CONFIG_VERSION = '3.0';
 
-    private const MESSAGES_VERSION = '3.1';
+    private const MESSAGES_VERSION = '3.0';
 
     private const SUPPORTED_LANGUAGES = ['en' => 'en', 'fr' => 'fr'];
 

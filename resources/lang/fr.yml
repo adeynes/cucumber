@@ -1,5 +1,5 @@
 # NE PAS MODIFIER LA LIGNE SUIVANTE
-version: '3.1'
+version: '3.0'
 
 error:
   # %player%
@@ -133,7 +133,10 @@ moderation:
     # La raison qui sera utilisée si aucune n'est fournie par le moderateur
     default-reason: "Vous avez enfreint une règle"
 
-  # Les valeurs ci-dessous replacent %expired%
+  # L'expiration affichée si la punition n'expire pas
+  no-expiration: "Big Crunch"
+
+  # Les valeurs ci-dessous remplacent %expired%
   active: "&aactif"
   expired: "&cexpiré"
 

@@ -19,7 +19,8 @@ trait Expirable
     public function getExpirationFormatted(): string
     {
         return $this->getExpiration() === null ?
-               'the Big Crunch' : date(Cucumber::getInstance()->getMessage('time-format'), $this->getExpiration());
+               Cucumber::getInstance()->getMessage('moderation.no-expiration') :
+               date(Cucumber::getInstance()->getMessage('time-format'), $this->getExpiration());
     }
 
     public function isExpired(): bool

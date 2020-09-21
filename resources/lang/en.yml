@@ -1,5 +1,5 @@
 # DO NOT EDIT THE FOLLOWING LINE
-version: '3.1'
+version: '3.0'
 
 error:
   # %player%
@@ -132,6 +132,9 @@ moderation:
     message: "&eYou have been warned by &b%moderator% &euntil &b%expiration%&e.\n&7Reason: &f%reason%"
     # The reason that will be displayed if none is provided by the moderator
     default-reason: "You have broken a rule"
+
+  # The expiration that is displayed when the punishment does not expired
+  no-expiration: "the Big Crunch"
 
   # These replace the %expired% tag
   active: "&aactive"

@@ -21,7 +21,7 @@ class UBan extends IpPunishment implements Persistent
         return [
             'ip' => $this->getIp(),
             'reason' => $this->getReason(),
-            'expiration' => 'the Big Crunch',
+            'expiration' => Cucumber::getInstance()->getMessage('moderation.no-expiration'),
             'expired' => Cucumber::getInstance()->getMessage('moderation.active'),
             'moderator' => $this->getModerator(),
             'time_created' => $this->getTimeOfCreationFormatted()
