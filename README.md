@@ -8,6 +8,8 @@
 
 **cucumber** is a complete moderation plugin for PocketMine-MP which features ban/mute management and logging of various significant events.
 
+If you are upgrading from **v1.6.2**, just update the cucumber `.phar`. Do not delete configuration files, they will automatically be updated and save your settings :-)
+
 ### Punishment Management
 cucumber enables banning of players and IPs, muting and warning.
 
