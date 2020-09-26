@@ -64,4 +64,5 @@ In a severity tag:
 * `notice`: Normal but interesting events
 * `important`: Significant events
 * `alert`: Exceptional events that likely require monitoring
+
 If a message is logged at the `important` severity, for instance, loggers that listen to higher severities (ex. `alert`) will not pick it up. This is useful if you want to have an `alert` logger that sends you a Discord notification, for example.
