@@ -57,7 +57,7 @@ cucumber also has miscellaneous moderation commands that are not related to puni
 | `/rawtell`  | Send a raw message to a player                          | `/rawtell <player> <message> [-nomessage\|-nom] [-popup\|-p] [-title\|-t]` | `-nomessage` does not send a chat message<br>`-popup` sends a popup<br>`-title`sends a title                    |
 | `/log`      | Log a message                                           | `/log <message> [-severity\|-s <severity>]`                                | `-severity` specifies the severity at which to log the message. See below for more informaiton about severities |
 | `/alert`    | Broadcast a message to the server                       | `/alert <message> [-nomessage\|-nom] [-popup\|-p] [-title\|-t]`            | `-nomessage` does not send a chat message<br>`-popup` sends a popup<br>`-title` sends a title                   |
-| `/ip`       | Get a player's IP and their alt accouts                 | `/ip <player>`                                                             | This shows every account that has the same IP as the player                                                     |
+| `/ip`       | Get a player's IP and their alt accounts                | `/ip <player>`                                                             | This shows every account that has the same IP as the player                                                     |
 | `/vanish`   | Vanish from other players' sight                        | `/vanish`                                                                  |                                                                                                                 |
 
 #### Severity
