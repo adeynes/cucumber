@@ -10,6 +10,10 @@ use adeynes\parsecmd\command\blueprint\CommandBlueprint;
 use adeynes\parsecmd\command\ParsedCommand;
 use pocketmine\command\CommandSender;
 
+use CortexPE\DiscordWebhookAPI\Message;
+use CortexPE\DiscordWebhookAPI\Webhook;
+use CortexPE\DiscordWebhookAPI\Embed;
+
 class PardonCommand extends CucumberCommand
 {
 
@@ -38,6 +42,25 @@ class PardonCommand extends CucumberCommand
             );
 
             $this->getPlugin()->formatAndSend($sender, 'success.pardon', ['player' => $target_name]);
+
+            // send details on discord server
+            $whook = $this->getConfig()->get('webh');
+            $webhook = new Webhook($whook);
+
+            $msg = new Message();
+            $msg->setUsername("HoennPE SysBan");
+            $msg->setAvatarURL("https://cdn.discordapp.com/attachments/834138834999705670/836139083981520926/HoennPE_SummerLogo_00000.png");
+            $list = array("wowowowowow", "nice", "oh wow!", "heyyyyy");
+            $msg->setContent("");
+
+            $embed = new Embed();
+            $embed->setTitle("PARDON");
+            $embed->setColor(0x00FF00);
+            $embed->addField(array_rand($list), "> " . $target_name ." is now pardoned by " . $sender->getName());
+            $embed->setFooter("cucumber for HoennPE", "https://github.com/HoennPE/cucumber");
+            $msg->addEmbed($embed);
+
+            $webhook->send($msg);
             return true;
         } catch (CucumberException $exception) {
             $sender->sendMessage($exception->getMessage());

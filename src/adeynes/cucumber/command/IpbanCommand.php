@@ -13,6 +13,10 @@ use adeynes\parsecmd\command\ParsedCommand;
 use InvalidArgumentException;
 use pocketmine\command\CommandSender;
 
+use CortexPE\DiscordWebhookAPI\Message;
+use CortexPE\DiscordWebhookAPI\Webhook;
+use CortexPE\DiscordWebhookAPI\Embed;
+
 class IpbanCommand extends CucumberCommand
 {
 
@@ -62,6 +66,26 @@ class IpbanCommand extends CucumberCommand
                 }
 
                 $this->getPlugin()->formatAndSend($sender, 'success.ipban', $ip_ban_data);
+
+                // send details on discord server
+                $whook = $this->getConfig()->get('webh');
+                $webhook = new Webhook($whook);
+
+                $msg = new Message();
+                $msg->setUsername("HoennPE SysBan");
+                $msg->setAvatarURL("https://cdn.discordapp.com/attachments/834138834999705670/836139083981520926/HoennPE_SummerLogo_00000.png");
+                $list = array("wowowowowow", "uh-oh", "nice", "bruuhh", "lmao", "xD", "oh wow!", "heyyyyy", "lol", "rip", "ggwp");
+                $msg->setContent("");
+
+                $embed = new Embed();
+                $embed->setTitle("IP-BANNED");
+                $embed->setColor(0xFF0000);
+                $embed->addField(array_rand($list), "> [Someone's IP] has been ip-banned by " . $sender->getName() . " for " . $expiration . " due to " . $reason);
+                $embed->setFooter("cucumber for HoennPE", "https://github.com/HoennPE/cucumber");
+                $msg->addEmbed($embed);
+
+                $webhook->send($msg);
+
                 return true;
             } catch (CucumberException $exception) {
                 $sender->sendMessage($exception->getMessage());
