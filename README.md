@@ -1,14 +1,13 @@
 # cucumber
 
-[![](https://poggit.pmmp.io/shield.state/cucumber)](https://poggit.pmmp.io/p/cucumber)
-[![](https://poggit.pmmp.io/ci.shield/adeynes/cucumber/cucumber)](https://poggit.pmmp.io/p/cucumber)
-[![](https://poggit.pmmp.io/shield.dl.total/cucumber)](https://poggit.pmmp.io/p/cucumber)
-
 ### Current stable version: 2.0.0
+
+> This is a fork of cucumber for HoennPE Server
+
+> In this repository, we have included here a Discord Webhook Messages, every ban, ipban, mute, warn.
 
 **cucumber** is a complete moderation plugin for PocketMine-MP which features ban/mute management and logging of various significant events.
 
-If you are upgrading from **v1.6.2**, just update the cucumber `.phar`. Do not delete configuration files, they will automatically be updated and save your settings :-)
 
 ### Punishment Management
 cucumber enables banning of players and IPs, muting and warning.
