@@ -1,11 +1,11 @@
 name: cucumber
 main: adeynes\cucumber\Cucumber
 version: 2.0.0
-api: 3.2.0
+api: [3.0.0, 3.21.0]
 load: POSTWORLD
-author: adeynes
-description: Advanced, flexible moderation plugin
-website: https://github.com/adeynes/cucumber
+author: adeynes, princepines
+description: Advanced, flexible moderation plugin, modified by princepines
+website: https://github.com/HoennPE/cucumber
 
 permissions:
   cucumber:

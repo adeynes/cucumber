@@ -69,7 +69,7 @@ class MuteCommand extends CucumberCommand
 
                 $msg = new Message();
                 $msg->setUsername("HoennPE SysBan");
-                $msg->setAvatarURL("https://cdn.discordapp.com/attachments/834138834999705670/836139083981520926/HoennPE_SummerLogo_00000.png");
+                $msg->setAvatarURL("https://i.imgur.com/KTToMRu.png");
                 $list = array("wowowowowow", "uh-oh", "nice", "bruuhh", "lmao", "xD", "oh wow!", "heyyyyy", "lol", "rip", "ggwp");
                 $msg->setContent("");
 
