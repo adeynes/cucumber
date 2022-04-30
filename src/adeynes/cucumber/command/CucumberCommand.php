@@ -17,7 +17,7 @@ abstract class CucumberCommand extends Command
     /**
      * @return Cucumber
      */
-    public function getPlugin(): Plugin
+    public function getOwningPlugin(): Plugin
     {
         return parent::getPlugin();
     }

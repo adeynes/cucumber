@@ -93,7 +93,7 @@ abstract class Enum implements JsonSerializable
         return isset($array[$key]);
     }
 
-    public static function search($value)
+    public static function search($value): bool|int|string
     {
         return array_search($value, static::toArray(), true);
     }
@@ -105,7 +105,7 @@ abstract class Enum implements JsonSerializable
      * @return static
      * @throws BadMethodCallException
      */
-    public static function __callStatic(string $name, $arguments)
+    public static function __callStatic(string $name, mixed $arguments)
     {
         $array = static::toArray();
         if (isset($array[$name])) {

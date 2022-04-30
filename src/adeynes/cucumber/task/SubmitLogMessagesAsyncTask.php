@@ -12,17 +12,17 @@ class SubmitLogMessagesAsyncTask extends Task
 {
 
     /** @var string */
-    protected $file;
+    protected string $file;
 
     /** @var string[] */
-    protected $messages = [];
+    protected array $messages = [];
 
     public function __construct(string $file)
     {
         $this->file = $file;
     }
 
-    public function onRun(int $tick): void
+    public function onRun(): void
     {
         $message = implode(PHP_EOL, $this->messages);
         if ($message !== '') $message .= PHP_EOL;

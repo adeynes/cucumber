@@ -4,22 +4,22 @@ declare(strict_types=1);
 namespace adeynes\cucumber\event;
 
 use adeynes\cucumber\log\LogSeverity;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class CommandEvent extends CucumberPlayerEvent
 {
 
     /** @var string */
-    protected static $type;
+    protected static string $type;
 
     /** @var string */
-    protected static $template;
+    protected static string $template;
 
     /** @var LogSeverity */
-    protected static $severity;
+    protected static LogSeverity $severity;
 
     /** @var string */
-    protected $command;
+    protected string $command;
 
     public function __construct(Player $player, string $command)
     {

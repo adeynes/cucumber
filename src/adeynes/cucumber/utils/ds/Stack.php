@@ -10,10 +10,10 @@ class Stack implements Iterator, Countable
 {
 
     /** @var array */
-    protected $stack = [];
+    protected array $stack = [];
 
     /** @var int */
-    protected $position = 0;
+    protected int $position = 0;
 
     public function rewind(): void
     {
@@ -59,7 +59,7 @@ class Stack implements Iterator, Countable
      * @param mixed $value Inserts the value at the beginning of the internal array
      * @return Stack
      */
-    public function push($value): self
+    public function push(mixed $value): self
     {
         array_unshift($this->stack, $value);
         return $this;
@@ -69,7 +69,7 @@ class Stack implements Iterator, Countable
      * @param int $index
      * @return mixed|null
      */
-    public function peek(int $index = 0)
+    public function peek(int $index = 0): mixed
     {
         return $this->stack[$index] ?? null;
     }

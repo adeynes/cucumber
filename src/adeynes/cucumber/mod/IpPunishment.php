@@ -7,7 +7,7 @@ abstract class IpPunishment extends SimplePunishment
 {
 
     /** @var string */
-    protected $ip;
+    protected string $ip;
 
     public function __construct(string $ip, string $reason, string $moderator, int $time_created)
     {

@@ -12,19 +12,19 @@ final class LogDispatcher
 {
 
     /** @var Cucumber */
-    private $plugin;
+    private Cucumber $plugin;
 
     /** @var string */
-    private $dir;
+    private mixed $dir;
 
     /** @var Stack<Logger>[] */
-    private $loggers;
+    private array $loggers;
+
+    /** @var string|null */
+    private ?string $global_template;
 
     /** @var string */
-    private $global_template;
-
-    /** @var string */
-    private $time_format;
+    private string $time_format;
 
     public function __construct(Cucumber $plugin)
     {

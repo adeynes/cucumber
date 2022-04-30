@@ -18,6 +18,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerCommandPreprocessEvent;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerPreLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 
@@ -25,16 +26,10 @@ final class CucumberListener implements Listener
 {
 
     /** @var Cucumber */
-    private $plugin;
+    private Cucumber $plugin;
 
     /** @var bool */
-    private $log_traffic;
-
-    /** @var bool */
-    private $log_chat;
-
-    /** @var bool */
-    private $log_command;
+    private bool $log_traffic, $log_chat, $log_command;
 
     public function __construct(Cucumber $plugin)
     {
@@ -57,7 +52,7 @@ final class CucumberListener implements Listener
 
         if ($this->getPlugin()->getPunishmentRegistry()->isMuted($player, $mute)) {
             /** @var Punishment $mute */
-            $ev->setCancelled();
+            $ev->cancel();
             $messages = $this->getPlugin()->getMessageConfig();
             $player->sendMessage(MessageFactory::fullFormat(
                 $messages->getNested('moderation.mute.chat-attempt') ?? $messages->getNested('moderation.mute.mute.message'),
@@ -73,13 +68,13 @@ final class CucumberListener implements Listener
 
     public function onCommandPreprocess(PlayerCommandPreprocessEvent $ev)
     {
-        if (strpos(($command = $ev->getMessage()), '/') === 0 && $this->log_command) {
+        if (str_starts_with(($command = $ev->getMessage()), '/') && $this->log_command) {
             (new CommandEvent($ev->getPlayer(), $command))->call();
         }
     }
 
     // Check if player is banned
-    public function onPreLogin(PlayerPreLoginEvent $ev)
+    public function onPreLogin(PlayerLoginEvent $ev)
     {
         $player = $ev->getPlayer();
         $punishment_registry = $this->getPlugin()->getPunishmentRegistry();
@@ -90,7 +85,7 @@ final class CucumberListener implements Listener
             $ev->setKickMessage(
                 $this->getPlugin()->formatMessageFromConfig('moderation.ban.message', $ban->getFormatData())
             );
-            $ev->setCancelled();
+            $ev->cancel();
 
             if ($this->log_traffic) {
                 (new JoinAttemptEvent($player))->call();
@@ -99,7 +94,7 @@ final class CucumberListener implements Listener
 
         $this->getPlugin()->getConnector()->executeInsert(
             Queries::CUCUMBER_ADD_PLAYER,
-            ['name' => $player->getLowerCaseName(), 'ip' => $player->getAddress()]
+            ['name' => strtolower($player->getName()), 'ip' => $player->getNetworkSession()->getIp()]
         );
     }
 

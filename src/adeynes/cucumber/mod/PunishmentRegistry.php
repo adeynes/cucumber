@@ -5,7 +5,7 @@ namespace adeynes\cucumber\mod;
 
 use adeynes\cucumber\utils\CucumberException;
 use adeynes\cucumber\utils\Queries;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\utils\Config;
 use poggit\libasynql\DataConnector;
 
@@ -13,22 +13,22 @@ final class PunishmentRegistry
 {
 
     /** @var Config */
-    private $message_config;
+    private Config $message_config;
 
     /** @var Ban[] */
-    private $bans = [];
+    private array $bans = [];
 
     /** @var IpBan[] */
-    private $ip_bans = [];
+    private array $ip_bans = [];
 
     /** @var UBan[] */
-    private $ubans = [];
+    private array $ubans = [];
 
     /** @var UBanChecker */
-    private $uban_checker;
+    private UBanChecker $uban_checker;
 
     /** @var Mute[] */
-    private $mutes = [];
+    private array $mutes = [];
 
     public function __construct(Config $message_config, DataConnector $connector)
     {
@@ -251,7 +251,7 @@ final class PunishmentRegistry
 
     public function isBanned(Player $player, ?Punishment &$punishment = null, bool $remove_if_expired = true): bool
     {
-        $name = $player->getLowerCaseName();
+        $name = strtolower($player->getName());
         if ($ban = $this->getBan($name)) {
             $punishment = $ban;
             if ($ban->isExpired()) {
@@ -265,7 +265,7 @@ final class PunishmentRegistry
             return true;
         }
 
-        $ip = $player->getAddress();
+        $ip = $player->getNetworkSession()->getIp();
         if ($ip_ban = $this->getIpBan($ip)) {
             $punishment = $ip_ban;
             if ($ip_ban->isExpired()) {
@@ -283,7 +283,7 @@ final class PunishmentRegistry
 
     public function isMuted(Player $player, ?Punishment &$punishment = null, bool $remove_if_expired = true): bool
     {
-        $name = $player->getLowerCaseName();
+        $name = strtolower($player->getName());
         if ($mute = $this->getMute($name)) {
             $punishment = $mute;
             if ($mute->isExpired()) {

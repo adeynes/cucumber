@@ -9,13 +9,13 @@ class JoinEvent extends CucumberPlayerEvent
 {
 
     /** @var string */
-    protected static $type;
+    protected static string $type;
 
     /** @var string */
-    protected static $template;
+    protected static string $template;
 
     /** @var LogSeverity */
-    protected static $severity;
+    protected static LogSeverity $severity;
 
     public function getMessagesPath(): string
     {

@@ -16,13 +16,13 @@ abstract class CucumberEvent extends Event implements Formattable
 {
 
     /** @var string */
-    protected static $type;
+    protected static string $type;
 
     /** @var string */
-    protected static $template;
+    protected static string $template;
 
     /** @var LogSeverity */
-    protected static $severity;
+    protected static LogSeverity $severity;
 
     public static function init(string $type, string $template, LogSeverity $severity): void
     {

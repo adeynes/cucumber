@@ -9,7 +9,7 @@ use adeynes\cucumber\utils\Queries;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
 use adeynes\parsecmd\command\ParsedCommand;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class MywarningsCommand extends CucumberCommand
 {
@@ -35,11 +35,11 @@ class MywarningsCommand extends CucumberCommand
 
         $this->getPlugin()->getConnector()->executeSelect(
             Queries::CUCUMBER_GET_PUNISHMENTS_WARNINGS_BY_PLAYER,
-            ['player' => $sender->getLowerCaseName(), 'all' => $command->getFlag('all') !== null],
+            ['player' => strtolower($sender->getName()), 'all' => $command->getFlag('all') !== null],
             function (array $rows) use ($sender) {
                 $intro = $this->getPlugin()->formatMessageFromConfig(
                     'success.mywarnings.intro',
-                    ['player' => $sender->getLowerCaseName(), 'count' => strval(count($rows))]
+                    ['player' => strtolower($sender->getName()), 'count' => strval(count($rows))]
                 );
                 $lines = [$intro];
                 foreach ($rows as $row) {

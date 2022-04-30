@@ -10,13 +10,10 @@ abstract class SimplePunishment implements Punishment, HasTimeOfCreation
 {
 
     /** @var string */
-    protected $reason;
-
-    /** @var string */
-    protected $moderator;
+    protected string $reason, $moderator;
 
     /** @var int */
-    protected $time_created;
+    protected int $time_created;
 
     public function __construct(string $reason, string $moderator, int $time_created)
     {

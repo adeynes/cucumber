@@ -61,7 +61,7 @@ class UbanCommand extends CucumberCommand
         preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/', $target, $ip_matches);
         if ($ip_matches === []) {
             if ($player = CucumberPlayer::getOnlinePlayer($target)) {
-                $uban($player->getAddress());
+                $uban($player->getNetworkSession()->getIp());
             } else {
                 $this->doIfTargetExists(
                     function (array $rows) use ($uban) {

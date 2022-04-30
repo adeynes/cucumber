@@ -10,7 +10,7 @@ abstract class CucumberTask extends Task
 {
 
     /** @var Cucumber */
-    protected $plugin;
+    protected Cucumber $plugin;
 
     public function __construct(Cucumber $plugin)
     {
@@ -24,7 +24,7 @@ abstract class CucumberTask extends Task
 
     public function cancel(): void
     {
-        $this->getPlugin()->cancelTask($this->getTaskId());
+        $this->getHandler()->cancel();
     }
 
 }

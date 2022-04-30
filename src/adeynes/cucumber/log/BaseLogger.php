@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace adeynes\cucumber\log;
 
 use adeynes\cucumber\task\SubmitLogMessagesAsyncTask;
+use pocketmine\scheduler\CancelTaskException;
 
 class BaseLogger implements Logger
 {
@@ -12,10 +13,10 @@ class BaseLogger implements Logger
      * The file to which log messages are outputted
      * @var string
      */
-    protected $file;
+    protected string $file;
 
     /** @var SubmitLogMessagesAsyncTask */
-    protected $submit_log_messages_async_task;
+    protected SubmitLogMessagesAsyncTask $submit_log_messages_async_task;
 
     public function __construct(LogDispatcher $dispatcher, string $file = 'log_out.txt')
     {
@@ -40,6 +41,9 @@ class BaseLogger implements Logger
         $this->submit_log_messages_async_task->addMessage($message);
     }
 
+    /**
+     * @throws CancelTaskException
+     */
     public function logNow(): void
     {
         $this->submit_log_messages_async_task->onRun(0);

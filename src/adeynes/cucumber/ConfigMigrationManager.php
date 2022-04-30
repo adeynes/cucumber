@@ -40,13 +40,13 @@ class ConfigMigrationManager
     }
 
     /** @var Cucumber */
-    private $plugin;
+    private Cucumber $plugin;
 
     /** @var string */
-    private $file;
+    private string $file;
 
     /** @var bool */
-    private $has_migrated = false;
+    private bool $has_migrated = false;
 
     public function __construct(Cucumber $plugin, string $file)
     {
