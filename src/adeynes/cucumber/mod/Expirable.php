@@ -9,7 +9,7 @@ trait Expirable
 {
 
     /** @var ?int */
-    protected $expiration;
+    protected ?int $expiration;
 
     public function getExpiration(): ?int
     {

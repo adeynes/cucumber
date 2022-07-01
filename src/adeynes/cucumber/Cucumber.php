@@ -34,25 +34,22 @@ final class Cucumber extends PluginBase
     private const SUPPORTED_LANGUAGES = ['en' => 'en', 'fr' => 'fr'];
 
     /** @var Cucumber */
-    private static $instance;
+    private static Cucumber $instance;
 
     /** @var Config We need to override PocketMine's config: it is private and we can't have it run saveDefaultConfig() */
-    private $config_;
-
-    /** @var Config */
-    private $messages;
+    private Config $config_, $messages;
 
     /** @var DataConnector */
-    private $connector;
+    private DataConnector $connector;
 
     /** @var parsecmd */
-    private $parsecmd;
+    private parsecmd $parsecmd;
 
     /** @var LogDispatcher */
-    private $log_dispatcher;
+    private LogDispatcher $log_dispatcher;
 
     /** @var PunishmentRegistry */
-    private $punishment_registry;
+    private PunishmentRegistry $punishment_registry;
 
     public static function getInstance(): self
     {
@@ -330,10 +327,5 @@ final class Cucumber extends PluginBase
     {
         $this->getLogger()->warning('Do not edit the cucumber_meta table');
     }
-
-    public function cancelTask(int $id)
-    {
-        $this->getScheduler()->cancelTask($id);
-    }
-
+    
 }

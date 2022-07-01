@@ -7,8 +7,7 @@ use adeynes\cucumber\Cucumber;
 use adeynes\parsecmd\command\blueprint\CommandBlueprint;
 use adeynes\parsecmd\command\ParsedCommand;
 use pocketmine\command\CommandSender;
-use pocketmine\entity\Entity;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class VanishCommand extends CucumberCommand
 {
@@ -18,7 +17,7 @@ class VanishCommand extends CucumberCommand
     /**
      * @var bool[]
      */
-    protected static $vanished = [];
+    protected static array $vanished = [];
 
     public function __construct(Cucumber $plugin, CommandBlueprint $blueprint)
     {
@@ -42,7 +41,7 @@ class VanishCommand extends CucumberCommand
         $old_vanished = self::isVanished($sender);
         $new_vanished = !$old_vanished;
         self::setVanished($sender, $new_vanished);
-        self::$vanished[$sender->getLowerCaseName()] = $new_vanished;
+        self::$vanished[strtolower($sender->getName())] = $new_vanished;
 
         $this->getPlugin()->formatAndSend($sender, 'success.vanish', ['status' => self::STATUSES[$new_vanished]]);
         return true;
@@ -50,13 +49,13 @@ class VanishCommand extends CucumberCommand
 
     public static function setVanished(Player $player, bool $vanish = true): void
     {
-        $player->setDataFlag(Entity::DATA_FLAGS, Entity::DATA_FLAG_INVISIBLE, $vanish);
+        $player->setInvisible($vanish);
         $player->setNameTagVisible(!$vanish);
     }
 
     public static function isVanished(Player $player): bool
     {
-        $name = $player->getLowerCaseName();
+        $name = strtolower($player->getName());
         return isset(self::$vanished[$name]) && self::$vanished[$name];
     }
 

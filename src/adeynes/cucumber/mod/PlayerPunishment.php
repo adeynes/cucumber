@@ -7,7 +7,7 @@ abstract class PlayerPunishment extends SimplePunishment
 {
 
     /** @var string */
-    protected $player;
+    protected string $player;
 
     public function __construct(string $player, string $reason, string $moderator, int $time_created)
     {

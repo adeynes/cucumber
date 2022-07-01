@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\mod;
 
-use pocketmine\Player;
+use pocketmine\player\Player;
 use poggit\libasynql\DataConnector;
 
 class UBanChecker
 {
 
     /** @var PunishmentRegistry */
-    protected $punishment_registry;
+    protected PunishmentRegistry $punishment_registry;
 
     /** @var DataConnector */
-    protected $connector;
+    protected DataConnector $connector;
 
     public function __construct(PunishmentRegistry $punishment_registry, DataConnector $connector)
     {
@@ -30,10 +30,10 @@ class UBanChecker
      */
     public function checkFor(Player $player, bool $do_ban = true): bool
     {
-        $uban = $this->punishment_registry->getUBan($player->getAddress());
+        $uban = $this->punishment_registry->getUBan($player->getNetworkSession()->getIp());
         if ($uban instanceof UBan) {
             if ($do_ban) {
-                $ban = new Ban($player->getLowerCaseName(), $uban->getReason(), null, $uban->getModerator(), $uban->getTimeOfCreation());
+                $ban = new Ban(strtolower($player->getName()), $uban->getReason(), null, $uban->getModerator(), $uban->getTimeOfCreation());
                 /** @noinspection PhpUnhandledExceptionInspection */
                 $this->punishment_registry->addBan($ban, true);
                 $ban->save($this->connector);

@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace adeynes\cucumber\event;
 
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 abstract class CucumberPlayerEvent extends CucumberEvent
 {
 
     /** @var Player */
-    protected $player;
+    protected Player $player;
 
     public function __construct(Player $player)
     {

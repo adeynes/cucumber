@@ -1,8 +1,7 @@
 name: cucumber
 main: adeynes\cucumber\Cucumber
-version: 2.0.0
-api: 3.2.0
-load: POSTWORLD
+version: 3.0.0
+api: 4.0.0
 author: adeynes
 description: Advanced, flexible moderation plugin
 website: https://github.com/adeynes/cucumber
@@ -10,86 +9,82 @@ website: https://github.com/adeynes/cucumber
 permissions:
   cucumber:
     default: op
-    children:
-      cucumber.command.rawtell:
-        description: "Allows for the use of /rawtell"
-        default: op
+  cucumber.command.rawtell:
+    description: "Allows for the use of /rawtell"
+    default: op
 
-      cucumber.command.log:
-        description: "Allows for the use of /log"
-        default: op
+  cucumber.command.log:
+    description: "Allows for the use of /log"
+    default: op
 
-      cucumber.command.alert:
-        description: "Allows for the use of /alert"
-        default: op
+  cucumber.command.alert:
+    description: "Allows for the use of /alert"
+    default: op
 
-      cucumber.mute:
-        description: "Mute-related commands"
-        default: op
-        children:
-          cucumber.command.mute:
-            description: "Allows for the use of /mute"
-            default: op
-          cucumber.command.mutelist:
-            description: "Allows for the use of /mutelist"
-            default: op
-          cucumber.command.unmute:
-            description: "Allows for the use of /unmute"
-            default: op
+  cucumber.mute:
+    description: "Mute-related commands"
+    default: op
+  cucumber.command.mute:
+    description: "Allows for the use of /mute"
+    default: op
+  cucumber.command.mutelist:
+    description: "Allows for the use of /mutelist"
+    default: op
+  cucumber.command.unmute:
+    description: "Allows for the use of /unmute"
+    default: op
 
-      cucumber.ban:
-        description: "Ban-related commands"
-        default: op
-        children:
-          cucumber.command.ban:
-            description: "Allows for the use of /ban"
-            default: op
-          cucumber.command.ipban:
-            description: "Allows for the use of /ipban"
-            default: op
-          cucumber.command.uban:
-            description: "Allows for the use of /uban"
-            default: op
+  cucumber.ban:
+    description: "Ban-related commands"
+    default: op
+  cucumber.command.ban:
+    description: "Allows for the use of /ban"
+    default: op
+  cucumber.command.ipban:
+    description: "Allows for the use of /ipban"
+    default: op
+  cucumber.command.uban:
+    description: "Allows for the use of /uban"
+    default: op
 
-          cucumber.command.pardon:
-            description: "Allows for the use of /pardon"
-            default: op
-          cucumber.command.ippardon:
-            description: "Allows for the use of /ippardon"
-            default: op
+  cucumber.command.pardon:
+    description: "Allows for the use of /pardon"
+    default: op
+  cucumber.command.ippardon:
+    description: "Allows for the use of /ippardon"
+    default: op
 
-          cucumber.command.banlist:
-            description: "Allows for the use of /banlist"
-            default: op
-          cucumber.command.ipbanlist:
-            description: "Allows for the use of /ipbanlist"
-            default: op
+  cucumber.command.banlist:
+    description: "Allows for the use of /banlist"
+    default: op
+  cucumber.command.ipbanlist:
+    description: "Allows for the use of /ipbanlist"
+    default: op
 
-      cucumber.warn:
-        description: "Warning-related commands"
-        default: op
-        children:
-          cucumber.command.warn:
-            description: "Allows for the use of /warn"
-            default: op
-          cucumber.command.warnings:
-            description: "Allows for the use of /warnings"
-            default: op
-          cucumber.command.mywarnings:
-            description: "Allows for the use of /mywarnings"
-            default: true
-          cucumber.command.delwarn:
-            description: "Allows for the use of /delwarn"
-            default: op
+  cucumber.warn:
+    description: "Warning-related commands"
+    default: op
+  cucumber.command.warn:
+    description: "Allows for the use of /warn"
+    default: op
+  cucumber.command.warnings:
+    description: "Allows for the use of /warnings"
+    default: op
+  cucumber.command.mywarnings:
+    description: "Allows for the use of /mywarnings"
+    default: true
+  cucumber.command.delwarn:
+    description: "Allows for the use of /delwarn"
+    default: op
 
-      cucumber.command.ip:
-        description: "Allows for the use of /ip"
-        default: op
+  cucumber.command.ip:
+    description: "Allows for the use of /ip"
+    default: op
 
-      cucumber.command.vanish:
-        description: "Allows for the use of /vanish"
-        default: op
+  cucumber.command.vanish:
+    description: "Allows for the use of /vanish"
+    default: op
 
-      cucumber.command.history:
-        description: "Allows for the user of /history"
-        default: op
+  cucumber.command.history:
+    description: "Allows for the user of /history"
+    default: op

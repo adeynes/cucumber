@@ -11,10 +11,10 @@ class DbSynchronizationTask extends Task
 {
 
     /** @var PunishmentRegistry */
-    protected $punishment_registry;
+    protected PunishmentRegistry $punishment_registry;
 
     /** @var DataConnector */
-    protected $connector;
+    protected DataConnector $connector;
 
     public function __construct(PunishmentRegistry $punishment_registry, DataConnector $connector)
     {
@@ -22,7 +22,7 @@ class DbSynchronizationTask extends Task
         $this->connector = $connector;
     }
 
-    public function onRun(int $tick): void
+    public function onRun(): void
     {
         $this->punishment_registry->load($this->connector);
     }

@@ -13,10 +13,10 @@ class ExpirationCheckTask extends Task
 {
 
     /** @var PunishmentRegistry */
-    protected $punishment_registry;
+    protected PunishmentRegistry $punishment_registry;
 
     /** @var Config */
-    protected $message_config;
+    protected Config $message_config;
 
     public function __construct(PunishmentRegistry $punishment_registry, Config $message_config)
     {
@@ -24,7 +24,7 @@ class ExpirationCheckTask extends Task
         $this->message_config = $message_config;
     }
 
-    public function onRun(int $tick): void
+    public function onRun(): void
     {
         foreach ($this->punishment_registry->getBans() as $name => $ban) {
             if ($ban->isExpired()) {
