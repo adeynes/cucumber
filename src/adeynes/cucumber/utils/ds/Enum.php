@@ -114,7 +114,7 @@ abstract class Enum implements JsonSerializable
         throw new BadMethodCallException("No static method or enum constant '$name' in class " . get_called_class());
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->getValue();
     }

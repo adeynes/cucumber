@@ -20,7 +20,7 @@ class Stack implements Iterator, Countable
         $this->position = 0;
     }
 
-    public function current()
+    public function current(): mixed
     {
         return $this->peek($this->position);
     }
