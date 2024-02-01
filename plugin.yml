@@ -1,7 +1,7 @@
 name: cucumber
 main: adeynes\cucumber\Cucumber
 version: 3.0.0
-api: 4.0.0
+api: 5.0.0
 author: adeynes
 description: Advanced, flexible moderation plugin
 website: https://github.com/adeynes/cucumber

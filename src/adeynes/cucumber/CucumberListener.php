@@ -16,11 +16,12 @@ use adeynes\cucumber\utils\MessageFactory;
 use adeynes\cucumber\utils\Queries;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\event\player\PlayerCommandPreprocessEvent;
+use pocketmine\event\server\CommandEvent as PlayerCommandEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerPreLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\player\Player;
 
 final class CucumberListener implements Listener
 {
@@ -66,10 +67,11 @@ final class CucumberListener implements Listener
         }
     }
 
-    public function onCommandPreprocess(PlayerCommandPreprocessEvent $ev)
+    public function onPlayerCommand(PlayerCommandEvent $ev)
     {
-        if (str_starts_with(($command = $ev->getMessage()), '/') && $this->log_command) {
-            (new CommandEvent($ev->getPlayer(), $command))->call();
+        $sender = $ev->getSender();
+        if ($sender instanceof Player && $this->log_command) {
+            (new CommandEvent($sender, $ev->getCommand()))->call();
         }
     }
 

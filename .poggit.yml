@@ -1,15 +1,14 @@
---- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/adeynes/cucumber
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/BlackD14/cucumber
 branches:
 - master
-- stable
 
 projects:
   cucumber:
     libs:
       - src: poggit/libasynql/libasynql
         version: ^3.3.0
-      - src: adeynes/parsecmd/parsecmd
+      - src: BlackD14/parsecmd/parsecmd
         version: ^5.0.0
-      - src: adeynes/asyncio/asyncio
+      - src: BlackD14/asyncio/asyncio
         version: ^0.1.0
 ...
